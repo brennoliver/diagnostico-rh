@@ -1,0 +1,1672 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Questionário de Diagnóstico — RH com Propósito</title>
+<!-- ─── WEB3FORMS CONFIG ───────────────────────────────────────
+     Para ativar o envio de email:
+     1. Acesse https://web3forms.com
+     2. Digite: cristiele_rodrigues@yahoo.com.br  e clique em "Get Access Key"
+     3. Confirme o email que chegará na sua caixa
+     4. Copie a chave gerada e substitua "SUA_CHAVE_AQUI" abaixo
+─────────────────────────────────────────────────────────── -->
+<script>
+  const WEB3FORMS_KEY = 'SUA_CHAVE_AQUI'; // ← cole sua chave aqui
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,300;0,400;0,700;0,900;1,300;1,400&family=Playfair+Display:ital,wght@0,700;0,900;1,700&display=swap" rel="stylesheet">
+
+<style>
+/* ─── RESET ─────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+/* ─── VARIABLES ─────────────────────────── */
+:root {
+  --g-dark:   #1A5C45;
+  --g-mid:    #2E7D58;
+  --g-light:  #E8F5EE;
+  --g-pale:   #F2FAF6;
+  --gold:     #C89B3C;
+  --gold-lt:  #F5E9C8;
+  --gold-pale:#FDF8EC;
+  --cream:    #FAFAF7;
+  --dark:     #1C1C1C;
+  --gray:     #3D3D3D;
+  --gray-lt:  #7A7A7A;
+  --rule:     #DADADA;
+  --white:    #ffffff;
+  --shadow:   0 8px 40px rgba(26,92,69,.12);
+  --r:        12px;
+}
+
+body {
+  font-family: 'Lato', sans-serif;
+  background: #0F3D2B;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 0;
+  overflow-x: hidden;
+}
+
+/* ─── BACKGROUND DECO ───────────────────── */
+body::before {
+  content: '';
+  position: fixed; inset: 0;
+  background:
+    radial-gradient(ellipse 60% 50% at 10% 20%, rgba(46,125,88,.35) 0%, transparent 70%),
+    radial-gradient(ellipse 40% 60% at 90% 80%, rgba(200,155,60,.12) 0%, transparent 70%);
+  pointer-events: none; z-index: 0;
+}
+
+/* ─── TOP BAR ───────────────────────────── */
+.top-bar {
+  width: 100%; position: sticky; top: 0; z-index: 100;
+  background: rgba(15,61,43,.92);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(200,155,60,.2);
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 14px 32px;
+}
+.top-bar-brand {
+  display: flex; align-items: center; gap: 12px;
+}
+.top-bar-dot {
+  width: 10px; height: 10px; border-radius: 50%;
+  background: var(--gold); flex-shrink: 0;
+}
+.top-bar-name {
+  font-size: 13px; font-weight: 700; color: var(--white); letter-spacing: 1px;
+}
+.top-bar-sub {
+  font-size: 11px; color: rgba(255,255,255,.5); font-weight: 300;
+  letter-spacing: .5px;
+}
+.top-bar-step {
+  font-size: 11px; color: rgba(255,255,255,.4); font-weight: 300;
+}
+
+/* ─── PROGRESS BAR ──────────────────────── */
+.progress-wrap {
+  width: 100%; height: 3px;
+  background: rgba(255,255,255,.08);
+  position: sticky; top: 57px; z-index: 99;
+}
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--g-mid), var(--gold));
+  transition: width .5s cubic-bezier(.4,0,.2,1);
+  border-radius: 0 2px 2px 0;
+}
+
+/* ─── MAIN CONTAINER ────────────────────── */
+.container {
+  position: relative; z-index: 1;
+  width: 100%; max-width: 720px;
+  padding: 48px 24px 80px;
+  flex: 1;
+}
+
+/* ─── PHASE CARD ────────────────────────── */
+.phase {
+  display: none;
+  animation: fadeIn .4s ease;
+}
+.phase.active { display: block; }
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes fadeOut {
+  from { opacity: 1; transform: translateY(0); }
+  to   { opacity: 0; transform: translateY(-12px); }
+}
+
+/* ─── COVER PHASE ───────────────────────── */
+.cover-card {
+  background: var(--white);
+  border-radius: var(--r);
+  overflow: hidden;
+  box-shadow: var(--shadow);
+}
+.cover-hero {
+  background: var(--g-dark);
+  padding: 52px 44px 44px;
+  position: relative; overflow: hidden;
+}
+.cover-hero::before {
+  content: '';
+  position: absolute; right: -60px; top: -60px;
+  width: 260px; height: 260px; border-radius: 50%;
+  background: rgba(46,125,88,.45);
+}
+.cover-hero::after {
+  content: '';
+  position: absolute; left: -30px; bottom: -40px;
+  width: 160px; height: 160px; border-radius: 50%;
+  background: rgba(200,155,60,.12);
+}
+.cover-eyebrow {
+  font-size: 10px; font-weight: 700; letter-spacing: 3px; color: var(--gold);
+  text-transform: uppercase; margin-bottom: 16px; position: relative; z-index: 1;
+}
+.cover-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 38px; line-height: 1.15; font-weight: 900;
+  color: var(--white); margin-bottom: 8px; position: relative; z-index: 1;
+}
+.cover-title span { color: var(--gold); }
+.cover-sub {
+  font-size: 14px; font-weight: 300; color: rgba(255,255,255,.7);
+  line-height: 1.7; position: relative; z-index: 1; margin-top: 12px;
+}
+.cover-gold-strip {
+  height: 4px;
+  background: linear-gradient(90deg, var(--gold), rgba(200,155,60,.3));
+}
+.cover-body {
+  padding: 40px 44px 44px;
+}
+.cover-desc {
+  font-size: 14px; color: var(--gray); line-height: 1.8; margin-bottom: 32px;
+}
+.cover-desc strong { color: var(--g-dark); }
+
+/* identity fields */
+.id-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 12px; }
+.id-grid.full { grid-template-columns: 1fr; }
+.field-label {
+  font-size: 11px; font-weight: 700; letter-spacing: 1.5px;
+  color: var(--g-dark); text-transform: uppercase; margin-bottom: 6px;
+}
+.field-input {
+  width: 100%; padding: 13px 16px;
+  border: 1.5px solid var(--rule);
+  border-radius: 8px;
+  font-family: 'Lato', sans-serif;
+  font-size: 14px; color: var(--dark);
+  background: var(--cream);
+  transition: border-color .2s, box-shadow .2s;
+  outline: none;
+}
+.field-input:focus {
+  border-color: var(--g-mid);
+  box-shadow: 0 0 0 3px rgba(46,125,88,.1);
+  background: var(--white);
+}
+.field-input::placeholder { color: var(--rule); }
+
+/* ─── QUESTION CARD ─────────────────────── */
+.q-card {
+  background: var(--white);
+  border-radius: var(--r);
+  overflow: hidden;
+  box-shadow: var(--shadow);
+}
+.q-header {
+  background: var(--g-dark);
+  padding: 28px 36px 24px;
+  position: relative; overflow: hidden;
+}
+.q-header::after {
+  content: '';
+  position: absolute; right: -40px; top: -40px;
+  width: 160px; height: 160px; border-radius: 50%;
+  background: rgba(255,255,255,.04);
+}
+.q-num {
+  font-size: 10px; font-weight: 700; letter-spacing: 3px;
+  color: var(--gold); text-transform: uppercase; margin-bottom: 10px;
+  position: relative; z-index: 1;
+}
+.q-text {
+  font-family: 'Playfair Display', serif;
+  font-size: 22px; line-height: 1.4; font-weight: 700;
+  color: var(--white); position: relative; z-index: 1;
+}
+.q-hint {
+  font-size: 12px; color: rgba(255,255,255,.55); margin-top: 8px;
+  position: relative; z-index: 1; font-style: italic;
+}
+.q-gold-strip {
+  height: 3px;
+  background: linear-gradient(90deg, var(--gold) 0%, rgba(200,155,60,.2) 100%);
+}
+.q-body { padding: 32px 36px 36px; }
+
+/* ─── RADIO OPTIONS ─────────────────────── */
+.options-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+.options-grid.single { grid-template-columns: 1fr; }
+.options-grid.three  { grid-template-columns: 1fr 1fr 1fr; }
+
+.opt-label {
+  display: flex; align-items: center; gap: 14px;
+  padding: 16px 20px;
+  border: 1.5px solid var(--rule);
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all .2s;
+  background: var(--cream);
+  user-select: none;
+}
+.opt-label:hover {
+  border-color: var(--g-mid);
+  background: var(--g-pale);
+}
+.opt-label.selected {
+  border-color: var(--g-dark);
+  background: var(--g-light);
+  box-shadow: 0 0 0 3px rgba(46,125,88,.1);
+}
+.opt-label.selected .opt-circle { background: var(--g-dark); border-color: var(--g-dark); }
+.opt-label.selected .opt-circle::after { opacity: 1; }
+.opt-label.selected .opt-text { color: var(--g-dark); font-weight: 700; }
+
+.opt-circle {
+  width: 20px; height: 20px; border-radius: 50%; flex-shrink: 0;
+  border: 2px solid var(--rule);
+  background: var(--white);
+  display: flex; align-items: center; justify-content: center;
+  transition: all .2s;
+  position: relative;
+}
+.opt-circle::after {
+  content: '';
+  width: 8px; height: 8px; border-radius: 50%;
+  background: var(--white);
+  opacity: 0; transition: opacity .2s;
+}
+.opt-text { font-size: 14px; color: var(--gray); line-height: 1.4; }
+
+input[type="radio"], input[type="checkbox"] { display: none; }
+
+/* ─── CHECKBOX OPTIONS ──────────────────── */
+.check-label {
+  display: flex; align-items: center; gap: 14px;
+  padding: 14px 18px;
+  border: 1.5px solid var(--rule);
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all .2s;
+  background: var(--cream);
+  user-select: none;
+}
+.check-label:hover { border-color: var(--gold); background: var(--gold-pale); }
+.check-label.selected {
+  border-color: var(--gold);
+  background: var(--gold-lt);
+}
+.check-label.selected .check-box { background: var(--gold); border-color: var(--gold); }
+.check-label.selected .check-box::after { opacity: 1; }
+.check-label.selected .check-text { color: #7A5C00; font-weight: 700; }
+
+.check-box {
+  width: 20px; height: 20px; border-radius: 5px; flex-shrink: 0;
+  border: 2px solid var(--rule); background: var(--white);
+  display: flex; align-items: center; justify-content: center;
+  transition: all .2s;
+}
+.check-box::after {
+  content: '✓'; color: var(--white);
+  font-size: 12px; font-weight: 900; opacity: 0; transition: opacity .2s;
+}
+.check-text { font-size: 14px; color: var(--gray); line-height: 1.4; }
+
+.check-outro { display: flex; align-items: center; gap: 12px; }
+.check-outro-input {
+  flex: 1; padding: 8px 12px;
+  border: 1.5px solid var(--rule); border-radius: 6px;
+  font-family: 'Lato', sans-serif; font-size: 13px; color: var(--dark);
+  background: var(--white); outline: none;
+  transition: border-color .2s;
+}
+.check-outro-input:focus { border-color: var(--gold); }
+
+.checks-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 10px;
+}
+
+.max-notice {
+  font-size: 11px; color: var(--gold); font-weight: 700;
+  margin-bottom: 16px; display: flex; align-items: center; gap: 6px;
+}
+.max-notice::before {
+  content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--gold);
+}
+
+/* ─── TEXTAREA ──────────────────────────── */
+.q-textarea {
+  width: 100%; min-height: 160px;
+  padding: 16px 18px;
+  border: 1.5px solid var(--rule);
+  border-radius: 10px;
+  font-family: 'Lato', sans-serif;
+  font-size: 14px; line-height: 1.7; color: var(--dark);
+  background: var(--cream);
+  resize: vertical; outline: none;
+  transition: border-color .2s, box-shadow .2s;
+}
+.q-textarea:focus {
+  border-color: var(--g-mid);
+  box-shadow: 0 0 0 3px rgba(46,125,88,.08);
+  background: var(--white);
+}
+.q-textarea::placeholder { color: var(--rule); font-style: italic; }
+
+/* ─── NAVIGATION ────────────────────────── */
+.nav {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-top: 28px; gap: 12px;
+}
+.btn {
+  padding: 14px 32px;
+  border: none; border-radius: 8px;
+  font-family: 'Lato', sans-serif;
+  font-size: 14px; font-weight: 700; cursor: pointer;
+  transition: all .2s;
+  letter-spacing: .5px;
+}
+.btn-back {
+  background: transparent;
+  color: rgba(255,255,255,.6);
+  border: 1.5px solid rgba(255,255,255,.2);
+}
+.btn-back:hover {
+  background: rgba(255,255,255,.06);
+  color: rgba(255,255,255,.85);
+}
+.btn-next {
+  background: var(--gold);
+  color: var(--dark);
+  box-shadow: 0 4px 16px rgba(200,155,60,.35);
+  display: flex; align-items: center; gap: 10px;
+}
+.btn-next:hover {
+  background: #d4a840;
+  box-shadow: 0 6px 22px rgba(200,155,60,.45);
+  transform: translateY(-1px);
+}
+.btn-next:active { transform: translateY(0); }
+.btn-start {
+  background: var(--g-dark);
+  color: var(--white);
+  width: 100%;
+  padding: 16px;
+  font-size: 15px;
+  border-radius: 10px;
+  display: flex; align-items: center; justify-content: center; gap: 12px;
+  box-shadow: 0 4px 20px rgba(26,92,69,.3);
+}
+.btn-start:hover {
+  background: var(--g-mid);
+  transform: translateY(-1px);
+  box-shadow: 0 8px 28px rgba(26,92,69,.4);
+}
+.btn-finish {
+  background: var(--g-dark);
+  color: var(--white);
+  box-shadow: 0 4px 20px rgba(26,92,69,.3);
+  display: flex; align-items: center; gap: 10px;
+  padding: 16px 40px;
+  font-size: 15px;
+}
+.btn-finish:hover {
+  background: var(--g-mid);
+  transform: translateY(-1px);
+}
+
+.arrow-icon { font-size: 18px; transition: transform .2s; }
+.btn-next:hover .arrow-icon { transform: translateX(3px); }
+.btn-finish:hover .arrow-icon { transform: translateX(3px); }
+
+/* ─── VALIDATION ────────────────────────── */
+.val-msg {
+  display: none;
+  font-size: 12px; color: #C0392B; font-weight: 700;
+  margin-top: 12px; padding: 10px 14px;
+  background: rgba(192,57,43,.08);
+  border-left: 3px solid #C0392B;
+  border-radius: 0 6px 6px 0;
+}
+.val-msg.show { display: block; animation: fadeIn .3s ease; }
+
+/* ─── THANK YOU PAGE ────────────────────── */
+.thanks-card {
+  background: var(--white);
+  border-radius: var(--r);
+  overflow: hidden;
+  box-shadow: var(--shadow);
+  text-align: center;
+}
+.thanks-hero {
+  background: var(--g-dark);
+  padding: 60px 44px 52px;
+  position: relative; overflow: hidden;
+}
+.thanks-hero::before {
+  content: '';
+  position: absolute; left: 50%; top: 50%; transform: translate(-50%,-50%);
+  width: 400px; height: 400px; border-radius: 50%;
+  background: radial-gradient(circle, rgba(46,125,88,.6) 0%, transparent 70%);
+}
+.thanks-icon {
+  width: 80px; height: 80px; border-radius: 50%;
+  background: var(--gold);
+  display: flex; align-items: center; justify-content: center;
+  margin: 0 auto 24px;
+  font-size: 36px;
+  position: relative; z-index: 1;
+  box-shadow: 0 8px 30px rgba(200,155,60,.4);
+}
+.thanks-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 34px; font-weight: 900; color: var(--white);
+  margin-bottom: 12px; position: relative; z-index: 1;
+}
+.thanks-sub {
+  font-size: 15px; color: rgba(255,255,255,.65); font-weight: 300;
+  line-height: 1.7; position: relative; z-index: 1; max-width: 440px; margin: 0 auto;
+}
+.thanks-gold-strip {
+  height: 4px;
+  background: linear-gradient(90deg, var(--gold), rgba(200,155,60,.2));
+}
+.thanks-body {
+  padding: 44px 44px 52px;
+}
+.thanks-msg {
+  font-size: 15px; color: var(--gray); line-height: 1.8; margin-bottom: 32px;
+}
+.thanks-brand {
+  display: inline-flex; align-items: center; gap: 10px;
+  padding: 14px 28px;
+  background: var(--g-pale);
+  border-radius: 40px;
+  border: 1px solid var(--g-light);
+  font-size: 13px; font-weight: 700; color: var(--g-dark);
+  letter-spacing: .5px;
+}
+.thanks-brand::before {
+  content: ''; width: 8px; height: 8px; border-radius: 50%; background: var(--gold);
+}
+
+/* ─── STEP DOTS (mini) ──────────────────── */
+.step-dots {
+  display: flex; justify-content: center; align-items: center;
+  gap: 6px; margin-top: 24px; flex-wrap: wrap; padding: 0 10px;
+}
+.step-dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: rgba(255,255,255,.15);
+  transition: all .3s;
+}
+.step-dot.done { background: rgba(200,155,60,.5); }
+.step-dot.current {
+  background: var(--gold);
+  width: 20px; border-radius: 3px;
+}
+
+/* ─── SKIP OPTIONAL ─────────────────────── */
+.optional-tag {
+  display: inline-block;
+  font-size: 10px; font-weight: 700; letter-spacing: 1px;
+  color: var(--gray-lt); text-transform: uppercase;
+  background: var(--cream); border: 1px solid var(--rule);
+  border-radius: 20px; padding: 3px 10px; margin-left: 10px;
+  vertical-align: middle;
+}
+
+/* ─── SETUP BANNER ──────────────────────── */
+.setup-banner {
+  position: fixed; bottom: 0; left: 0; right: 0; z-index: 200;
+  background: linear-gradient(135deg, #7A5C00, #C89B3C);
+  color: white; padding: 14px 24px;
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 16px; box-shadow: 0 -4px 24px rgba(0,0,0,.3);
+}
+.setup-banner-text { font-size: 13px; line-height: 1.5; }
+.setup-banner-text strong { display: block; font-size: 14px; margin-bottom: 2px; }
+.setup-banner-text span { opacity: .85; }
+.setup-banner-actions { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
+.btn-setup {
+  padding: 10px 20px; background: white; color: #7A5C00;
+  border: none; border-radius: 6px; font-family: 'Lato',sans-serif;
+  font-size: 13px; font-weight: 700; cursor: pointer;
+  white-space: nowrap; transition: all .2s;
+}
+.btn-setup:hover { background: #FFF8E8; }
+.btn-dismiss {
+  background: rgba(255,255,255,.15); color: white;
+  border: 1px solid rgba(255,255,255,.3);
+  padding: 10px 14px; border-radius: 6px; font-size: 12px;
+  cursor: pointer; font-family: 'Lato',sans-serif;
+}
+.btn-dismiss:hover { background: rgba(255,255,255,.25); }
+
+/* ─── SETUP MODAL ────────────────────────── */
+.modal-overlay {
+  display: none; position: fixed; inset: 0; z-index: 300;
+  background: rgba(0,0,0,.75); backdrop-filter: blur(4px);
+  align-items: center; justify-content: center; padding: 24px;
+}
+.modal-overlay.show { display: flex; }
+.modal-box {
+  background: white; border-radius: 16px; overflow: hidden;
+  max-width: 520px; width: 100%;
+  box-shadow: 0 24px 80px rgba(0,0,0,.4);
+  animation: fadeIn .3s ease;
+}
+.modal-header {
+  background: var(--g-dark); padding: 28px 32px 24px;
+  position: relative; overflow: hidden;
+}
+.modal-header::before {
+  content: ''; position: absolute; right: -40px; top: -40px;
+  width: 160px; height: 160px; border-radius: 50%;
+  background: rgba(255,255,255,.05);
+}
+.modal-eyebrow {
+  font-size: 9px; font-weight: 700; letter-spacing: 2.5px;
+  color: var(--gold); text-transform: uppercase; margin-bottom: 8px;
+}
+.modal-title {
+  font-family: 'Playfair Display',serif; font-size: 22px;
+  color: white; font-weight: 700; position: relative; z-index: 1;
+}
+.modal-body { padding: 28px 32px 32px; }
+.setup-step {
+  display: flex; gap: 14px; align-items: flex-start;
+  margin-bottom: 18px;
+}
+.setup-step-num {
+  width: 30px; height: 30px; border-radius: 50%; flex-shrink: 0;
+  background: var(--g-dark); color: white;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 13px; font-weight: 900;
+}
+.setup-step-content { flex: 1; }
+.setup-step-title { font-size: 13px; font-weight: 700; color: var(--dark); margin-bottom: 3px; }
+.setup-step-desc { font-size: 12px; color: var(--gray-lt); line-height: 1.6; }
+.setup-step-desc a { color: var(--g-mid); font-weight: 700; }
+.setup-step-desc code {
+  background: var(--g-pale); color: var(--g-dark); padding: 2px 7px;
+  border-radius: 4px; font-size: 12px; font-family: monospace;
+}
+.key-input-row {
+  display: flex; gap: 10px; margin-top: 20px; padding-top: 20px;
+  border-top: 1px solid var(--rule);
+}
+.key-input {
+  flex: 1; padding: 12px 14px;
+  border: 1.5px solid var(--rule); border-radius: 8px;
+  font-family: monospace; font-size: 13px; color: var(--dark);
+  outline: none; background: var(--cream);
+  transition: border-color .2s;
+}
+.key-input:focus { border-color: var(--g-mid); background: white; }
+.key-input::placeholder { color: var(--rule); font-family: 'Lato',sans-serif; font-style: italic; }
+.btn-save-key {
+  padding: 12px 20px; background: var(--g-dark); color: white;
+  border: none; border-radius: 8px; font-family: 'Lato',sans-serif;
+  font-size: 13px; font-weight: 700; cursor: pointer;
+  transition: all .2s; white-space: nowrap;
+}
+.btn-save-key:hover { background: var(--g-mid); }
+.modal-close-btn {
+  position: absolute; top: 20px; right: 24px;
+  background: rgba(255,255,255,.15); border: none;
+  color: white; width: 30px; height: 30px; border-radius: 50%;
+  font-size: 16px; cursor: pointer; display: flex;
+  align-items: center; justify-content: center;
+  transition: background .2s;
+}
+.modal-close-btn:hover { background: rgba(255,255,255,.3); }
+
+/* ─── SEND OVERLAY ───────────────────────── */
+.send-overlay {
+  display: none; position: fixed; inset: 0; z-index: 400;
+  background: rgba(15,61,43,.92); backdrop-filter: blur(6px);
+  flex-direction: column; align-items: center; justify-content: center;
+  gap: 20px;
+}
+.send-overlay.show { display: flex; animation: fadeIn .3s ease; }
+.send-spinner {
+  width: 56px; height: 56px; border-radius: 50%;
+  border: 4px solid rgba(200,155,60,.2);
+  border-top-color: var(--gold);
+  animation: spin .8s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+.send-label {
+  font-family: 'Playfair Display',serif;
+  font-size: 20px; color: white; font-weight: 700;
+}
+.send-sublabel { font-size: 13px; color: rgba(255,255,255,.5); }
+
+/* ─── SUCCESS / ERROR TOAST ──────────────── */
+.toast {
+  position: fixed; bottom: 32px; left: 50%; transform: translateX(-50%);
+  z-index: 500; padding: 14px 24px; border-radius: 10px;
+  font-size: 14px; font-weight: 700; color: white;
+  display: none; align-items: center; gap: 10px;
+  box-shadow: 0 8px 32px rgba(0,0,0,.3);
+  animation: slideUp .4s ease;
+  white-space: nowrap;
+}
+.toast.show { display: flex; }
+.toast.success { background: var(--g-dark); }
+.toast.error { background: #C0392B; }
+@keyframes slideUp {
+  from { opacity:0; transform: translateX(-50%) translateY(12px); }
+  to   { opacity:1; transform: translateX(-50%) translateY(0); }
+}
+
+/* ─── RESPONSIVE ────────────────────────── */
+@media (max-width: 600px) {
+  .options-grid, .options-grid.three { grid-template-columns: 1fr; }
+  .checks-grid { grid-template-columns: 1fr; }
+  .id-grid { grid-template-columns: 1fr; }
+  .q-text { font-size: 18px; }
+  .cover-title { font-size: 28px; }
+  .q-header { padding: 22px 24px 18px; }
+  .q-body { padding: 24px 24px 28px; }
+  .cover-body { padding: 28px 24px 32px; }
+  .nav { flex-wrap: wrap; }
+  .btn-back { order: 2; flex: 1; }
+  .btn-next, .btn-finish { order: 1; flex: 1; justify-content: center; }
+}
+</style>
+</head>
+<body>
+
+<!-- TOP BAR -->
+<div class="top-bar">
+  <div class="top-bar-brand">
+    <div class="top-bar-dot"></div>
+    <div>
+      <div class="top-bar-name">RH com Propósito</div>
+      <div class="top-bar-sub">Questionário de Diagnóstico</div>
+    </div>
+  </div>
+  <div class="top-bar-step" id="topStep"></div>
+</div>
+
+<!-- PROGRESS BAR -->
+<div class="progress-wrap">
+  <div class="progress-fill" id="progressFill" style="width:0%"></div>
+</div>
+
+<!-- MAIN -->
+<div class="container">
+
+  <!-- STEP DOTS -->
+  <div class="step-dots" id="stepDots"></div>
+
+  <!-- ══════════════════════════════════
+       FASE 0 — CAPA
+  ══════════════════════════════════ -->
+  <div class="phase active" id="phase-0">
+    <div class="cover-card">
+      <div class="cover-hero">
+        <div class="cover-eyebrow">RH com Propósito</div>
+        <div class="cover-title">Questionário de<br><span>Diagnóstico</span></div>
+        <div class="cover-sub">Briefing com a Direção — Personalização do Programa</div>
+      </div>
+      <div class="cover-gold-strip"></div>
+      <div class="cover-body">
+        <p class="cover-desc">
+          Preencha as questões abaixo com atenção. As informações serão utilizadas para
+          <strong>personalizar o trabalho de desenvolvimento da equipe</strong> e compreender
+          melhor a realidade da empresa.<br><br>
+          Este questionário conta com <strong>14 perguntas</strong> divididas em etapas.
+          Ao final, todas as respostas serão reunidas para embasar o trabalho.
+        </p>
+
+        <div class="id-grid">
+          <div>
+            <div class="field-label">Nome completo</div>
+            <input class="field-input" id="id-nome" type="text" placeholder="Seu nome">
+          </div>
+          <div>
+            <div class="field-label">Cargo</div>
+            <input class="field-input" id="id-cargo" type="text" placeholder="Seu cargo">
+          </div>
+        </div>
+        <div class="id-grid full">
+          <div>
+            <div class="field-label">Data</div>
+            <input class="field-input" id="id-data" type="date">
+          </div>
+        </div>
+
+        <div style="margin-top:28px">
+          <button class="btn btn-start" onclick="startQuiz()">
+            Iniciar questionário
+            <span class="arrow-icon">→</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════
+       FASE 1
+  ══════════════════════════════════ -->
+  <div class="phase" id="phase-1">
+    <div class="q-card">
+      <div class="q-header">
+        <div class="q-num">Pergunta 1 de 14</div>
+        <div class="q-text">Como você avalia o clima organizacional da empresa atualmente?</div>
+      </div>
+      <div class="q-gold-strip"></div>
+      <div class="q-body">
+        <div class="options-grid">
+
+          <label class="opt-label" onclick="selectOpt(this,'q1')">
+            <input type="radio" name="q1" value="Excelente">
+            <div class="opt-circle"></div>
+            <span class="opt-text">Excelente</span>
+          </label>
+          <label class="opt-label" onclick="selectOpt(this,'q1')">
+            <input type="radio" name="q1" value="Bom">
+            <div class="opt-circle"></div>
+            <span class="opt-text">Bom</span>
+          </label>
+          <label class="opt-label" onclick="selectOpt(this,'q1')">
+            <input type="radio" name="q1" value="Regular">
+            <div class="opt-circle"></div>
+            <span class="opt-text">Regular</span>
+          </label>
+          <label class="opt-label" onclick="selectOpt(this,'q1')">
+            <input type="radio" name="q1" value="Precisa melhorar">
+            <div class="opt-circle"></div>
+            <span class="opt-text">Precisa melhorar</span>
+          </label>
+
+        </div>
+        <div class="val-msg" id="val-1">Por favor, selecione uma opção para continuar.</div>
+        <div class="nav">
+          <button class="btn btn-back" onclick="goBack()">← Voltar</button>
+          <button class="btn btn-next" onclick="nextPhase(1,'radio','q1')">Próxima <span class="arrow-icon">→</span></button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════
+       FASE 2
+  ══════════════════════════════════ -->
+  <div class="phase" id="phase-2">
+    <div class="q-card">
+      <div class="q-header">
+        <div class="q-num">Pergunta 2 de 14</div>
+        <div class="q-text">Como você avalia a comunicação entre líderes e colaboradores?</div>
+      </div>
+      <div class="q-gold-strip"></div>
+      <div class="q-body">
+        <div class="options-grid">
+          <label class="opt-label" onclick="selectOpt(this,'q2')">
+            <input type="radio" name="q2" value="Excelente">
+            <div class="opt-circle"></div>
+            <span class="opt-text">Excelente</span>
+          </label>
+          <label class="opt-label" onclick="selectOpt(this,'q2')">
+            <input type="radio" name="q2" value="Boa">
+            <div class="opt-circle"></div>
+            <span class="opt-text">Boa</span>
+          </label>
+          <label class="opt-label" onclick="selectOpt(this,'q2')">
+            <input type="radio" name="q2" value="Regular">
+            <div class="opt-circle"></div>
+            <span class="opt-text">Regular</span>
+          </label>
+          <label class="opt-label" onclick="selectOpt(this,'q2')">
+            <input type="radio" name="q2" value="Ruim">
+            <div class="opt-circle"></div>
+            <span class="opt-text">Ruim</span>
+          </label>
+        </div>
+        <div class="val-msg" id="val-2">Por favor, selecione uma opção para continuar.</div>
+        <div class="nav">
+          <button class="btn btn-back" onclick="goBack()">← Voltar</button>
+          <button class="btn btn-next" onclick="nextPhase(2,'radio','q2')">Próxima <span class="arrow-icon">→</span></button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════
+       FASE 3
+  ══════════════════════════════════ -->
+  <div class="phase" id="phase-3">
+    <div class="q-card">
+      <div class="q-header">
+        <div class="q-num">Pergunta 3 de 14</div>
+        <div class="q-text">Como você avalia o comprometimento da equipe?</div>
+      </div>
+      <div class="q-gold-strip"></div>
+      <div class="q-body">
+        <div class="options-grid">
+          <label class="opt-label" onclick="selectOpt(this,'q3')">
+            <input type="radio" name="q3" value="Muito alto">
+            <div class="opt-circle"></div>
+            <span class="opt-text">Muito alto</span>
+          </label>
+          <label class="opt-label" onclick="selectOpt(this,'q3')">
+            <input type="radio" name="q3" value="Alto">
+            <div class="opt-circle"></div>
+            <span class="opt-text">Alto</span>
+          </label>
+          <label class="opt-label" onclick="selectOpt(this,'q3')">
+            <input type="radio" name="q3" value="Médio">
+            <div class="opt-circle"></div>
+            <span class="opt-text">Médio</span>
+          </label>
+          <label class="opt-label" onclick="selectOpt(this,'q3')">
+            <input type="radio" name="q3" value="Baixo">
+            <div class="opt-circle"></div>
+            <span class="opt-text">Baixo</span>
+          </label>
+        </div>
+        <div class="val-msg" id="val-3">Por favor, selecione uma opção para continuar.</div>
+        <div class="nav">
+          <button class="btn btn-back" onclick="goBack()">← Voltar</button>
+          <button class="btn btn-next" onclick="nextPhase(3,'radio','q3')">Próxima <span class="arrow-icon">→</span></button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════
+       FASE 4 — CHECKBOXES (até 3)
+  ══════════════════════════════════ -->
+  <div class="phase" id="phase-4">
+    <div class="q-card">
+      <div class="q-header">
+        <div class="q-num">Pergunta 4 de 14</div>
+        <div class="q-text">Quais desafios você percebe com maior frequência?</div>
+        <div class="q-hint">Marque até 3 opções</div>
+      </div>
+      <div class="q-gold-strip"></div>
+      <div class="q-body">
+        <div class="max-notice" id="maxNotice" style="display:none">Limite de 3 opções atingido</div>
+        <div class="checks-grid" id="q4-grid">
+          <label class="check-label" onclick="toggleCheck(this,'q4',3)">
+            <input type="checkbox" name="q4" value="Comunicação">
+            <div class="check-box"></div>
+            <span class="check-text">Comunicação</span>
+          </label>
+          <label class="check-label" onclick="toggleCheck(this,'q4',3)">
+            <input type="checkbox" name="q4" value="Falta de comprometimento">
+            <div class="check-box"></div>
+            <span class="check-text">Falta de comprometimento</span>
+          </label>
+          <label class="check-label" onclick="toggleCheck(this,'q4',3)">
+            <input type="checkbox" name="q4" value="Trabalho em equipe">
+            <div class="check-box"></div>
+            <span class="check-text">Trabalho em equipe</span>
+          </label>
+          <label class="check-label" onclick="toggleCheck(this,'q4',3)">
+            <input type="checkbox" name="q4" value="Liderança">
+            <div class="check-box"></div>
+            <span class="check-text">Liderança</span>
+          </label>
+          <label class="check-label" onclick="toggleCheck(this,'q4',3)">
+            <input type="checkbox" name="q4" value="Atendimento ao cliente">
+            <div class="check-box"></div>
+            <span class="check-text">Atendimento ao cliente</span>
+          </label>
+          <label class="check-label" onclick="toggleCheck(this,'q4',3)">
+            <input type="checkbox" name="q4" value="Conflitos internos">
+            <div class="check-box"></div>
+            <span class="check-text">Conflitos internos</span>
+          </label>
+          <label class="check-label" onclick="toggleCheck(this,'q4',3)">
+            <input type="checkbox" name="q4" value="Resistência a mudanças">
+            <div class="check-box"></div>
+            <span class="check-text">Resistência a mudanças</span>
+          </label>
+          <label class="check-label" onclick="toggleCheck(this,'q4',3)">
+            <input type="checkbox" name="q4" value="Falta de iniciativa">
+            <div class="check-box"></div>
+            <span class="check-text">Falta de iniciativa</span>
+          </label>
+          <label class="check-label" onclick="toggleCheck(this,'q4',3)" style="grid-column:1/-1">
+            <input type="checkbox" name="q4" value="outro">
+            <div class="check-box"></div>
+            <div class="check-outro" style="flex:1">
+              <span class="check-text">Outro:</span>
+              <input class="check-outro-input" id="q4-outro" type="text" placeholder="Especifique..." onclick="event.stopPropagation()">
+            </div>
+          </label>
+        </div>
+        <div class="val-msg" id="val-4">Por favor, selecione ao menos uma opção.</div>
+        <div class="nav">
+          <button class="btn btn-back" onclick="goBack()">← Voltar</button>
+          <button class="btn btn-next" onclick="nextPhase(4,'checkbox','q4')">Próxima <span class="arrow-icon">→</span></button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════
+       FASE 5
+  ══════════════════════════════════ -->
+  <div class="phase" id="phase-5">
+    <div class="q-card">
+      <div class="q-header">
+        <div class="q-num">Pergunta 5 de 14</div>
+        <div class="q-text">Os colaboradores compreendem claramente os objetivos da empresa?</div>
+      </div>
+      <div class="q-gold-strip"></div>
+      <div class="q-body">
+        <div class="options-grid three">
+          <label class="opt-label" onclick="selectOpt(this,'q5')">
+            <input type="radio" name="q5" value="Sim">
+            <div class="opt-circle"></div>
+            <span class="opt-text">Sim</span>
+          </label>
+          <label class="opt-label" onclick="selectOpt(this,'q5')">
+            <input type="radio" name="q5" value="Parcialmente">
+            <div class="opt-circle"></div>
+            <span class="opt-text">Parcialmente</span>
+          </label>
+          <label class="opt-label" onclick="selectOpt(this,'q5')">
+            <input type="radio" name="q5" value="Não">
+            <div class="opt-circle"></div>
+            <span class="opt-text">Não</span>
+          </label>
+        </div>
+        <div class="val-msg" id="val-5">Por favor, selecione uma opção para continuar.</div>
+        <div class="nav">
+          <button class="btn btn-back" onclick="goBack()">← Voltar</button>
+          <button class="btn btn-next" onclick="nextPhase(5,'radio','q5')">Próxima <span class="arrow-icon">→</span></button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════
+       FASE 6
+  ══════════════════════════════════ -->
+  <div class="phase" id="phase-6">
+    <div class="q-card">
+      <div class="q-header">
+        <div class="q-num">Pergunta 6 de 14</div>
+        <div class="q-text">Você acredita que os líderes estão preparados para desenvolver suas equipes?</div>
+      </div>
+      <div class="q-gold-strip"></div>
+      <div class="q-body">
+        <div class="options-grid three">
+          <label class="opt-label" onclick="selectOpt(this,'q6')">
+            <input type="radio" name="q6" value="Sim">
+            <div class="opt-circle"></div>
+            <span class="opt-text">Sim</span>
+          </label>
+          <label class="opt-label" onclick="selectOpt(this,'q6')">
+            <input type="radio" name="q6" value="Parcialmente">
+            <div class="opt-circle"></div>
+            <span class="opt-text">Parcialmente</span>
+          </label>
+          <label class="opt-label" onclick="selectOpt(this,'q6')">
+            <input type="radio" name="q6" value="Não">
+            <div class="opt-circle"></div>
+            <span class="opt-text">Não</span>
+          </label>
+        </div>
+        <div class="val-msg" id="val-6">Por favor, selecione uma opção para continuar.</div>
+        <div class="nav">
+          <button class="btn btn-back" onclick="goBack()">← Voltar</button>
+          <button class="btn btn-next" onclick="nextPhase(6,'radio','q6')">Próxima <span class="arrow-icon">→</span></button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════
+       FASE 7
+  ══════════════════════════════════ -->
+  <div class="phase" id="phase-7">
+    <div class="q-card">
+      <div class="q-header">
+        <div class="q-num">Pergunta 7 de 14</div>
+        <div class="q-text">Como você avalia o alinhamento da equipe com os valores da empresa?</div>
+      </div>
+      <div class="q-gold-strip"></div>
+      <div class="q-body">
+        <div class="options-grid">
+          <label class="opt-label" onclick="selectOpt(this,'q7')">
+            <input type="radio" name="q7" value="Muito alinhada">
+            <div class="opt-circle"></div>
+            <span class="opt-text">Muito alinhada</span>
+          </label>
+          <label class="opt-label" onclick="selectOpt(this,'q7')">
+            <input type="radio" name="q7" value="Alinhada">
+            <div class="opt-circle"></div>
+            <span class="opt-text">Alinhada</span>
+          </label>
+          <label class="opt-label" onclick="selectOpt(this,'q7')">
+            <input type="radio" name="q7" value="Parcialmente alinhada">
+            <div class="opt-circle"></div>
+            <span class="opt-text">Parcialmente alinhada</span>
+          </label>
+          <label class="opt-label" onclick="selectOpt(this,'q7')">
+            <input type="radio" name="q7" value="Pouco alinhada">
+            <div class="opt-circle"></div>
+            <span class="opt-text">Pouco alinhada</span>
+          </label>
+        </div>
+        <div class="val-msg" id="val-7">Por favor, selecione uma opção para continuar.</div>
+        <div class="nav">
+          <button class="btn btn-back" onclick="goBack()">← Voltar</button>
+          <button class="btn btn-next" onclick="nextPhase(7,'radio','q7')">Próxima <span class="arrow-icon">→</span></button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════
+       FASE 8
+  ══════════════════════════════════ -->
+  <div class="phase" id="phase-8">
+    <div class="q-card">
+      <div class="q-header">
+        <div class="q-num">Pergunta 8 de 14</div>
+        <div class="q-text">Quais são os três maiores desafios da empresa atualmente?</div>
+      </div>
+      <div class="q-gold-strip"></div>
+      <div class="q-body">
+        <textarea class="q-textarea" id="q8" placeholder="Descreva os três principais desafios que a empresa enfrenta hoje..."></textarea>
+        <div class="val-msg" id="val-8">Por favor, escreva sua resposta para continuar.</div>
+        <div class="nav">
+          <button class="btn btn-back" onclick="goBack()">← Voltar</button>
+          <button class="btn btn-next" onclick="nextPhase(8,'textarea','q8')">Próxima <span class="arrow-icon">→</span></button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════
+       FASE 9
+  ══════════════════════════════════ -->
+  <div class="phase" id="phase-9">
+    <div class="q-card">
+      <div class="q-header">
+        <div class="q-num">Pergunta 9 de 14</div>
+        <div class="q-text">O que você espera que melhore após este trabalho?</div>
+      </div>
+      <div class="q-gold-strip"></div>
+      <div class="q-body">
+        <textarea class="q-textarea" id="q9" placeholder="Descreva suas expectativas com o resultado deste trabalho..."></textarea>
+        <div class="val-msg" id="val-9">Por favor, escreva sua resposta para continuar.</div>
+        <div class="nav">
+          <button class="btn btn-back" onclick="goBack()">← Voltar</button>
+          <button class="btn btn-next" onclick="nextPhase(9,'textarea','q9')">Próxima <span class="arrow-icon">→</span></button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════
+       FASE 10
+  ══════════════════════════════════ -->
+  <div class="phase" id="phase-10">
+    <div class="q-card">
+      <div class="q-header">
+        <div class="q-num">Pergunta 10 de 14</div>
+        <div class="q-text">Quais comportamentos gostaria de ver mais presentes na equipe?</div>
+      </div>
+      <div class="q-gold-strip"></div>
+      <div class="q-body">
+        <textarea class="q-textarea" id="q10" placeholder="Descreva os comportamentos que você gostaria de observar com mais frequência..."></textarea>
+        <div class="val-msg" id="val-10">Por favor, escreva sua resposta para continuar.</div>
+        <div class="nav">
+          <button class="btn btn-back" onclick="goBack()">← Voltar</button>
+          <button class="btn btn-next" onclick="nextPhase(10,'textarea','q10')">Próxima <span class="arrow-icon">→</span></button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════
+       FASE 11
+  ══════════════════════════════════ -->
+  <div class="phase" id="phase-11">
+    <div class="q-card">
+      <div class="q-header">
+        <div class="q-num">Pergunta 11 de 14</div>
+        <div class="q-text">Quais comportamentos precisam ser reduzidos ou eliminados?</div>
+      </div>
+      <div class="q-gold-strip"></div>
+      <div class="q-body">
+        <textarea class="q-textarea" id="q11" placeholder="Descreva os comportamentos que precisam de ajuste ou eliminação..."></textarea>
+        <div class="val-msg" id="val-11">Por favor, escreva sua resposta para continuar.</div>
+        <div class="nav">
+          <button class="btn btn-back" onclick="goBack()">← Voltar</button>
+          <button class="btn btn-next" onclick="nextPhase(11,'textarea','q11')">Próxima <span class="arrow-icon">→</span></button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════
+       FASE 12
+  ══════════════════════════════════ -->
+  <div class="phase" id="phase-12">
+    <div class="q-card">
+      <div class="q-header">
+        <div class="q-num">Pergunta 12 de 14</div>
+        <div class="q-text">O que você considera inegociável dentro da cultura da empresa?</div>
+      </div>
+      <div class="q-gold-strip"></div>
+      <div class="q-body">
+        <textarea class="q-textarea" id="q12" placeholder="Descreva os valores ou comportamentos que são inegociáveis para você e a empresa..."></textarea>
+        <div class="val-msg" id="val-12">Por favor, escreva sua resposta para continuar.</div>
+        <div class="nav">
+          <button class="btn btn-back" onclick="goBack()">← Voltar</button>
+          <button class="btn btn-next" onclick="nextPhase(12,'textarea','q12')">Próxima <span class="arrow-icon">→</span></button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════
+       FASE 13
+  ══════════════════════════════════ -->
+  <div class="phase" id="phase-13">
+    <div class="q-card">
+      <div class="q-header">
+        <div class="q-num">Pergunta 13 de 14</div>
+        <div class="q-text">Se pudesse mudar apenas uma coisa na empresa hoje, o que seria?</div>
+      </div>
+      <div class="q-gold-strip"></div>
+      <div class="q-body">
+        <textarea class="q-textarea" id="q13" placeholder="Se pudesse escolher apenas uma mudança imediata..."></textarea>
+        <div class="val-msg" id="val-13">Por favor, escreva sua resposta para continuar.</div>
+        <div class="nav">
+          <button class="btn btn-back" onclick="goBack()">← Voltar</button>
+          <button class="btn btn-next" onclick="nextPhase(13,'textarea','q13')">Próxima <span class="arrow-icon">→</span></button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════
+       FASE 14
+  ══════════════════════════════════ -->
+  <div class="phase" id="phase-14">
+    <div class="q-card">
+      <div class="q-header">
+        <div class="q-num">Pergunta 14 de 14</div>
+        <div class="q-text">
+          Existe alguma informação que você considera importante para a construção deste trabalho?
+          <span class="optional-tag">Opcional</span>
+        </div>
+      </div>
+      <div class="q-gold-strip"></div>
+      <div class="q-body">
+        <textarea class="q-textarea" id="q14" placeholder="Sinta-se à vontade para compartilhar qualquer informação adicional que julgar relevante..."></textarea>
+        <div class="nav">
+          <button class="btn btn-back" onclick="goBack()">← Voltar</button>
+          <button class="btn btn-finish" onclick="finish()">
+            Concluir questionário <span class="arrow-icon">→</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════
+       FASE 15 — OBRIGADO
+  ══════════════════════════════════ -->
+  <div class="phase" id="phase-15">
+    <div class="thanks-card">
+      <div class="thanks-hero">
+        <div class="thanks-icon">✓</div>
+        <div class="thanks-title">Questionário concluído!</div>
+        <div class="thanks-sub">
+          Obrigada pelo tempo e atenção dedicados a este diagnóstico.
+          Suas respostas são fundamentais para construirmos um trabalho personalizado e eficaz.
+        </div>
+      </div>
+      <div class="thanks-gold-strip"></div>
+      <div class="thanks-body">
+        <p class="thanks-msg">
+          As informações compartilhadas serão utilizadas com cuidado e sigilo para
+          <strong>personalizar o programa de desenvolvimento da equipe</strong> de acordo
+          com a realidade da sua empresa.<br><br>
+          Em breve entraremos em contato para apresentar as próximas etapas.
+        </p>
+        <div class="thanks-brand">
+          RH com Propósito
+        </div>
+
+        <div style="margin-top:32px;display:flex;flex-wrap:wrap;gap:12px;justify-content:center">
+          <button class="btn btn-start" style="width:auto;padding:14px 32px;font-size:13px;background:var(--g-pale);color:var(--g-dark);border:1.5px solid var(--g-light);box-shadow:none" onclick="printAnswers()">
+            🖨️ &nbsp;Imprimir / Salvar respostas
+          </button>
+          <button id="mailtoFallbackBtn" class="btn btn-start" style="width:auto;padding:14px 32px;font-size:13px;display:none" onclick="openMailto()">
+            📧 &nbsp;Enviar por email
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /container -->
+
+
+<!-- ─── SETUP BANNER ─────────────────────── -->
+<div class="setup-banner" id="setupBanner">
+  <div class="setup-banner-text">
+    <strong>⚙️ Configuração necessária — Envio de email não ativado</strong>
+    <span>Clique em "Como ativar" para receber as respostas em cristiele_rodrigues@yahoo.com.br</span>
+  </div>
+  <div class="setup-banner-actions">
+    <button class="btn-setup" onclick="openSetupModal()">Como ativar →</button>
+    <button class="btn-dismiss" onclick="document.getElementById('setupBanner').style.display='none'">✕</button>
+  </div>
+</div>
+
+<!-- ─── SETUP MODAL ──────────────────────── -->
+<div class="modal-overlay" id="setupModal">
+  <div class="modal-box">
+    <div class="modal-header">
+      <button class="modal-close-btn" onclick="closeSetupModal()">✕</button>
+      <div class="modal-eyebrow">Configuração — 1 minuto</div>
+      <div class="modal-title">Ativar envio de email</div>
+    </div>
+    <div class="modal-body">
+      <div class="setup-step">
+        <div class="setup-step-num">1</div>
+        <div class="setup-step-content">
+          <div class="setup-step-title">Acesse o Web3Forms</div>
+          <div class="setup-step-desc">Abra <a href="https://web3forms.com" target="_blank">web3forms.com</a> e digite <code>cristiele_rodrigues@yahoo.com.br</code> no campo. Clique em <strong>"Get Access Key"</strong>.</div>
+        </div>
+      </div>
+      <div class="setup-step">
+        <div class="setup-step-num">2</div>
+        <div class="setup-step-content">
+          <div class="setup-step-title">Confirme seu email</div>
+          <div class="setup-step-desc">Você vai receber um email de confirmação no Yahoo. Clique no link para ativar. (Verifique a caixa de spam se não chegar.)</div>
+        </div>
+      </div>
+      <div class="setup-step">
+        <div class="setup-step-num">3</div>
+        <div class="setup-step-content">
+          <div class="setup-step-title">Cole a chave abaixo</div>
+          <div class="setup-step-desc">Após confirmar, o site mostrará sua chave (Access Key). Cole ela no campo abaixo e clique em Salvar.</div>
+        </div>
+      </div>
+
+      <div class="key-input-row">
+        <input class="key-input" id="keyInput" type="text" placeholder="Cole sua chave aqui  (ex: a1b2c3d4-e5f6-...)">
+        <button class="btn-save-key" onclick="saveKey()">Salvar e ativar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ─── SEND OVERLAY ─────────────────────── -->
+<div class="send-overlay" id="sendOverlay">
+  <div class="send-spinner"></div>
+  <div class="send-label">Enviando respostas…</div>
+  <div class="send-sublabel">Aguarde um instante</div>
+</div>
+
+<!-- ─── TOAST ────────────────────────────── -->
+<div class="toast success" id="toastSuccess">✓ &nbsp;Respostas enviadas para cristiele_rodrigues@yahoo.com.br</div>
+<div class="toast error" id="toastError">✕ &nbsp;Erro ao enviar. Tente pelo botão de email alternativo.</div>
+
+<!-- ─── PRINT MODAL ──────────────────────── -->
+<div id="printModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:999;overflow-y:auto;padding:32px 16px">
+  <div style="max-width:680px;margin:0 auto;background:white;border-radius:12px;overflow:hidden">
+    <div style="background:#1A5C45;padding:28px 36px">
+      <div style="font-size:10px;font-weight:700;letter-spacing:3px;color:#C89B3C;margin-bottom:8px">RH COM PROPÓSITO</div>
+      <div style="font-family:'Playfair Display',serif;font-size:24px;color:white;font-weight:700">Questionário de Diagnóstico</div>
+      <div style="font-size:12px;color:rgba(255,255,255,.6);margin-top:6px" id="print-date"></div>
+    </div>
+    <div style="padding:32px 36px" id="printContent"></div>
+    <div style="padding:0 36px 32px;display:flex;gap:12px">
+      <button class="btn btn-start" style="flex:1;padding:14px" onclick="window.print()">🖨️ Imprimir</button>
+      <button class="btn btn-back" style="color:#3D3D3D;border-color:#DADADA" onclick="document.getElementById('printModal').style.display='none'">Fechar</button>
+    </div>
+  </div>
+</div>
+
+
+<script>
+// ─── CONFIG ──────────────────────────────
+const DEST_EMAIL = 'cristiele_rodrigues@yahoo.com.br';
+let activeKey = (typeof WEB3FORMS_KEY !== 'undefined' && WEB3FORMS_KEY !== 'SUA_CHAVE_AQUI')
+  ? WEB3FORMS_KEY
+  : (localStorage.getItem('w3f_key') || '');
+
+// ─── STATE ───────────────────────────────
+const TOTAL = 16; // phases 0-15
+let current = 0;
+const answers = {};
+
+const questions = [
+  null, // phase 0 is cover
+  'Como você avalia o clima organizacional da empresa atualmente?',
+  'Como você avalia a comunicação entre líderes e colaboradores?',
+  'Como você avalia o comprometimento da equipe?',
+  'Quais desafios você percebe com maior frequência?',
+  'Os colaboradores compreendem claramente os objetivos da empresa?',
+  'Você acredita que os líderes estão preparados para desenvolver suas equipes?',
+  'Como você avalia o alinhamento da equipe com os valores da empresa?',
+  'Quais são os três maiores desafios da empresa atualmente?',
+  'O que você espera que melhore após este trabalho?',
+  'Quais comportamentos gostaria de ver mais presentes na equipe?',
+  'Quais comportamentos precisam ser reduzidos ou eliminados?',
+  'O que você considera inegociável dentro da cultura da empresa?',
+  'Se pudesse mudar apenas uma coisa na empresa hoje, o que seria?',
+  'Existe alguma informação que você considera importante para a construção deste trabalho?',
+];
+
+// ─── SETUP MODAL ─────────────────────────
+function openSetupModal() { document.getElementById('setupModal').classList.add('show'); }
+function closeSetupModal() { document.getElementById('setupModal').classList.remove('show'); }
+
+function saveKey() {
+  const k = document.getElementById('keyInput').value.trim();
+  if (!k || k.length < 8) { alert('Por favor, cole uma chave válida.'); return; }
+  localStorage.setItem('w3f_key', k);
+  activeKey = k;
+  document.getElementById('setupBanner').style.display = 'none';
+  closeSetupModal();
+  showToast('success', '✓ Chave salva! O envio de email está ativo.');
+}
+
+// ─── TOAST ───────────────────────────────
+function showToast(type, msg) {
+  const id = type === 'success' ? 'toastSuccess' : 'toastError';
+  const el = document.getElementById(id);
+  if (msg) el.innerHTML = msg;
+  el.classList.add('show');
+  setTimeout(() => el.classList.remove('show'), 5000);
+}
+
+// ─── INIT ────────────────────────────────
+function init() {
+  buildDots();
+  updateUI();
+  // Show/hide setup banner based on key presence
+  if (activeKey && activeKey !== 'SUA_CHAVE_AQUI') {
+    document.getElementById('setupBanner').style.display = 'none';
+  }
+}
+
+function buildDots() {
+  const wrap = document.getElementById('stepDots');
+  wrap.innerHTML = '';
+  // show dots for phases 1-14 only
+  for (let i = 1; i <= 14; i++) {
+    const d = document.createElement('div');
+    d.className = 'step-dot';
+    d.id = `dot-${i}`;
+    wrap.appendChild(d);
+  }
+}
+
+function updateUI() {
+  // progress
+  const pct = current === 0 ? 0 : Math.round((current / 15) * 100);
+  document.getElementById('progressFill').style.width = pct + '%';
+
+  // top step label
+  const topStep = document.getElementById('topStep');
+  if (current === 0) topStep.textContent = '';
+  else if (current === 15) topStep.textContent = 'Concluído ✓';
+  else topStep.textContent = `${current} / 14`;
+
+  // dots
+  for (let i = 1; i <= 14; i++) {
+    const d = document.getElementById(`dot-${i}`);
+    if (!d) continue;
+    d.className = 'step-dot';
+    if (i < current) d.classList.add('done');
+    else if (i === current) d.classList.add('current');
+  }
+}
+
+// ─── NAVIGATION ──────────────────────────
+function showPhase(n) {
+  document.querySelectorAll('.phase').forEach(p => p.classList.remove('active'));
+  document.getElementById(`phase-${n}`).classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+  current = n;
+  updateUI();
+  // show fallback email button on thank-you page if no key configured
+  if (n === 15) {
+    const fallback = document.getElementById('mailtoFallbackBtn');
+    if (fallback) fallback.style.display = (!activeKey || activeKey === 'SUA_CHAVE_AQUI') ? 'inline-flex' : 'none';
+  }
+}
+
+function startQuiz() {
+  answers.nome  = document.getElementById('id-nome').value.trim();
+  answers.cargo = document.getElementById('id-cargo').value.trim();
+  answers.data  = document.getElementById('id-data').value;
+  showPhase(1);
+}
+
+function goBack() {
+  if (current > 1) showPhase(current - 1);
+  else showPhase(0);
+}
+
+function nextPhase(phaseNum, type, name) {
+  const valEl = document.getElementById(`val-${phaseNum}`);
+  valEl.classList.remove('show');
+
+  if (type === 'radio') {
+    const sel = document.querySelector(`input[name="${name}"]:checked`);
+    if (!sel) { valEl.classList.add('show'); return; }
+    answers[name] = sel.value;
+  } else if (type === 'checkbox') {
+    const checked = [...document.querySelectorAll(`input[name="${name}"]:checked`)];
+    if (checked.length === 0) { valEl.classList.add('show'); return; }
+    let vals = checked.map(c => {
+      if (c.value === 'outro') {
+        const txt = document.getElementById('q4-outro').value.trim();
+        return txt ? `Outro: ${txt}` : 'Outro';
+      }
+      return c.value;
+    });
+    answers[name] = vals.join(', ');
+  } else if (type === 'textarea') {
+    const ta = document.getElementById(name);
+    if (!ta.value.trim()) { valEl.classList.add('show'); return; }
+    answers[name] = ta.value.trim();
+  }
+
+  showPhase(phaseNum + 1);
+}
+
+function finish() {
+  answers.q14 = (document.getElementById('q14').value || '').trim();
+  sendAndAdvance();
+}
+
+// ─── EMAIL SEND ───────────────────────────
+async function sendAndAdvance() {
+  if (!activeKey || activeKey === 'SUA_CHAVE_AQUI') {
+    // No key configured — go to thank-you page, which will show the mailto fallback button
+    showPhase(15);
+    return;
+  }
+
+  const overlay = document.getElementById('sendOverlay');
+  overlay.classList.add('show');
+
+  const dataFormatada = answers.data
+    ? new Date(answers.data + 'T12:00:00').toLocaleDateString('pt-BR') : '—';
+
+  const rows = questions.slice(1).map((q, i) => {
+    const key = `q${i+1}`;
+    const val = (answers[key] || '—').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>');
+    return `
+      <tr>
+        <td style="padding:14px 16px;border-bottom:1px solid #e8f5ee;vertical-align:top;width:42%">
+          <span style="font-size:10px;font-weight:700;letter-spacing:1px;color:#C89B3C;text-transform:uppercase">Pergunta ${i+1}</span><br>
+          <span style="font-size:13px;font-weight:700;color:#1A5C45;line-height:1.4">${q}</span>
+        </td>
+        <td style="padding:14px 16px;border-bottom:1px solid #e8f5ee;font-size:13px;color:#3D3D3D;line-height:1.7;vertical-align:top">${val}</td>
+      </tr>`;
+  }).join('');
+
+  const htmlBody = `<div style="font-family:Arial,sans-serif;max-width:700px;margin:0 auto">
+  <div style="background:#1A5C45;padding:28px 32px">
+    <div style="font-size:9px;font-weight:700;letter-spacing:3px;color:#C89B3C;margin-bottom:8px">RH COM PROPÓSITO</div>
+    <div style="font-size:22px;font-weight:700;color:white">Questionário de Diagnóstico</div>
+  </div>
+  <div style="background:#C89B3C;height:3px"></div>
+  <table style="width:100%;border-collapse:collapse;background:#F2FAF6"><tr>
+    <td style="padding:12px 32px;font-size:12px;color:#3D3D3D"><b>Nome:</b> ${answers.nome || '—'}</td>
+    <td style="padding:12px 16px;font-size:12px;color:#3D3D3D"><b>Cargo:</b> ${answers.cargo || '—'}</td>
+    <td style="padding:12px 16px;font-size:12px;color:#3D3D3D"><b>Data:</b> ${dataFormatada}</td>
+  </tr></table>
+  <table style="width:100%;border-collapse:collapse;background:white">${rows}</table>
+  <div style="background:#1A5C45;padding:16px 32px;text-align:center">
+    <span style="font-size:11px;color:rgba(255,255,255,.5)">RH com Propósito — Questionário de Diagnóstico da Direção</span>
+  </div>
+</div>`;
+
+  const payload = {
+    access_key: activeKey,
+    subject: `[RH com Propósito] Diagnóstico — ${answers.nome || 'Respondente'} (${answers.cargo || ''})`,
+    from_name: 'Questionário RH com Propósito',
+    to: DEST_EMAIL,
+    message: buildPlainText(),
+    html: htmlBody,
+    'Nome': answers.nome || '—',
+    'Cargo': answers.cargo || '—',
+    'Data': dataFormatada,
+  };
+  questions.slice(1).forEach((q, i) => {
+    payload[`P${i+1} - ${q.substring(0,55)}`] = answers[`q${i+1}`] || '—';
+  });
+
+  try {
+    const res = await fetch('https://api.web3forms.com/submit', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+      body: JSON.stringify(payload),
+    });
+    const json = await res.json();
+    overlay.classList.remove('show');
+    if (json.success) {
+      showPhase(15);
+      showToast('success', `✓ &nbsp;Respostas enviadas para ${DEST_EMAIL}`);
+    } else {
+      throw new Error(json.message || 'Erro desconhecido');
+    }
+  } catch (err) {
+    overlay.classList.remove('show');
+    showToast('error', '✕ &nbsp;Falha no envio. Use o botão de email na próxima tela.');
+    setTimeout(() => showPhase(15), 2000);
+  }
+}
+
+function buildPlainText() {
+  const lines = [
+    'QUESTIONÁRIO DE DIAGNÓSTICO — RH COM PROPÓSITO',
+    '='.repeat(50),
+    `Nome: ${answers.nome || '—'}`,
+    `Cargo: ${answers.cargo || '—'}`,
+    `Data: ${answers.data || '—'}`,
+    '',
+  ];
+  questions.slice(1).forEach((q, i) => {
+    lines.push(`${i+1}. ${q}`);
+    lines.push(`Resposta: ${answers[`q${i+1}`] || '—'}`);
+    lines.push('');
+  });
+  return lines.join('\n');
+}
+
+function openMailto() {
+  const subject = encodeURIComponent(`[RH com Propósito] Diagnóstico — ${answers.nome || 'Respondente'}`);
+  const body = encodeURIComponent(buildPlainText());
+  window.open(`mailto:${DEST_EMAIL}?subject=${subject}&body=${body}`);
+}
+
+// ─── OPTION SELECTION ────────────────────
+function selectOpt(label, name) {
+  document.querySelectorAll(`input[name="${name}"]`).forEach(r => {
+    r.closest('label').classList.remove('selected');
+  });
+  label.classList.add('selected');
+  label.querySelector('input').checked = true;
+  // hide validation
+  const phaseNum = parseInt(name.replace('q',''));
+  const valEl = document.getElementById(`val-${phaseNum}`);
+  if (valEl) valEl.classList.remove('show');
+}
+
+function toggleCheck(label, name, max) {
+  const input = label.querySelector('input[type="checkbox"]');
+  const checked = [...document.querySelectorAll(`input[name="${name}"]:checked`)];
+  const notice = document.getElementById('maxNotice');
+
+  if (!input.checked) {
+    // trying to check
+    if (checked.length >= max) {
+      if (notice) { notice.style.display = 'flex'; setTimeout(()=>{ notice.style.display='none'; }, 2000); }
+      return;
+    }
+    input.checked = true;
+    label.classList.add('selected');
+  } else {
+    input.checked = false;
+    label.classList.remove('selected');
+  }
+
+  const nowChecked = [...document.querySelectorAll(`input[name="${name}"]:checked`)];
+  if (notice) notice.style.display = nowChecked.length >= max ? 'flex' : 'none';
+}
+
+// ─── PRINT ───────────────────────────────
+function printAnswers() {
+  const modal = document.getElementById('printModal');
+  const content = document.getElementById('printContent');
+  const dateEl = document.getElementById('print-date');
+
+  dateEl.textContent = [
+    answers.nome  ? `Nome: ${answers.nome}` : '',
+    answers.cargo ? `Cargo: ${answers.cargo}` : '',
+    answers.data  ? `Data: ${answers.data}` : '',
+  ].filter(Boolean).join('   |   ');
+
+  let html = '';
+  for (let i = 1; i <= 14; i++) {
+    const key = `q${i}`;
+    const val = answers[key] || '—';
+    html += `
+      <div style="margin-bottom:20px;padding-bottom:20px;border-bottom:1px solid #DADADA">
+        <div style="font-size:10px;font-weight:700;letter-spacing:1.5px;color:#C89B3C;text-transform:uppercase;margin-bottom:6px">Pergunta ${i}</div>
+        <div style="font-size:13px;font-weight:700;color:#1A5C45;margin-bottom:8px">${questions[i]}</div>
+        <div style="font-size:13px;color:#3D3D3D;line-height:1.7;background:#F2FAF6;border-left:3px solid #2E7D58;padding:8px 12px;border-radius:0 6px 6px 0">${val.replace(/\n/g,'<br>')}</div>
+      </div>`;
+  }
+  content.innerHTML = html;
+  modal.style.display = 'block';
+}
+
+// ─── RUN ─────────────────────────────────
+init();
+</script>
+
+</body>
+</html>
