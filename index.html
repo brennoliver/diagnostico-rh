@@ -4,16 +4,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Questionário de Diagnóstico — RH com Propósito</title>
-<!-- ─── WEB3FORMS CONFIG ───────────────────────────────────────
-     Para ativar o envio de email:
-     1. Acesse https://web3forms.com
-     2. Digite: cristiele_rodrigues@yahoo.com.br  e clique em "Get Access Key"
-     3. Confirme o email que chegará na sua caixa
-     4. Copie a chave gerada e substitua "SUA_CHAVE_AQUI" abaixo
-─────────────────────────────────────────────────────────── -->
-<script>
-  const WEB3FORMS_KEY = 'SUA_CHAVE_AQUI'; // ← cole sua chave aqui
-</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,300;0,400;0,700;0,900;1,300;1,400&family=Playfair+Display:ital,wght@0,700;0,900;1,700&display=swap" rel="stylesheet">
@@ -66,25 +56,26 @@ body::before {
 /* ─── TOP BAR ───────────────────────────── */
 .top-bar {
   width: 100%; position: sticky; top: 0; z-index: 100;
-  background: rgba(15,61,43,.92);
+  background: rgba(15,61,43,.95);
   backdrop-filter: blur(12px);
   border-bottom: 1px solid rgba(200,155,60,.2);
   display: flex; align-items: center; justify-content: space-between;
-  padding: 14px 32px;
+  padding: 10px 28px;
 }
 .top-bar-brand {
-  display: flex; align-items: center; gap: 12px;
+  display: flex; align-items: center; gap: 14px;
 }
-.top-bar-dot {
-  width: 10px; height: 10px; border-radius: 50%;
-  background: var(--gold); flex-shrink: 0;
+.top-bar-logo {
+  height: 46px; width: auto; flex-shrink: 0;
 }
-.top-bar-name {
-  font-size: 13px; font-weight: 700; color: var(--white); letter-spacing: 1px;
+.top-bar-divider {
+  width: 1px; height: 28px;
+  background: rgba(200,155,60,.35);
+  flex-shrink: 0;
 }
 .top-bar-sub {
   font-size: 11px; color: rgba(255,255,255,.5); font-weight: 300;
-  letter-spacing: .5px;
+  letter-spacing: .8px; text-transform: uppercase;
 }
 .top-bar-step {
   font-size: 11px; color: rgba(255,255,255,.4); font-weight: 300;
@@ -487,16 +478,13 @@ input[type="radio"], input[type="checkbox"] { display: none; }
   font-size: 15px; color: var(--gray); line-height: 1.8; margin-bottom: 32px;
 }
 .thanks-brand {
-  display: inline-flex; align-items: center; gap: 10px;
-  padding: 14px 28px;
-  background: var(--g-pale);
-  border-radius: 40px;
-  border: 1px solid var(--g-light);
-  font-size: 13px; font-weight: 700; color: var(--g-dark);
-  letter-spacing: .5px;
+  display: inline-flex; align-items: center; justify-content: center;
+  padding: 16px 32px;
+  background: var(--g-dark);
+  border-radius: 12px;
 }
-.thanks-brand::before {
-  content: ''; width: 8px; height: 8px; border-radius: 50%; background: var(--gold);
+.thanks-brand svg {
+  height: 52px; width: auto;
 }
 
 /* ─── STEP DOTS (mini) ──────────────────── */
@@ -524,112 +512,6 @@ input[type="radio"], input[type="checkbox"] { display: none; }
   border-radius: 20px; padding: 3px 10px; margin-left: 10px;
   vertical-align: middle;
 }
-
-/* ─── SETUP BANNER ──────────────────────── */
-.setup-banner {
-  position: fixed; bottom: 0; left: 0; right: 0; z-index: 200;
-  background: linear-gradient(135deg, #7A5C00, #C89B3C);
-  color: white; padding: 14px 24px;
-  display: flex; align-items: center; justify-content: space-between;
-  gap: 16px; box-shadow: 0 -4px 24px rgba(0,0,0,.3);
-}
-.setup-banner-text { font-size: 13px; line-height: 1.5; }
-.setup-banner-text strong { display: block; font-size: 14px; margin-bottom: 2px; }
-.setup-banner-text span { opacity: .85; }
-.setup-banner-actions { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
-.btn-setup {
-  padding: 10px 20px; background: white; color: #7A5C00;
-  border: none; border-radius: 6px; font-family: 'Lato',sans-serif;
-  font-size: 13px; font-weight: 700; cursor: pointer;
-  white-space: nowrap; transition: all .2s;
-}
-.btn-setup:hover { background: #FFF8E8; }
-.btn-dismiss {
-  background: rgba(255,255,255,.15); color: white;
-  border: 1px solid rgba(255,255,255,.3);
-  padding: 10px 14px; border-radius: 6px; font-size: 12px;
-  cursor: pointer; font-family: 'Lato',sans-serif;
-}
-.btn-dismiss:hover { background: rgba(255,255,255,.25); }
-
-/* ─── SETUP MODAL ────────────────────────── */
-.modal-overlay {
-  display: none; position: fixed; inset: 0; z-index: 300;
-  background: rgba(0,0,0,.75); backdrop-filter: blur(4px);
-  align-items: center; justify-content: center; padding: 24px;
-}
-.modal-overlay.show { display: flex; }
-.modal-box {
-  background: white; border-radius: 16px; overflow: hidden;
-  max-width: 520px; width: 100%;
-  box-shadow: 0 24px 80px rgba(0,0,0,.4);
-  animation: fadeIn .3s ease;
-}
-.modal-header {
-  background: var(--g-dark); padding: 28px 32px 24px;
-  position: relative; overflow: hidden;
-}
-.modal-header::before {
-  content: ''; position: absolute; right: -40px; top: -40px;
-  width: 160px; height: 160px; border-radius: 50%;
-  background: rgba(255,255,255,.05);
-}
-.modal-eyebrow {
-  font-size: 9px; font-weight: 700; letter-spacing: 2.5px;
-  color: var(--gold); text-transform: uppercase; margin-bottom: 8px;
-}
-.modal-title {
-  font-family: 'Playfair Display',serif; font-size: 22px;
-  color: white; font-weight: 700; position: relative; z-index: 1;
-}
-.modal-body { padding: 28px 32px 32px; }
-.setup-step {
-  display: flex; gap: 14px; align-items: flex-start;
-  margin-bottom: 18px;
-}
-.setup-step-num {
-  width: 30px; height: 30px; border-radius: 50%; flex-shrink: 0;
-  background: var(--g-dark); color: white;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 13px; font-weight: 900;
-}
-.setup-step-content { flex: 1; }
-.setup-step-title { font-size: 13px; font-weight: 700; color: var(--dark); margin-bottom: 3px; }
-.setup-step-desc { font-size: 12px; color: var(--gray-lt); line-height: 1.6; }
-.setup-step-desc a { color: var(--g-mid); font-weight: 700; }
-.setup-step-desc code {
-  background: var(--g-pale); color: var(--g-dark); padding: 2px 7px;
-  border-radius: 4px; font-size: 12px; font-family: monospace;
-}
-.key-input-row {
-  display: flex; gap: 10px; margin-top: 20px; padding-top: 20px;
-  border-top: 1px solid var(--rule);
-}
-.key-input {
-  flex: 1; padding: 12px 14px;
-  border: 1.5px solid var(--rule); border-radius: 8px;
-  font-family: monospace; font-size: 13px; color: var(--dark);
-  outline: none; background: var(--cream);
-  transition: border-color .2s;
-}
-.key-input:focus { border-color: var(--g-mid); background: white; }
-.key-input::placeholder { color: var(--rule); font-family: 'Lato',sans-serif; font-style: italic; }
-.btn-save-key {
-  padding: 12px 20px; background: var(--g-dark); color: white;
-  border: none; border-radius: 8px; font-family: 'Lato',sans-serif;
-  font-size: 13px; font-weight: 700; cursor: pointer;
-  transition: all .2s; white-space: nowrap;
-}
-.btn-save-key:hover { background: var(--g-mid); }
-.modal-close-btn {
-  position: absolute; top: 20px; right: 24px;
-  background: rgba(255,255,255,.15); border: none;
-  color: white; width: 30px; height: 30px; border-radius: 50%;
-  font-size: 16px; cursor: pointer; display: flex;
-  align-items: center; justify-content: center;
-  transition: background .2s;
-}
-.modal-close-btn:hover { background: rgba(255,255,255,.3); }
 
 /* ─── SEND OVERLAY ───────────────────────── */
 .send-overlay {
@@ -691,11 +573,14 @@ input[type="radio"], input[type="checkbox"] { display: none; }
 <!-- TOP BAR -->
 <div class="top-bar">
   <div class="top-bar-brand">
-    <div class="top-bar-dot"></div>
-    <div>
-      <div class="top-bar-name">RH com Propósito</div>
-      <div class="top-bar-sub">Questionário de Diagnóstico</div>
-    </div>
+    <svg class="top-bar-logo" viewBox="0 0 900.76 921.01" xmlns="http://www.w3.org/2000/svg" aria-label="RH com Propósito">
+      <defs><style>.tbl-1{letter-spacing:0em}.tbl-2{font-family:Inter-Medium,Inter;font-size:104.57px;font-weight:500;fill:#f8f1eb}.tbl-3{font-family:MinionConceptRoman-Semibold,'Minion Variable Concept';font-size:620.66px;font-weight:600;fill:#f8f1eb}.tbl-4{fill:#f8f1eb}.tbl-5{letter-spacing:.02em}</style></defs>
+      <path class="tbl-4" d="M403.28,261.57c-.83.35-1.09.02-.54-.67,1.02-4.13,2.26-8.24,3.71-12.35,1.49-4.52,3.22-8.83,5.2-12.93l-.65-.82c.24-1.23,1.85-5.36,3.2-5.22,1.83-4.96,4.4-10.39,7.09-15.12.05-.1.24-.12.46-.12-.19-.15-.36-.3-.42-.49-.18-.55,3.92-7.53,4.61-8.5l1.13-.11c.27-1.56,1.75-3.76,2.97-4.7,1.01-3.45,2.81-6.64,5.42-9.57,2.3-3.73,5.11-6.83,8.43-9.31l.57-1.66c5.75-7.98,12.8-15.04,19.86-21.9,1.48-.74,2.91-1.62,4.27-2.64l-.18-1.03c6.17-4.51,11.89-9.55,17.19-15.13l7.72-10.09,1.12-.53c2.33-2.92,4.78-5.46,7.33-7.64l-.37-.95,23.24-24.44,1.02.04c.38-1.42-.45-1.1-1.51-.67.16.33.35.86.14,1-8.62,5.88-18.3,12.08-27.25,17.47l-.96-.48-1.34,1.34c-7.79,6.07-15.63,12.14-23.51,18.21l-1.8.76c-1.9,2.18-4.09,4.35-6.58,6.49.54.78,0,1.35-.79.85-1,1.48-2.17,2.91-3.51,4.29l-1.11-.2c-1.5,2.32-3.83,4.58-5.98,6.15-.4,1.05-.84,2.11-1.57,2.98-3.46,4.12-6.92,8.26-10.38,12.38-.73.87-1.7,1.49-2.67,2.07-.97,2.09-2.91,5.17-4.72,6.54l-.25,1.4c-3.76,5.69-7.39,11.48-10.89,17.37l-2.01,1.84c-.36,1.84-1.56,4.19-2.86,5.58,1.28.56.44,3.26-.94,3.18-1.85,2.98-3.46,6.13-4.82,9.45l-.42.14c-.16,1.24-.53,2.44-1.1,3.61.5.93-.19,2.16-1.36,1.96-.96,3.06-2.05,6.12-3.27,9.19-1.49,3.97-3.02,7.82-4.61,11.56-.89,4.01-2.53,8.89-4.36,12.67l.72.71c-1.55,5.13-3.8,11.29-5.84,16.27-.85,2.07-1.71,3.83-3.02,5.67-5.94,12.72-20.4,29.32-33.68,34.42-3.48,1.34-7.42.67-10.29-1.5-2.47-1.86-4.21-5.38-3.76-8.86.64-4.89,3.59-8.92,7.68-11.61,6.11-4.02,10.95-9.06,14.23-15.68,7.84-15.78,10.86-44.32,9.25-61.99l-2.72-29.94c-4.06-44.62,14.8-88.21,46.76-118.84,14.62-14.01,31.39-25.61,50.85-31.51,6.81-2.07,13.08-4.44,19.71-6.99,7.23-2.78,14.39-4.88,22.04-6.48,14.1-2.95,27.95-4.98,42.38-6l35.26-2.49c13.92-.98,27.51-1.73,41.2-4.2,6.4-1.16,9-5.09,11.66-3.44.76.47,1.82,1.64,2.02,2.93,1.02,6.42.97,12.63.95,19.24-.06,15.85-1.36,31.14-3.1,46.93-4.46,40.65-15.24,77.61-38.7,111.31-6.59,9.47-13.61,18.07-22.12,25.8-14.44,13.11-31.29,22.39-49.91,28.31-16.44,5.23-33.04,8.41-50.19,10.09l-28.18,2.77c-10.3,1.01-20,3.68-29.83,6.9-5.48,1.79-10.5,4.22-15.32,6.9Z"/>
+      <text class="tbl-2" transform="translate(16.34 834.11)"><tspan x="0" y="0">COM PROPÓSITO</tspan></text>
+      <text class="tbl-3" transform="translate(0 702.57)"><tspan class="tbl-5" x="0" y="0">R</tspan><tspan class="tbl-1" x="407.76" y="0">H</tspan></text>
+    </svg>
+    <div class="top-bar-divider"></div>
+    <div class="top-bar-sub">Questionário de Diagnóstico</div>
   </div>
   <div class="top-bar-step" id="topStep"></div>
 </div>
@@ -717,7 +602,12 @@ input[type="radio"], input[type="checkbox"] { display: none; }
   <div class="phase active" id="phase-0">
     <div class="cover-card">
       <div class="cover-hero">
-        <div class="cover-eyebrow">RH com Propósito</div>
+        <svg style="height:72px;width:auto;margin-bottom:20px;display:block" viewBox="0 0 900.76 921.01" xmlns="http://www.w3.org/2000/svg" aria-label="RH com Propósito">
+          <defs><style>.cbl-1{letter-spacing:0em}.cbl-2{font-family:Inter-Medium,Inter;font-size:104.57px;font-weight:500;fill:#f8f1eb}.cbl-3{font-family:MinionConceptRoman-Semibold,'Minion Variable Concept';font-size:620.66px;font-weight:600;fill:#f8f1eb}.cbl-4{fill:#f8f1eb}.cbl-5{letter-spacing:.02em}</style></defs>
+          <path class="cbl-4" d="M403.28,261.57c-.83.35-1.09.02-.54-.67,1.02-4.13,2.26-8.24,3.71-12.35,1.49-4.52,3.22-8.83,5.2-12.93l-.65-.82c.24-1.23,1.85-5.36,3.2-5.22,1.83-4.96,4.4-10.39,7.09-15.12.05-.1.24-.12.46-.12-.19-.15-.36-.3-.42-.49-.18-.55,3.92-7.53,4.61-8.5l1.13-.11c.27-1.56,1.75-3.76,2.97-4.7,1.01-3.45,2.81-6.64,5.42-9.57,2.3-3.73,5.11-6.83,8.43-9.31l.57-1.66c5.75-7.98,12.8-15.04,19.86-21.9,1.48-.74,2.91-1.62,4.27-2.64l-.18-1.03c6.17-4.51,11.89-9.55,17.19-15.13l7.72-10.09,1.12-.53c2.33-2.92,4.78-5.46,7.33-7.64l-.37-.95,23.24-24.44,1.02.04c.38-1.42-.45-1.1-1.51-.67.16.33.35.86.14,1-8.62,5.88-18.3,12.08-27.25,17.47l-.96-.48-1.34,1.34c-7.79,6.07-15.63,12.14-23.51,18.21l-1.8.76c-1.9,2.18-4.09,4.35-6.58,6.49.54.78,0,1.35-.79.85-1,1.48-2.17,2.91-3.51,4.29l-1.11-.2c-1.5,2.32-3.83,4.58-5.98,6.15-.4,1.05-.84,2.11-1.57,2.98-3.46,4.12-6.92,8.26-10.38,12.38-.73.87-1.7,1.49-2.67,2.07-.97,2.09-2.91,5.17-4.72,6.54l-.25,1.4c-3.76,5.69-7.39,11.48-10.89,17.37l-2.01,1.84c-.36,1.84-1.56,4.19-2.86,5.58,1.28.56.44,3.26-.94,3.18-1.85,2.98-3.46,6.13-4.82,9.45l-.42.14c-.16,1.24-.53,2.44-1.1,3.61.5.93-.19,2.16-1.36,1.96-.96,3.06-2.05,6.12-3.27,9.19-1.49,3.97-3.02,7.82-4.61,11.56-.89,4.01-2.53,8.89-4.36,12.67l.72.71c-1.55,5.13-3.8,11.29-5.84,16.27-.85,2.07-1.71,3.83-3.02,5.67-5.94,12.72-20.4,29.32-33.68,34.42-3.48,1.34-7.42.67-10.29-1.5-2.47-1.86-4.21-5.38-3.76-8.86.64-4.89,3.59-8.92,7.68-11.61,6.11-4.02,10.95-9.06,14.23-15.68,7.84-15.78,10.86-44.32,9.25-61.99l-2.72-29.94c-4.06-44.62,14.8-88.21,46.76-118.84,14.62-14.01,31.39-25.61,50.85-31.51,6.81-2.07,13.08-4.44,19.71-6.99,7.23-2.78,14.39-4.88,22.04-6.48,14.1-2.95,27.95-4.98,42.38-6l35.26-2.49c13.92-.98,27.51-1.73,41.2-4.2,6.4-1.16,9-5.09,11.66-3.44.76.47,1.82,1.64,2.02,2.93,1.02,6.42.97,12.63.95,19.24-.06,15.85-1.36,31.14-3.1,46.93-4.46,40.65-15.24,77.61-38.7,111.31-6.59,9.47-13.61,18.07-22.12,25.8-14.44,13.11-31.29,22.39-49.91,28.31-16.44,5.23-33.04,8.41-50.19,10.09l-28.18,2.77c-10.3,1.01-20,3.68-29.83,6.9-5.48,1.79-10.5,4.22-15.32,6.9Z"/>
+          <text class="cbl-2" transform="translate(16.34 834.11)"><tspan x="0" y="0">COM PROPÓSITO</tspan></text>
+          <text class="cbl-3" transform="translate(0 702.57)"><tspan class="cbl-5" x="0" y="0">R</tspan><tspan class="cbl-1" x="407.76" y="0">H</tspan></text>
+        </svg>
         <div class="cover-title">Questionário de<br><span>Diagnóstico</span></div>
         <div class="cover-sub">Briefing com a Direção — Personalização do Programa</div>
       </div>
@@ -1247,15 +1137,17 @@ input[type="radio"], input[type="checkbox"] { display: none; }
           Em breve entraremos em contato para apresentar as próximas etapas.
         </p>
         <div class="thanks-brand">
-          RH com Propósito
+          <svg viewBox="0 0 900.76 921.01" xmlns="http://www.w3.org/2000/svg" aria-label="RH com Propósito">
+            <defs><style>.tkl-1{letter-spacing:0em}.tkl-2{font-family:Inter-Medium,Inter;font-size:104.57px;font-weight:500;fill:#f8f1eb}.tkl-3{font-family:MinionConceptRoman-Semibold,'Minion Variable Concept';font-size:620.66px;font-weight:600;fill:#f8f1eb}.tkl-4{fill:#f8f1eb}.tkl-5{letter-spacing:.02em}</style></defs>
+            <path class="tkl-4" d="M403.28,261.57c-.83.35-1.09.02-.54-.67,1.02-4.13,2.26-8.24,3.71-12.35,1.49-4.52,3.22-8.83,5.2-12.93l-.65-.82c.24-1.23,1.85-5.36,3.2-5.22,1.83-4.96,4.4-10.39,7.09-15.12.05-.1.24-.12.46-.12-.19-.15-.36-.3-.42-.49-.18-.55,3.92-7.53,4.61-8.5l1.13-.11c.27-1.56,1.75-3.76,2.97-4.7,1.01-3.45,2.81-6.64,5.42-9.57,2.3-3.73,5.11-6.83,8.43-9.31l.57-1.66c5.75-7.98,12.8-15.04,19.86-21.9,1.48-.74,2.91-1.62,4.27-2.64l-.18-1.03c6.17-4.51,11.89-9.55,17.19-15.13l7.72-10.09,1.12-.53c2.33-2.92,4.78-5.46,7.33-7.64l-.37-.95,23.24-24.44,1.02.04c.38-1.42-.45-1.1-1.51-.67.16.33.35.86.14,1-8.62,5.88-18.3,12.08-27.25,17.47l-.96-.48-1.34,1.34c-7.79,6.07-15.63,12.14-23.51,18.21l-1.8.76c-1.9,2.18-4.09,4.35-6.58,6.49.54.78,0,1.35-.79.85-1,1.48-2.17,2.91-3.51,4.29l-1.11-.2c-1.5,2.32-3.83,4.58-5.98,6.15-.4,1.05-.84,2.11-1.57,2.98-3.46,4.12-6.92,8.26-10.38,12.38-.73.87-1.7,1.49-2.67,2.07-.97,2.09-2.91,5.17-4.72,6.54l-.25,1.4c-3.76,5.69-7.39,11.48-10.89,17.37l-2.01,1.84c-.36,1.84-1.56,4.19-2.86,5.58,1.28.56.44,3.26-.94,3.18-1.85,2.98-3.46,6.13-4.82,9.45l-.42.14c-.16,1.24-.53,2.44-1.1,3.61.5.93-.19,2.16-1.36,1.96-.96,3.06-2.05,6.12-3.27,9.19-1.49,3.97-3.02,7.82-4.61,11.56-.89,4.01-2.53,8.89-4.36,12.67l.72.71c-1.55,5.13-3.8,11.29-5.84,16.27-.85,2.07-1.71,3.83-3.02,5.67-5.94,12.72-20.4,29.32-33.68,34.42-3.48,1.34-7.42.67-10.29-1.5-2.47-1.86-4.21-5.38-3.76-8.86.64-4.89,3.59-8.92,7.68-11.61,6.11-4.02,10.95-9.06,14.23-15.68,7.84-15.78,10.86-44.32,9.25-61.99l-2.72-29.94c-4.06-44.62,14.8-88.21,46.76-118.84,14.62-14.01,31.39-25.61,50.85-31.51,6.81-2.07,13.08-4.44,19.71-6.99,7.23-2.78,14.39-4.88,22.04-6.48,14.1-2.95,27.95-4.98,42.38-6l35.26-2.49c13.92-.98,27.51-1.73,41.2-4.2,6.4-1.16,9-5.09,11.66-3.44.76.47,1.82,1.64,2.02,2.93,1.02,6.42.97,12.63.95,19.24-.06,15.85-1.36,31.14-3.1,46.93-4.46,40.65-15.24,77.61-38.7,111.31-6.59,9.47-13.61,18.07-22.12,25.8-14.44,13.11-31.29,22.39-49.91,28.31-16.44,5.23-33.04,8.41-50.19,10.09l-28.18,2.77c-10.3,1.01-20,3.68-29.83,6.9-5.48,1.79-10.5,4.22-15.32,6.9Z"/>
+            <text class="tkl-2" transform="translate(16.34 834.11)"><tspan x="0" y="0">COM PROPÓSITO</tspan></text>
+            <text class="tkl-3" transform="translate(0 702.57)"><tspan class="tkl-5" x="0" y="0">R</tspan><tspan class="tkl-1" x="407.76" y="0">H</tspan></text>
+          </svg>
         </div>
 
         <div style="margin-top:32px;display:flex;flex-wrap:wrap;gap:12px;justify-content:center">
           <button class="btn btn-start" style="width:auto;padding:14px 32px;font-size:13px;background:var(--g-pale);color:var(--g-dark);border:1.5px solid var(--g-light);box-shadow:none" onclick="printAnswers()">
             🖨️ &nbsp;Imprimir / Salvar respostas
-          </button>
-          <button id="mailtoFallbackBtn" class="btn btn-start" style="width:auto;padding:14px 32px;font-size:13px;display:none" onclick="openMailto()">
-            📧 &nbsp;Enviar por email
           </button>
         </div>
       </div>
@@ -1264,57 +1156,6 @@ input[type="radio"], input[type="checkbox"] { display: none; }
 
 </div><!-- /container -->
 
-
-<!-- ─── SETUP BANNER ─────────────────────── -->
-<div class="setup-banner" id="setupBanner">
-  <div class="setup-banner-text">
-    <strong>⚙️ Configuração necessária — Envio de email não ativado</strong>
-    <span>Clique em "Como ativar" para receber as respostas em cristiele_rodrigues@yahoo.com.br</span>
-  </div>
-  <div class="setup-banner-actions">
-    <button class="btn-setup" onclick="openSetupModal()">Como ativar →</button>
-    <button class="btn-dismiss" onclick="document.getElementById('setupBanner').style.display='none'">✕</button>
-  </div>
-</div>
-
-<!-- ─── SETUP MODAL ──────────────────────── -->
-<div class="modal-overlay" id="setupModal">
-  <div class="modal-box">
-    <div class="modal-header">
-      <button class="modal-close-btn" onclick="closeSetupModal()">✕</button>
-      <div class="modal-eyebrow">Configuração — 1 minuto</div>
-      <div class="modal-title">Ativar envio de email</div>
-    </div>
-    <div class="modal-body">
-      <div class="setup-step">
-        <div class="setup-step-num">1</div>
-        <div class="setup-step-content">
-          <div class="setup-step-title">Acesse o Web3Forms</div>
-          <div class="setup-step-desc">Abra <a href="https://web3forms.com" target="_blank">web3forms.com</a> e digite <code>cristiele_rodrigues@yahoo.com.br</code> no campo. Clique em <strong>"Get Access Key"</strong>.</div>
-        </div>
-      </div>
-      <div class="setup-step">
-        <div class="setup-step-num">2</div>
-        <div class="setup-step-content">
-          <div class="setup-step-title">Confirme seu email</div>
-          <div class="setup-step-desc">Você vai receber um email de confirmação no Yahoo. Clique no link para ativar. (Verifique a caixa de spam se não chegar.)</div>
-        </div>
-      </div>
-      <div class="setup-step">
-        <div class="setup-step-num">3</div>
-        <div class="setup-step-content">
-          <div class="setup-step-title">Cole a chave abaixo</div>
-          <div class="setup-step-desc">Após confirmar, o site mostrará sua chave (Access Key). Cole ela no campo abaixo e clique em Salvar.</div>
-        </div>
-      </div>
-
-      <div class="key-input-row">
-        <input class="key-input" id="keyInput" type="text" placeholder="Cole sua chave aqui  (ex: a1b2c3d4-e5f6-...)">
-        <button class="btn-save-key" onclick="saveKey()">Salvar e ativar</button>
-      </div>
-    </div>
-  </div>
-</div>
 
 <!-- ─── SEND OVERLAY ─────────────────────── -->
 <div class="send-overlay" id="sendOverlay">
@@ -1345,14 +1186,7 @@ input[type="radio"], input[type="checkbox"] { display: none; }
 
 
 <script>
-// ─── CONFIG ──────────────────────────────
-const DEST_EMAIL = 'cristiele_rodrigues@yahoo.com.br';
-let activeKey = (typeof WEB3FORMS_KEY !== 'undefined' && WEB3FORMS_KEY !== 'SUA_CHAVE_AQUI')
-  ? WEB3FORMS_KEY
-  : (localStorage.getItem('w3f_key') || '');
-
 // ─── STATE ───────────────────────────────
-const TOTAL = 16; // phases 0-15
 let current = 0;
 const answers = {};
 
@@ -1374,20 +1208,6 @@ const questions = [
   'Existe alguma informação que você considera importante para a construção deste trabalho?',
 ];
 
-// ─── SETUP MODAL ─────────────────────────
-function openSetupModal() { document.getElementById('setupModal').classList.add('show'); }
-function closeSetupModal() { document.getElementById('setupModal').classList.remove('show'); }
-
-function saveKey() {
-  const k = document.getElementById('keyInput').value.trim();
-  if (!k || k.length < 8) { alert('Por favor, cole uma chave válida.'); return; }
-  localStorage.setItem('w3f_key', k);
-  activeKey = k;
-  document.getElementById('setupBanner').style.display = 'none';
-  closeSetupModal();
-  showToast('success', '✓ Chave salva! O envio de email está ativo.');
-}
-
 // ─── TOAST ───────────────────────────────
 function showToast(type, msg) {
   const id = type === 'success' ? 'toastSuccess' : 'toastError';
@@ -1401,10 +1221,6 @@ function showToast(type, msg) {
 function init() {
   buildDots();
   updateUI();
-  // Show/hide setup banner based on key presence
-  if (activeKey && activeKey !== 'SUA_CHAVE_AQUI') {
-    document.getElementById('setupBanner').style.display = 'none';
-  }
 }
 
 function buildDots() {
@@ -1447,11 +1263,6 @@ function showPhase(n) {
   window.scrollTo({ top: 0, behavior: 'smooth' });
   current = n;
   updateUI();
-  // show fallback email button on thank-you page if no key configured
-  if (n === 15) {
-    const fallback = document.getElementById('mailtoFallbackBtn');
-    if (fallback) fallback.style.display = (!activeKey || activeKey === 'SUA_CHAVE_AQUI') ? 'inline-flex' : 'none';
-  }
 }
 
 function startQuiz() {
@@ -1501,105 +1312,35 @@ function finish() {
 
 // ─── EMAIL SEND ───────────────────────────
 async function sendAndAdvance() {
-  if (!activeKey || activeKey === 'SUA_CHAVE_AQUI') {
-    // No key configured — go to thank-you page, which will show the mailto fallback button
-    showPhase(15);
-    return;
-  }
-
   const overlay = document.getElementById('sendOverlay');
   overlay.classList.add('show');
 
   const dataFormatada = answers.data
     ? new Date(answers.data + 'T12:00:00').toLocaleDateString('pt-BR') : '—';
 
-  const rows = questions.slice(1).map((q, i) => {
-    const key = `q${i+1}`;
-    const val = (answers[key] || '—').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>');
-    return `
-      <tr>
-        <td style="padding:14px 16px;border-bottom:1px solid #e8f5ee;vertical-align:top;width:42%">
-          <span style="font-size:10px;font-weight:700;letter-spacing:1px;color:#C89B3C;text-transform:uppercase">Pergunta ${i+1}</span><br>
-          <span style="font-size:13px;font-weight:700;color:#1A5C45;line-height:1.4">${q}</span>
-        </td>
-        <td style="padding:14px 16px;border-bottom:1px solid #e8f5ee;font-size:13px;color:#3D3D3D;line-height:1.7;vertical-align:top">${val}</td>
-      </tr>`;
-  }).join('');
-
-  const htmlBody = `<div style="font-family:Arial,sans-serif;max-width:700px;margin:0 auto">
-  <div style="background:#1A5C45;padding:28px 32px">
-    <div style="font-size:9px;font-weight:700;letter-spacing:3px;color:#C89B3C;margin-bottom:8px">RH COM PROPÓSITO</div>
-    <div style="font-size:22px;font-weight:700;color:white">Questionário de Diagnóstico</div>
-  </div>
-  <div style="background:#C89B3C;height:3px"></div>
-  <table style="width:100%;border-collapse:collapse;background:#F2FAF6"><tr>
-    <td style="padding:12px 32px;font-size:12px;color:#3D3D3D"><b>Nome:</b> ${answers.nome || '—'}</td>
-    <td style="padding:12px 16px;font-size:12px;color:#3D3D3D"><b>Cargo:</b> ${answers.cargo || '—'}</td>
-    <td style="padding:12px 16px;font-size:12px;color:#3D3D3D"><b>Data:</b> ${dataFormatada}</td>
-  </tr></table>
-  <table style="width:100%;border-collapse:collapse;background:white">${rows}</table>
-  <div style="background:#1A5C45;padding:16px 32px;text-align:center">
-    <span style="font-size:11px;color:rgba(255,255,255,.5)">RH com Propósito — Questionário de Diagnóstico da Direção</span>
-  </div>
-</div>`;
-
-  const payload = {
-    access_key: activeKey,
-    subject: `[RH com Propósito] Diagnóstico — ${answers.nome || 'Respondente'} (${answers.cargo || ''})`,
-    from_name: 'Questionário RH com Propósito',
-    to: DEST_EMAIL,
-    message: buildPlainText(),
-    html: htmlBody,
-    'Nome': answers.nome || '—',
-    'Cargo': answers.cargo || '—',
-    'Data': dataFormatada,
-  };
-  questions.slice(1).forEach((q, i) => {
-    payload[`P${i+1} - ${q.substring(0,55)}`] = answers[`q${i+1}`] || '—';
-  });
-
   try {
-    const res = await fetch('https://api.web3forms.com/submit', {
+    const res = await fetch('/api/send', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-      body: JSON.stringify(payload),
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        nome: answers.nome || '',
+        cargo: answers.cargo || '',
+        data: dataFormatada,
+        answers,
+      }),
     });
-    const json = await res.json();
     overlay.classList.remove('show');
-    if (json.success) {
+    if (res.ok) {
       showPhase(15);
-      showToast('success', `✓ &nbsp;Respostas enviadas para ${DEST_EMAIL}`);
+      showToast('success', '✓ &nbsp;Respostas enviadas com sucesso!');
     } else {
-      throw new Error(json.message || 'Erro desconhecido');
+      throw new Error('Erro no servidor');
     }
   } catch (err) {
     overlay.classList.remove('show');
-    showToast('error', '✕ &nbsp;Falha no envio. Use o botão de email na próxima tela.');
+    showToast('error', '✕ &nbsp;Falha no envio. Tente novamente.');
     setTimeout(() => showPhase(15), 2000);
   }
-}
-
-function buildPlainText() {
-  const lines = [
-    'QUESTIONÁRIO DE DIAGNÓSTICO — RH COM PROPÓSITO',
-    '='.repeat(50),
-    `Nome: ${answers.nome || '—'}`,
-    `Cargo: ${answers.cargo || '—'}`,
-    `Data: ${answers.data || '—'}`,
-    '',
-  ];
-  questions.slice(1).forEach((q, i) => {
-    lines.push(`${i+1}. ${q}`);
-    lines.push(`Resposta: ${answers[`q${i+1}`] || '—'}`);
-    lines.push('');
-  });
-  return lines.join('\n');
-}
-
-function openMailto() {
-  const subject = encodeURIComponent(`[RH com Propósito] Diagnóstico — ${answers.nome || 'Respondente'}`);
-  const body = encodeURIComponent(buildPlainText());
-  window.open(`mailto:${DEST_EMAIL}?subject=${subject}&body=${body}`);
 }
 
 // ─── OPTION SELECTION ────────────────────
