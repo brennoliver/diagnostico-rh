@@ -1014,29 +1014,23 @@ CREATE POLICY "select" ON responses FOR SELECT USING (true);</pre>
       <div id="tab-gerar" class="admin-tab-panel">
         <div class="a-section">
           <div class="a-section-header">
-            <div class="a-section-eyebrow">Seção 5 + Relatório Final</div>
-            <div class="a-section-title">Geração Automática com Inteligência Artificial</div>
-            <div class="a-section-sub">A IA irá analisar todas as respostas coletadas e gerar automaticamente a Identificação dos Desafios e o Relatório Final.</div>
+            <div class="a-section-eyebrow">Relatório Final</div>
+            <div class="a-section-title">Compilado Completo das Respostas</div>
+            <div class="a-section-sub">Gera um documento com todas as respostas coletadas de Direção, Gestores, Colaboradores e a avaliação de comunicação da Seção 4.</div>
           </div>
 
-          <!-- Claude API banner inside admin -->
-          <div class="banner show" id="claude-admin-banner" style="margin-bottom:20px">
-            <div class="banner-icon">🔑</div>
-            <div style="flex:1">
-              <strong>Chave da API Claude</strong> — necessária para gerar o relatório com IA.<br>
-              Obtenha gratuitamente em <a href="https://console.anthropic.com" target="_blank">console.anthropic.com</a><br>
-              <input type="password" id="claudeKeyAdmin" placeholder="sk-ant-...">
-              <button class="banner-btn" onclick="saveClaudeKeyAdmin()">Salvar chave</button>
-              <div class="banner-ok" id="claudeAdminOk">✓ Chave configurada. Pronto para gerar!</div>
-            </div>
+          <!-- Banner oculto (mantido para compatibilidade) -->
+          <div class="banner" id="claude-admin-banner" style="display:none">
+            <input type="password" id="claudeKeyAdmin" style="display:none">
+            <div class="banner-ok" id="claudeAdminOk"></div>
           </div>
 
           <div class="generate-area">
             <button class="generate-btn" id="generateBtn" onclick="generateReport()">
-              <span id="generate-icon">✨</span>
-              <span id="generate-label">Gerar Diagnóstico Final com IA</span>
+              <span id="generate-icon">📄</span>
+              <span id="generate-label">Gerar Relatório Compilado</span>
             </button>
-            <div class="generate-note" id="generate-note">Certifique-se de ter compilado as respostas na aba anterior e preenchido a Seção 4.</div>
+            <div class="generate-note" id="generate-note">Compila todas as respostas coletadas em um documento para análise e anotações.</div>
           </div>
 
           <!-- Output -->
@@ -1050,12 +1044,12 @@ CREATE POLICY "select" ON responses FOR SELECT USING (true);</pre>
             </div>
 
             <div class="output-section">
-              <div class="output-section-title">Seção 5 — Identificação dos Principais Desafios</div>
+              <div class="output-section-title">Respostas dos Questionários (Seções 1, 2 e 3)</div>
               <div class="output-content" id="out-desafios"></div>
             </div>
 
             <div class="output-section">
-              <div class="output-section-title">Relatório Final</div>
+              <div class="output-section-title">Seção 4 — Avaliação da Comunicação Interna</div>
               <div class="output-content" id="out-relatorio"></div>
             </div>
 
@@ -1331,13 +1325,11 @@ function saveClaudeKeyAdmin() {
 }
 
 function checkBanners() {
-  const hasW3F    = !!localStorage.getItem('w3f_key');
-  const hasClaude = !!localStorage.getItem('claude_key');
-  // Supabase já vem pré-configurado — banner só aparece se alguém quiser trocar
+  const hasW3F = !!localStorage.getItem('w3f_key');
   document.getElementById('w3f-banner').classList.toggle('show', !hasW3F);
-  document.getElementById('claude-banner').classList.toggle('show', !hasClaude);
+  // Claude e Supabase pré-configurados — banners ocultos
+  document.getElementById('claude-banner').classList.remove('show');
   document.getElementById('supabase-banner').classList.remove('show');
-  if (hasClaude) document.getElementById('claude-admin-banner').style.display = 'none';
 }
 
 // ── Navigation ──
@@ -1405,9 +1397,6 @@ function loadAdminView() {
   const company = localStorage.getItem('diag_company') || '';
   const el = document.getElementById('admin-company-display');
   el.innerHTML = company ? `<div class="company-display">🏢 ${company}</div>` : '';
-  if (localStorage.getItem('claude_key')) {
-    document.getElementById('claude-admin-banner').style.display = 'none';
-  }
   updateResponseCounts();
   updateResponseCountsAsync();
 }
@@ -1539,127 +1528,67 @@ async function submitColaboradores() {
   showView('thanks');
 }
 
-// ── Generate Report (Claude API) ──
+// ── Generate Report (compilado sem IA) ──
 async function generateReport() {
-  const apiKey = localStorage.getItem('claude_key');
-  if (!apiKey) {
-    document.getElementById('claude-admin-banner').style.display = 'flex';
-    return;
-  }
-
   const company = localStorage.getItem('diag_company') || 'Empresa';
 
-  // Compilação automática das respostas (Supabase ou localStorage)
+  const btn   = document.getElementById('generateBtn');
+  const label = document.getElementById('generate-label');
+  const icon  = document.getElementById('generate-icon');
+  btn.disabled = true;
+  icon.innerHTML = '<div class="spinner"></div>';
+  label.textContent = 'Compilando respostas...';
+
+  // Lê do Supabase ou localStorage
   const { direcaoText: direcao, gestoresText: gestores, colaboradoresText: colab } = await compilarRespostas();
   const s4text = getSecao4Text();
 
   if (direcao === '(Nenhuma resposta registrada)' && gestores === '(Nenhuma resposta registrada)' && colab === '(Nenhuma resposta registrada)') {
+    btn.disabled = false;
+    icon.textContent = '📄';
+    label.textContent = 'Gerar Relatório Compilado';
     alert(`Nenhuma resposta encontrada para a empresa "${company}".\n\nVerifique:\n• O nome da empresa está correto na tela inicial?\n• A tabela "responses" foi criada no Supabase?\n• Os questionários foram preenchidos e enviados?`);
     switchTab('compilar');
     return;
   }
 
-  const btn = document.getElementById('generateBtn');
-  const label = document.getElementById('generate-label');
-  const icon  = document.getElementById('generate-icon');
-  btn.disabled = true;
-  icon.innerHTML = '<div class="spinner"></div>';
-  label.textContent = 'Gerando diagnóstico...';
-  document.getElementById('generate-note').textContent = 'Aguarde enquanto a IA analisa as respostas...';
+  // Monta o bloco de respostas dos questionários
+  const questionariosText = [
+    '════════════════════════════════════════\nSEÇÃO 1 — REUNIÃO COM A DIREÇÃO\n════════════════════════════════════════\n\n' + direcao,
+    '════════════════════════════════════════\nSEÇÃO 2 — ENTREVISTA COM GESTORES\n════════════════════════════════════════\n\n' + gestores,
+    '════════════════════════════════════════\nSEÇÃO 3 — CONVERSA COM COLABORADORES\n════════════════════════════════════════\n\n' + colab,
+  ].join('\n\n\n');
 
-  const prompt = `Você é Cristiele Rodrigues, consultora especialista em RH e Desenvolvimento Organizacional do RH com Propósito. Você aplicou um diagnóstico organizacional completo na empresa "${company}".
+  // Monta o bloco da Seção 4
+  const sec4Text = '════════════════════════════════════════\nSEÇÃO 4 — AVALIAÇÃO DA COMUNICAÇÃO INTERNA\n════════════════════════════════════════\n\n' + s4text;
 
-Abaixo estão as informações coletadas em cada etapa:
+  document.getElementById('out-desafios').textContent  = questionariosText;
+  document.getElementById('out-relatorio').textContent = sec4Text;
+  document.getElementById('output-meta').textContent   = company;
+  document.getElementById('output-date').textContent   = new Date().toLocaleDateString('pt-BR', {day:'2-digit',month:'long',year:'numeric'});
+  document.getElementById('outputBox').classList.add('show');
+  document.getElementById('outputBox').scrollIntoView({behavior:'smooth', block:'start'});
 
-═══ SEÇÃO 1 — REUNIÃO COM A DIREÇÃO ═══
-${direcao || '(Respostas não compiladas ainda)'}
-
-═══ SEÇÃO 2 — ENTREVISTA COM GESTORES ═══
-${gestores || '(Respostas não compiladas ainda)'}
-
-═══ SEÇÃO 3 — CONVERSA COM COLABORADORES ═══
-${colab || '(Respostas não compiladas ainda)'}
-
-═══ SEÇÃO 4 — AVALIAÇÃO DA COMUNICAÇÃO INTERNA ═══
-${s4text}
-
-Com base em todas essas informações, gere o relatório completo de diagnóstico. Seja específico, profissional e orientado a soluções práticas. Use linguagem direta e humanizada, sem termos vagos. Responda EXATAMENTE neste formato:
-
-SEÇÃO 5 — IDENTIFICAÇÃO DOS PRINCIPAIS DESAFIOS
-
-Principais pontos observados:
-[Liste 4 a 6 pontos concretos observados nas respostas, com base nos padrões e convergências encontradas]
-
-Oportunidades de melhoria:
-[Liste 4 a 5 oportunidades específicas e práticas de melhoria]
-
-Recomendações iniciais:
-[Liste 4 a 6 recomendações priorizadas, com foco em impacto e viabilidade]
-
----
-
-RELATÓRIO FINAL
-
-Pontos Fortes:
-[Liste 3 a 5 pontos fortes identificados na organização]
-
-Pontos de Atenção:
-[Liste 3 a 5 pontos críticos que merecem atenção prioritária]
-
-Plano de Ação Inicial:
-[Descreva 4 a 6 ações concretas, com responsável sugerido e prazo — formato: Ação | Responsável | Prazo]`;
-
-  try {
-    const res = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: {
-        'x-api-key': apiKey,
-        'anthropic-version': '2023-06-01',
-        'content-type': 'application/json',
-        'anthropic-dangerous-direct-browser-access': 'true'
-      },
-      body: JSON.stringify({
-        model: 'claude-opus-4-8',
-        max_tokens: 2500,
-        messages: [{ role: 'user', content: prompt }]
-      })
-    });
-
-    if (!res.ok) {
-      const err = await res.json();
-      throw new Error(err.error?.message || `Erro ${res.status}`);
-    }
-
-    const data = await res.json();
-    const text = data.content[0].text;
-
-    // Parse output
-    const parts = text.split('---');
-    const sec5    = (parts[0] || text).replace('SEÇÃO 5 — IDENTIFICAÇÃO DOS PRINCIPAIS DESAFIOS','').trim();
-    const relFinal = parts[1] ? parts[1].replace('RELATÓRIO FINAL','').trim() : '';
-
-    document.getElementById('out-desafios').textContent  = sec5;
-    document.getElementById('out-relatorio').textContent = relFinal || sec5;
-    document.getElementById('output-meta').textContent   = company;
-    document.getElementById('output-date').textContent   = new Date().toLocaleDateString('pt-BR', {day:'2-digit',month:'long',year:'numeric'});
-    document.getElementById('outputBox').classList.add('show');
-    document.getElementById('outputBox').scrollIntoView({behavior:'smooth', block:'start'});
-
-  } catch(e) {
-    alert('Erro ao gerar relatório: ' + e.message + '\n\nVerifique sua chave da API Claude.');
-  } finally {
-    btn.disabled = false;
-    icon.textContent = '✨';
-    label.textContent = 'Gerar Diagnóstico Final com IA';
-    document.getElementById('generate-note').textContent = 'Clique novamente para regenerar com as mesmas respostas.';
-  }
+  btn.disabled = false;
+  icon.textContent = '📄';
+  label.textContent = 'Gerar Relatório Compilado';
+  document.getElementById('generate-note').textContent = 'Clique novamente para atualizar com novas respostas.';
 }
 
 function copyOutput() {
-  const s5  = document.getElementById('out-desafios').textContent;
-  const rel = document.getElementById('out-relatorio').textContent;
+  const questionarios = document.getElementById('out-desafios').textContent;
+  const sec4          = document.getElementById('out-relatorio').textContent;
   const company = localStorage.getItem('diag_company') || '';
-  const full = `DIAGNÓSTICO ORGANIZACIONAL — RH COM PROPÓSITO\n${company ? 'Empresa: ' + company + '\n' : ''}Data: ${new Date().toLocaleDateString('pt-BR')}\n\nSEÇÃO 5 — IDENTIFICAÇÃO DOS PRINCIPAIS DESAFIOS\n\n${s5}\n\n---\n\nRELATÓRIO FINAL\n\n${rel}`;
+  const date    = new Date().toLocaleDateString('pt-BR');
+  const full = [
+    'DIAGNÓSTICO ORGANIZACIONAL — RH COM PROPÓSITO',
+    company ? 'Empresa: ' + company : '',
+    'Data: ' + date,
+    '',
+    questionarios,
+    '',
+    sec4
+  ].filter(l => l !== undefined).join('\n');
   navigator.clipboard.writeText(full).then(() => alert('Texto copiado!')).catch(() => alert('Não foi possível copiar. Selecione o texto manualmente.'));
 }
 
