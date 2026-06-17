@@ -1,0 +1,1945 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Liderança com Propósito — RH com Propósito</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,300;0,400;0,700;0,900;1,300;1,400;1,700&family=Playfair+Display:ital,wght@0,700;0,900;1,700&display=swap" rel="stylesheet">
+<style>
+/* ─── VARIABLES ─────────────────────────────── */
+:root {
+  --green-dark:  #1A5C45;
+  --green-mid:   #2E7D58;
+  --green-light: #E8F5EE;
+  --green-pale:  #F0FAF4;
+  --gold:        #C89B3C;
+  --gold-light:  #F5E9C8;
+  --gold-pale:   #FDF8EC;
+  --cream:       #FAFAF7;
+  --dark:        #1C1C1C;
+  --gray:        #3D3D3D;
+  --gray-light:  #7A7A7A;
+  --rule:        #DADADA;
+  --line-light:  #C5DDD1;
+  --white:       #ffffff;
+
+  --page-w: 210mm;
+  --page-h: 297mm;
+
+  --font-body: 'Lato', sans-serif;
+  --font-display: 'Playfair Display', serif;
+}
+
+/* ─── RESET ─────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { font-size: 14px; }
+
+body {
+  font-family: var(--font-body);
+  background: #e8e8e0;
+  color: var(--gray);
+}
+
+/* ─── PAGE SHELL ─────────────────────────────── */
+.page {
+  width: var(--page-w);
+  min-height: var(--page-h);
+  margin: 16px auto;
+  background: var(--cream);
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 4px 32px rgba(0,0,0,.18);
+}
+
+/* ─── CONTENT PAGES — shared chrome ─────────── */
+.page.content {
+  background: var(--cream);
+}
+.page.content::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 0;
+  width: 5mm; height: 100%;
+  background: var(--green-dark);
+  z-index: 1;
+}
+.page.content .page-header {
+  position: absolute;
+  top: 0; left: 5mm; right: 0;
+  height: 14mm;
+  background: var(--green-light);
+  display: flex; align-items: center; justify-content: flex-end;
+  padding: 0 10mm;
+  border-bottom: 0.5px solid var(--line-light);
+  z-index: 2;
+}
+.page.content .page-header span {
+  font-size: 8px; font-weight: 400; letter-spacing: 1px;
+  color: var(--gray-light); text-transform: uppercase;
+}
+.page.content .page-footer {
+  position: absolute;
+  bottom: 0; left: 5mm; right: 0;
+  height: 12mm;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 10mm;
+  border-top: 0.5px solid var(--rule);
+}
+.page.content .page-footer .ft-brand {
+  font-size: 8px; color: var(--gray-light);
+}
+.page.content .page-footer .ft-num {
+  font-size: 9px; font-weight: 700; color: var(--green-dark);
+}
+.page.content .page-body {
+  position: absolute;
+  top: 14mm; bottom: 12mm; left: 5mm; right: 0;
+  padding: 10mm 12mm 6mm 12mm;
+  overflow: hidden;
+}
+
+/* Activity pages — gold accent */
+.page.activity::before { background: var(--gold) !important; }
+.page.activity .page-header { background: var(--gold-light) !important; border-bottom-color: var(--gold) !important; }
+
+/* ─── COVER PAGE ─────────────────────────────── */
+.page.cover {
+  background: var(--green-dark);
+  display: flex; flex-direction: column;
+}
+.cover-bg-circles {
+  position: absolute; inset: 0; overflow: hidden; pointer-events: none;
+}
+.cover-gold-stripe {
+  position: absolute; right: 0; top: 0;
+  width: 34mm; height: 100%;
+  background: var(--gold);
+}
+.cover-body {
+  position: relative; z-index: 2;
+  padding: 18mm 0 0 18mm;
+  flex: 1;
+}
+.cover-eyebrow {
+  display: inline-block;
+  font-size: 8px; font-weight: 700; letter-spacing: 3px;
+  color: var(--gold); text-transform: uppercase;
+  border-bottom: 1.5px solid var(--gold);
+  padding-bottom: 3px; margin-bottom: 10mm;
+}
+.cover-title {
+  font-family: var(--font-display);
+  font-size: 52px; line-height: 1;
+  color: var(--white);
+  letter-spacing: -1px;
+}
+.cover-title-gold {
+  font-family: var(--font-display);
+  font-size: 52px; line-height: 1;
+  color: var(--gold);
+  letter-spacing: -1px;
+  display: block; margin-bottom: 8mm;
+}
+.cover-tagline {
+  font-size: 13px; font-style: italic; font-weight: 300;
+  color: var(--line-light); margin-bottom: 18mm;
+}
+.cover-author-box {
+  background: rgba(200,155,60,.12);
+  border-left: 3px solid var(--gold);
+  padding: 8mm 10mm;
+  display: inline-block; margin-bottom: 0;
+  max-width: 110mm;
+}
+.cover-author-label {
+  font-size: 7.5px; font-weight: 700; letter-spacing: 2px;
+  color: var(--rule); text-transform: uppercase; margin-bottom: 4px;
+}
+.cover-author-name {
+  font-family: var(--font-display);
+  font-size: 18px; color: var(--white); margin-bottom: 2px;
+}
+.cover-author-sub {
+  font-size: 9px; color: var(--line-light); font-weight: 300;
+}
+.cover-bottom {
+  background: rgba(0,0,0,.25);
+  padding: 5mm 18mm;
+  display: flex; align-items: center; gap: 8mm;
+}
+.cover-bottom-brand {
+  font-size: 9px; font-weight: 700; letter-spacing: 2px;
+  color: var(--gold); text-transform: uppercase;
+}
+.cover-bottom-line {
+  flex: 1; height: 1px; background: rgba(200,155,60,.3);
+}
+.cover-bottom-tag {
+  font-size: 8px; color: var(--line-light); font-weight: 300;
+}
+
+/* ─── MODULE COVER ───────────────────────────── */
+.page.module-cover {
+  background: var(--green-light);
+  display: flex; flex-direction: column;
+  overflow: hidden;
+}
+.mc-left-block {
+  position: absolute;
+  left: 0; top: 0; bottom: 0; width: 72mm;
+  background: var(--green-dark);
+  display: flex; flex-direction: column; justify-content: center;
+  padding: 14mm;
+}
+.mc-gold-stripe {
+  position: absolute;
+  left: 72mm; top: 0; bottom: 0; width: 3mm;
+  background: var(--gold);
+}
+.mc-right-block {
+  position: absolute;
+  left: 78mm; top: 0; right: 0; bottom: 0;
+  display: flex; flex-direction: column; justify-content: center;
+  padding: 14mm 12mm;
+}
+.mc-mod-label {
+  font-size: 9px; font-weight: 700; letter-spacing: 3px;
+  color: var(--gold); text-transform: uppercase; margin-bottom: 6px;
+}
+.mc-mod-num {
+  font-family: var(--font-display);
+  font-size: 90px; line-height: 1; font-weight: 900;
+  color: rgba(255,255,255,.12); margin-bottom: 0;
+  line-height: 0.9;
+}
+.mc-icon {
+  margin-bottom: 8mm;
+}
+.mc-title {
+  font-family: var(--font-display);
+  font-size: 26px; line-height: 1.2; font-weight: 700;
+  color: var(--green-dark); margin-bottom: 5mm;
+}
+.mc-desc {
+  font-size: 11px; line-height: 1.7; color: var(--gray-light);
+  font-weight: 300;
+}
+.mc-bottom-tag {
+  position: absolute; bottom: 8mm; left: 78mm + 12mm; right: 12mm;
+}
+.mc-tag-inner {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: var(--gold-light);
+  border: 1px solid var(--gold);
+  border-radius: 20px;
+  padding: 4px 12px;
+  font-size: 8px; font-weight: 700; color: var(--gold);
+  letter-spacing: 1px; text-transform: uppercase;
+}
+
+/* ─── TYPOGRAPHY ─────────────────────────────── */
+h1.section-title {
+  font-size: 11px; font-weight: 900; letter-spacing: 2px;
+  text-transform: uppercase; color: var(--white);
+  background: var(--green-dark);
+  padding: 8px 14px;
+  border-radius: 3px;
+  margin-bottom: 8mm;
+}
+h1.section-title.gold {
+  background: var(--gold);
+}
+h2 {
+  font-family: var(--font-display);
+  font-size: 17px; font-weight: 700; color: var(--green-dark);
+  margin: 6mm 0 3mm;
+  padding-bottom: 3px;
+  border-bottom: 2px solid var(--gold);
+  display: inline-block;
+}
+h3 {
+  font-size: 11px; font-weight: 700; color: var(--green-mid);
+  text-transform: uppercase; letter-spacing: .8px;
+  margin: 5mm 0 2mm;
+}
+p {
+  font-size: 10.5px; line-height: 1.75; color: var(--gray);
+  margin-bottom: 4mm; text-align: justify;
+}
+p.lead {
+  font-size: 11.5px; font-style: italic; color: var(--green-dark);
+  font-weight: 300; line-height: 1.8; border-left: 3px solid var(--gold);
+  padding-left: 10px; margin: 4mm 0;
+}
+
+/* ─── LISTS ──────────────────────────────────── */
+ul.styled { list-style: none; padding: 0; margin: 2mm 0 4mm; }
+ul.styled li {
+  font-size: 10.5px; line-height: 1.65; color: var(--gray);
+  padding: 2px 0 2px 18px; position: relative; margin-bottom: 2px;
+}
+ul.styled li::before {
+  content: '•';
+  position: absolute; left: 0;
+  color: var(--gold); font-size: 16px; line-height: 1; top: 1px;
+  font-weight: 900;
+}
+
+/* ─── INFO BOXES ─────────────────────────────── */
+.box {
+  border-radius: 4px;
+  padding: 8px 14px;
+  margin: 4mm 0;
+  font-size: 10.5px; line-height: 1.7;
+}
+.box.green {
+  background: var(--green-light);
+  border-left: 4px solid var(--green-mid);
+  color: var(--green-dark);
+}
+.box.gold {
+  background: var(--gold-light);
+  border-left: 4px solid var(--gold);
+  color: #7A5C00;
+}
+.box.dark {
+  background: var(--green-dark);
+  color: var(--white);
+  font-style: italic;
+  font-size: 12px; line-height: 1.8;
+  text-align: center; padding: 10px 18px;
+}
+.box.dark .dash {
+  display: block; width: 30px; height: 2px;
+  background: var(--gold); margin: 6px auto 0;
+}
+.reflexao {
+  font-style: italic; font-size: 10px; color: var(--green-mid);
+  padding-left: 14px; border-left: 2px solid var(--green-mid);
+  margin: 2mm 0 4mm; line-height: 1.65;
+}
+.reflexao::before { content: '→ '; font-weight: 700; }
+
+/* ─── COMPARISON TABLE ───────────────────────── */
+.compare-table {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 3mm; margin: 4mm 0;
+}
+.compare-col { border-radius: 4px; overflow: hidden; }
+.compare-col .col-head {
+  padding: 7px 12px;
+  font-size: 9px; font-weight: 900; letter-spacing: 2px;
+  text-transform: uppercase; color: var(--white);
+  text-align: center;
+}
+.compare-col.left .col-head { background: var(--green-dark); }
+.compare-col.right .col-head { background: var(--green-mid); }
+.compare-col .col-body {
+  border: 0.5px solid var(--rule);
+  border-top: none;
+}
+.compare-col .col-item {
+  padding: 5px 12px;
+  font-size: 10px; color: var(--gray); line-height: 1.5;
+  border-bottom: 0.5px solid var(--rule);
+}
+.compare-col .col-item:nth-child(odd) { background: var(--white); }
+.compare-col .col-item:nth-child(even) { background: var(--cream); }
+.compare-col .col-item::before { content: '• '; color: var(--gold); font-weight: 700; }
+
+/* ─── STEP ROWS ──────────────────────────────── */
+.step-row {
+  display: grid; grid-template-columns: auto 1fr; gap: 0;
+  margin-bottom: 2mm; border-radius: 3px; overflow: hidden;
+  border: 0.5px solid var(--rule);
+}
+.step-row .step-label {
+  background: var(--green-dark);
+  padding: 8px 12px;
+  font-size: 10px; font-weight: 700; color: var(--white);
+  display: flex; align-items: center; min-width: 38mm;
+  line-height: 1.4;
+}
+.step-row.gold-row .step-label { background: var(--gold); }
+.step-row .step-desc {
+  background: var(--cream);
+  padding: 8px 12px;
+  font-size: 10px; color: var(--gray); line-height: 1.6;
+}
+.step-row.gold-row .step-desc { background: var(--gold-pale); }
+
+/* ─── SBI TABLE ──────────────────────────────── */
+.sbi-row {
+  display: grid; grid-template-columns: 22mm 1fr; margin-bottom: 2.5mm;
+  border-radius: 3px; overflow: hidden;
+}
+.sbi-row .sbi-label {
+  background: var(--green-dark);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 11px; font-weight: 900; color: var(--white);
+  text-align: center; padding: 10px 6px;
+}
+.sbi-row .sbi-desc {
+  background: var(--green-light);
+  padding: 10px 14px;
+  font-size: 10px; color: var(--gray); line-height: 1.6;
+}
+
+/* ─── EXAMPLE CARDS ──────────────────────────── */
+.example-card {
+  border-left: 3px solid var(--green-mid);
+  border-radius: 0 4px 4px 0;
+  margin-bottom: 3mm; overflow: hidden;
+}
+.example-card .ex-tag {
+  background: var(--green-light);
+  padding: 3px 12px;
+  font-size: 8px; font-weight: 700; color: var(--gold); letter-spacing: 1px;
+  text-transform: uppercase;
+}
+.example-card .ex-title {
+  padding: 5px 12px 3px;
+  font-size: 10.5px; font-weight: 700; color: var(--green-dark);
+}
+.example-card .ex-text {
+  padding: 0 12px 8px;
+  font-size: 10px; font-style: italic; color: var(--gray); line-height: 1.7;
+  background: var(--white);
+}
+
+/* ─── PROFILE CARDS ──────────────────────────── */
+.profile-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 3mm; margin: 4mm 0;
+}
+.profile-card {
+  border-radius: 6px; overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0,0,0,.08);
+}
+.profile-card .pc-head {
+  padding: 10px 14px;
+  display: flex; align-items: center; gap: 8px;
+}
+.profile-card .pc-icon { font-size: 22px; }
+.profile-card .pc-title {
+  font-size: 13px; font-weight: 900; color: var(--white);
+  font-family: var(--font-display);
+}
+.profile-card .pc-sub {
+  font-size: 9px; color: rgba(255,255,255,.75); font-style: italic;
+}
+.profile-card .pc-body {
+  background: var(--white);
+  padding: 8px 14px;
+  font-size: 10px; color: var(--gray); line-height: 1.6;
+}
+.pc-1 .pc-head { background: var(--green-dark); }
+.pc-2 .pc-head { background: var(--green-mid); }
+.pc-3 .pc-head { background: #5B8A5D; }
+.pc-4 .pc-head { background: #3A6B55; }
+
+/* ─── PILLAR CARDS ───────────────────────────── */
+.pillar-row {
+  display: grid; grid-template-columns: 20mm 1fr; margin-bottom: 2.5mm;
+  border-radius: 4px; overflow: hidden; border: 0.5px solid var(--rule);
+}
+.pillar-row .p-label {
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-display);
+  font-size: 13px; font-weight: 700; color: var(--white);
+  text-align: center; padding: 12px 6px;
+}
+.pillar-row .p-desc {
+  padding: 12px 14px;
+  font-size: 10px; color: var(--gray); line-height: 1.65;
+}
+
+/* ─── ACTIVITY SECTIONS ──────────────────────── */
+.activity-block { margin-bottom: 6mm; }
+.activity-q {
+  font-size: 11px; font-weight: 700; color: var(--green-dark);
+  margin-bottom: 3mm;
+}
+.activity-lines {
+  display: flex; flex-direction: column; gap: 6mm;
+}
+.activity-lines .a-line {
+  border-bottom: 1px solid var(--rule);
+  height: 1px; width: 100%;
+}
+.checkbox-list { list-style: none; padding: 0; margin: 2mm 0; }
+.checkbox-list li {
+  font-size: 10.5px; color: var(--gray); padding: 3px 0 3px 22px;
+  position: relative; line-height: 1.6;
+}
+.checkbox-list li::before {
+  content: '☐';
+  position: absolute; left: 0;
+  color: var(--gold); font-size: 14px; line-height: 1; top: 2px;
+}
+
+/* ─── TOC ────────────────────────────────────── */
+.toc-list { list-style: none; padding: 0; }
+.toc-item {
+  display: flex; align-items: center;
+  padding: 6px 0;
+  border-bottom: 0.5px solid var(--rule);
+  font-size: 11px; color: var(--gray);
+}
+.toc-num { width: 7mm; font-weight: 700; color: var(--gold); }
+.toc-title { flex: 1; }
+.toc-page {
+  font-weight: 700; color: var(--green-dark);
+  font-size: 11px; min-width: 8mm; text-align: right;
+}
+
+/* ─── PLANO DE AÇÃO ROWS ─────────────────────── */
+.plan-row {
+  display: grid; grid-template-columns: 12mm 1fr;
+  margin-bottom: 4mm; border-radius: 4px; overflow: hidden;
+}
+.plan-row .plan-num {
+  background: var(--gold);
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-display);
+  font-size: 22px; font-weight: 700; color: var(--white);
+}
+.plan-row .plan-body {
+  border: 0.5px solid var(--rule);
+  border-left: none;
+  padding: 8px 12px;
+}
+.plan-row .plan-label {
+  font-size: 9px; font-weight: 700; letter-spacing: 1px;
+  text-transform: uppercase; color: var(--gold); margin-bottom: 6px;
+}
+.plan-row .plan-lines { display: flex; flex-direction: column; gap: 8mm; }
+.plan-row .plan-lines .pl { border-bottom: 1px solid var(--rule); }
+
+/* ─── EXAMPLE PLAN ───────────────────────────── */
+.ex-plan-row {
+  display: grid; grid-template-columns: 28mm 1fr;
+  margin-bottom: 2mm; border-radius: 3px; overflow: hidden;
+}
+.ex-plan-row .ep-label {
+  background: var(--green-mid);
+  padding: 8px 10px; font-size: 8.5px; font-weight: 700;
+  letter-spacing: 1px; text-transform: uppercase; color: var(--white);
+  display: flex; align-items: center;
+}
+.ex-plan-row .ep-val {
+  background: var(--green-light);
+  padding: 8px 12px; font-size: 10.5px; color: var(--dark);
+  display: flex; align-items: center;
+}
+
+/* ─── FINAL QUOTE PAGE ───────────────────────── */
+.page.final-page {
+  background: var(--green-dark);
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+}
+.final-page .fp-quote {
+  font-family: var(--font-display);
+  font-size: 28px; line-height: 1.4; color: var(--white);
+  text-align: center; max-width: 140mm;
+  font-style: italic; font-weight: 700;
+  padding: 0 20mm; margin-bottom: 16mm;
+}
+.final-page .fp-rule {
+  width: 40mm; height: 2px; background: var(--gold); margin-bottom: 8mm;
+}
+.final-page .fp-author {
+  font-family: var(--font-display);
+  font-size: 16px; color: var(--white); margin-bottom: 3px;
+}
+.final-page .fp-brand {
+  font-size: 10px; color: var(--line-light); letter-spacing: 1px;
+}
+.final-page-deco {
+  position: absolute; pointer-events: none;
+}
+
+/* ─── PRINT ──────────────────────────────────── */
+@media print {
+  body { background: none; }
+  .page { margin: 0; box-shadow: none; page-break-after: always; }
+  .page:last-child { page-break-after: auto; }
+  @page { size: A4; margin: 0; }
+}
+
+/* ─── SPACERS ────────────────────────────────── */
+.sp-sm { margin-top: 3mm; }
+.sp-md { margin-top: 5mm; }
+.sp-lg { margin-top: 8mm; }
+
+/* ─── TWO-COL GRID ───────────────────────────── */
+.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 4mm; margin: 4mm 0; }
+.col-card { background: var(--white); border: 0.5px solid var(--rule); border-radius: 4px; overflow: hidden; }
+.col-card .cc-head {
+  padding: 7px 12px; font-size: 9px; font-weight: 900;
+  letter-spacing: 1.5px; text-transform: uppercase; color: var(--white);
+  text-align: center;
+}
+.col-card.green-card .cc-head { background: var(--green-dark); }
+.col-card.teal-card .cc-head { background: var(--green-mid); }
+.col-card .cc-body { padding: 8px 12px; }
+.col-card .cc-body li {
+  font-size: 10px; color: var(--gray); line-height: 1.6;
+  padding: 2px 0 2px 14px; position: relative;
+}
+.col-card .cc-body li::before { content: '•'; position: absolute; left: 0; color: var(--gold); font-weight: 700; }
+
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════════
+     CAPA
+════════════════════════════════════════════════ -->
+<div class="page cover">
+  <!-- circles deco -->
+  <svg class="cover-bg-circles" viewBox="0 0 595 842" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="208" cy="440" r="220" fill="rgba(46,125,88,0.35)"/>
+    <circle cx="208" cy="440" r="140" fill="rgba(26,92,69,0.5)"/>
+    <circle cx="80" cy="620" r="58" fill="rgba(200,155,60,0.18)"/>
+    <circle cx="480" cy="200" r="36" fill="rgba(200,155,60,0.12)"/>
+    <circle cx="510" cy="640" r="20" fill="rgba(255,255,255,0.06)"/>
+    <!-- geometric lines -->
+    <line x1="0" y1="330" x2="460" y2="330" stroke="rgba(46,125,88,0.4)" stroke-width="1"/>
+    <line x1="0" y1="333" x2="460" y2="333" stroke="rgba(200,155,60,0.2)" stroke-width="0.5"/>
+  </svg>
+
+  <div class="cover-gold-stripe"></div>
+
+  <!-- rotated text on gold stripe -->
+  <svg style="position:absolute;right:0;top:0;width:34mm;height:100%;z-index:3" viewBox="0 0 96 842" xmlns="http://www.w3.org/2000/svg">
+    <text x="-421" y="62" transform="rotate(-90)" font-family="Lato,sans-serif" font-size="9" font-weight="700" fill="rgba(26,92,69,0.6)" letter-spacing="3">LIDERANÇA COM PROPÓSITO • RH COM PROPÓSITO</text>
+  </svg>
+
+  <div class="cover-body">
+    <div class="cover-eyebrow">Programa de Desenvolvimento de Líderes</div>
+    <div class="cover-title">LIDERANÇA</div>
+    <span class="cover-title-gold">COM PROPÓSITO</span>
+    <div class="cover-tagline">Porque todo resultado começa com pessoas.</div>
+
+    <div class="cover-author-box">
+      <div class="cover-author-label">Material de apoio para treinamentos</div>
+      <div class="cover-author-name">Cristiele Rodrigues</div>
+      <div class="cover-author-sub">RH com Propósito</div>
+    </div>
+  </div>
+
+  <div class="cover-bottom">
+    <span class="cover-bottom-brand">RH com Propósito</span>
+    <span class="cover-bottom-line"></span>
+    <span class="cover-bottom-tag">Encontros de liderança e desenvolvimento de equipes</span>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════
+     APRESENTAÇÃO
+════════════════════════════════════════════════ -->
+<div class="page content">
+  <div class="page-header"><span>RH com Propósito</span></div>
+  <div class="page-footer"><span class="ft-brand">Liderança com Propósito</span><span class="ft-num">2</span></div>
+  <div class="page-body">
+
+    <h1 class="section-title">Apresentação</h1>
+    <p>Este material foi desenvolvido com o objetivo de fortalecer a atuação da liderança dentro das empresas, trazendo uma visão prática sobre o papel do líder no dia a dia.</p>
+    <p>Mais do que direcionar tarefas, liderar envolve conduzir pessoas, alinhar comportamentos e contribuir diretamente para os resultados da equipe.</p>
+    <p>Ao longo deste conteúdo, você encontrará orientações, reflexões, atividades práticas e dinâmicas que irão auxiliar no desenvolvimento de uma liderança mais consciente, preparada e alinhada com as necessidades da organização.</p>
+
+    <div class="sp-md"></div>
+    <h1 class="section-title">Como Utilizar Esta Apostila</h1>
+    <p>Este material foi pensado para ser utilizado durante treinamentos e encontros de liderança.</p>
+
+    <div class="two-col" style="margin-top:4mm">
+      <div class="col-card green-card">
+        <div class="cc-head">O que você vai encontrar</div>
+        <ul class="cc-body">
+          <li>Conteúdo prático</li>
+          <li>Situações reais do dia a dia</li>
+          <li>Espaços para reflexão individual</li>
+          <li>Atividades práticas</li>
+          <li>Dinâmicas em grupo</li>
+        </ul>
+      </div>
+      <div class="col-card teal-card">
+        <div class="cc-head">Proposta</div>
+        <ul class="cc-body">
+          <li>Aprender, refletir e aplicar</li>
+          <li>Fortalecer equipes</li>
+          <li>Melhorar a comunicação</li>
+          <li>Resultados mais consistentes</li>
+          <li>Liderança mais consciente</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="sp-md"></div>
+    <h1 class="section-title">RH com Propósito</h1>
+    <p>O RH com Propósito nasce com o objetivo de contribuir para o desenvolvimento de pessoas e organizações, por meio de ações práticas voltadas para comportamento, cultura e resultados.</p>
+    <p>Acreditamos que todo resultado começa com pessoas e que investir no desenvolvimento das equipes é um caminho essencial para o crescimento sustentável das empresas.</p>
+
+    <div class="sp-md"></div>
+    <h1 class="section-title">Sobre a Autora</h1>
+    <p>Cristiele Rodrigues é profissional formada e Pós-graduada na área de Recursos Humanos, com atuação voltada para o desenvolvimento de equipes, liderança e comportamento organizacional.</p>
+    <p>Fundadora do projeto RH com Propósito, desenvolve palestras e treinamentos personalizados de acordo com a realidade de cada empresa, com foco em fortalecer equipes, melhorar a comunicação e contribuir para resultados mais consistentes.</p>
+
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════
+     SUMÁRIO
+════════════════════════════════════════════════ -->
+<div class="page content">
+  <div class="page-header"><span>RH com Propósito</span></div>
+  <div class="page-footer"><span class="ft-brand">Liderança com Propósito</span><span class="ft-num">3</span></div>
+  <div class="page-body">
+
+    <h1 class="section-title">Sumário</h1>
+    <div class="sp-md"></div>
+
+    <ul class="toc-list">
+      <li class="toc-item"><span class="toc-num">1.</span><span class="toc-title">Introdução</span><span class="toc-page">5</span></li>
+      <li class="toc-item"><span class="toc-num">2.</span><span class="toc-title">Módulo 1 — O papel do líder</span><span class="toc-page">6</span></li>
+      <li class="toc-item"><span class="toc-num">3.</span><span class="toc-title">Módulo 2 — Comunicação e influência</span><span class="toc-page">11</span></li>
+      <li class="toc-item"><span class="toc-num">4.</span><span class="toc-title">Módulo 3 — Perfis comportamentais</span><span class="toc-page">21</span></li>
+      <li class="toc-item"><span class="toc-num">5.</span><span class="toc-title">Módulo 4 — Gestão de equipe</span><span class="toc-page">27</span></li>
+      <li class="toc-item"><span class="toc-num">6.</span><span class="toc-title">Módulo 5 — Postura, cultura e responsabilidade</span><span class="toc-page">31</span></li>
+      <li class="toc-item"><span class="toc-num">7.</span><span class="toc-title">Módulo 6 — Conflitos, feedback e liderança sob pressão</span><span class="toc-page">35</span></li>
+      <li class="toc-item"><span class="toc-num">8.</span><span class="toc-title">Plano de ação</span><span class="toc-page">54</span></li>
+      <li class="toc-item"><span class="toc-num">9.</span><span class="toc-title">Aplicação final</span><span class="toc-page">58</span></li>
+    </ul>
+
+    <!-- decorative SVG -->
+    <div style="margin-top:14mm;text-align:center">
+      <svg width="160" height="100" viewBox="0 0 160 100" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="80" cy="50" r="46" fill="none" stroke="#E8F5EE" stroke-width="18"/>
+        <circle cx="80" cy="50" r="46" fill="none" stroke="#C89B3C" stroke-width="2"
+                stroke-dasharray="8 4" stroke-dashoffset="0"/>
+        <!-- people icons simplified -->
+        <circle cx="80" cy="36" r="9" fill="#1A5C45"/>
+        <path d="M62 68 Q80 54 98 68" fill="#1A5C45"/>
+        <!-- small dots -->
+        <circle cx="34" cy="50" r="4" fill="#C89B3C"/>
+        <circle cx="126" cy="50" r="4" fill="#C89B3C"/>
+        <circle cx="80" cy="6" r="3" fill="#C89B3C"/>
+        <circle cx="80" cy="94" r="3" fill="#C89B3C"/>
+      </svg>
+      <p style="font-size:9px;color:var(--gray-light);margin-top:3mm;text-align:center;font-style:italic">
+        "Porque todo resultado começa com pessoas."
+      </p>
+    </div>
+
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════
+     INTRODUÇÃO
+════════════════════════════════════════════════ -->
+<div class="page content">
+  <div class="page-header"><span>RH com Propósito</span></div>
+  <div class="page-footer"><span class="ft-brand">Liderança com Propósito</span><span class="ft-num">5</span></div>
+  <div class="page-body">
+
+    <h1 class="section-title">Introdução</h1>
+    <p class="lead">Liderar vai muito além de ocupar um cargo. Liderança é responsabilidade, influência e direção.</p>
+    <p>Dentro das organizações, o líder exerce um papel essencial na construção do clima, na qualidade da comunicação e no desempenho das equipes.</p>
+    <p>Quando a liderança não está preparada, surgem falhas, conflitos, retrabalho e desmotivação. Quando ela se desenvolve, os resultados se tornam mais consistentes e o ambiente mais saudável.</p>
+    <p>Este programa foi desenvolvido para fortalecer a atuação do líder no dia a dia, trazendo mais clareza, segurança e direção.</p>
+
+    <div class="sp-md"></div>
+
+    <div class="two-col">
+      <div class="col-card green-card">
+        <div class="cc-head">Objetivos do Programa</div>
+        <ul class="cc-body">
+          <li>Comunicar com clareza</li>
+          <li>Conduzir equipes com segurança</li>
+          <li>Compreender perfis</li>
+          <li>Reduzir conflitos</li>
+          <li>Fortalecer o ambiente</li>
+        </ul>
+      </div>
+      <div class="col-card teal-card">
+        <div class="cc-head">O Desenvolvimento Evita</div>
+        <ul class="cc-body">
+          <li>Falta de direcionamento</li>
+          <li>Comunicação falha</li>
+          <li>Conflitos constantes</li>
+          <li>Queda de desempenho</li>
+          <li>Desmotivação da equipe</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Visual intro graphic -->
+    <div style="margin-top:10mm;text-align:center">
+      <svg width="340" height="70" viewBox="0 0 340 70" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <marker id="arrow" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+            <polygon points="0 0, 8 3, 0 6" fill="#C89B3C"/>
+          </marker>
+        </defs>
+        <!-- boxes -->
+        <rect x="0" y="15" width="80" height="40" rx="4" fill="#1A5C45"/>
+        <text x="40" y="39" font-family="Lato" font-size="9" fill="white" text-anchor="middle" font-weight="700">CLAREZA</text>
+        <line x1="80" y1="35" x2="110" y2="35" stroke="#C89B3C" stroke-width="1.5" marker-end="url(#arrow)"/>
+        <rect x="110" y="15" width="80" height="40" rx="4" fill="#2E7D58"/>
+        <text x="150" y="39" font-family="Lato" font-size="9" fill="white" text-anchor="middle" font-weight="700">COMUNICAÇÃO</text>
+        <line x1="190" y1="35" x2="220" y2="35" stroke="#C89B3C" stroke-width="1.5" marker-end="url(#arrow)"/>
+        <rect x="220" y="15" width="80" height="40" rx="4" fill="#C89B3C"/>
+        <text x="260" y="39" font-family="Lato" font-size="9" fill="white" text-anchor="middle" font-weight="700">RESULTADO</text>
+        <line x1="300" y1="35" x2="330" y2="35" stroke="#C89B3C" stroke-width="1.5" marker-end="url(#arrow)"/>
+      </svg>
+    </div>
+
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════
+     MÓDULO 1 — CAPA
+════════════════════════════════════════════════ -->
+<div class="page module-cover">
+  <div class="mc-left-block">
+    <div class="mc-mod-label">Módulo</div>
+    <div class="mc-mod-num">01</div>
+    <div style="margin-top:8mm">
+      <svg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="30" cy="22" r="12" fill="rgba(200,155,60,0.8)"/>
+        <path d="M10 52 Q30 38 50 52" fill="rgba(200,155,60,0.6)"/>
+        <circle cx="14" cy="38" r="7" fill="rgba(255,255,255,0.3)"/>
+        <circle cx="46" cy="38" r="7" fill="rgba(255,255,255,0.3)"/>
+        <path d="M4 52 Q14 44 24 52" fill="rgba(255,255,255,0.25)"/>
+        <path d="M36 52 Q46 44 56 52" fill="rgba(255,255,255,0.25)"/>
+      </svg>
+    </div>
+  </div>
+  <div class="mc-gold-stripe"></div>
+  <div class="mc-right-block">
+    <div class="mc-title">O Papel do Líder</div>
+    <p class="mc-desc">Muitos profissionais assumem cargos de liderança por confiança, tempo de casa ou competência técnica. Ainda assim, liderar pessoas exige preparo. Este módulo ajuda o participante a compreender que liderar não é apenas supervisionar tarefas, mas influenciar pessoas, direcionar resultados e fortalecer o ambiente.</p>
+    <div style="margin-top:8mm">
+      <span class="mc-tag-inner">
+        <svg width="10" height="10" viewBox="0 0 10 10"><circle cx="5" cy="5" r="4" fill="none" stroke="#C89B3C" stroke-width="1.5"/><circle cx="5" cy="5" r="1.5" fill="#C89B3C"/></svg>
+        Diferença · Responsabilidade · Referência
+      </span>
+    </div>
+  </div>
+</div>
+
+
+<!-- MÓDULO 1 — CONTEÚDO -->
+<div class="page content">
+  <div class="page-header"><span>Módulo 1 — O Papel do Líder</span></div>
+  <div class="page-footer"><span class="ft-brand">Liderança com Propósito</span><span class="ft-num">7</span></div>
+  <div class="page-body">
+
+    <h2>Chefe × Líder</h2>
+
+    <div class="compare-table">
+      <div class="compare-col left">
+        <div class="col-head">Chefe</div>
+        <div class="col-body">
+          <div class="col-item">Exerce autoridade pelo cargo</div>
+          <div class="col-item">Normalmente dá ordens</div>
+          <div class="col-item">Cobra resultados</div>
+          <div class="col-item">Mantém relação hierárquica e distante</div>
+          <div class="col-item"><strong>Impõe respeito</strong></div>
+        </div>
+      </div>
+      <div class="compare-col right">
+        <div class="col-head">Líder</div>
+        <div class="col-body">
+          <div class="col-item">Influencia pelo exemplo e pela confiança</div>
+          <div class="col-item">Engaja a equipe</div>
+          <div class="col-item">Escuta e orienta</div>
+          <div class="col-item">Trabalha junto para alcançar objetivos</div>
+          <div class="col-item"><strong>Conquista respeito</strong></div>
+        </div>
+      </div>
+    </div>
+
+    <h2>Liderança como Responsabilidade</h2>
+    <p>Liderar não é privilégio, é compromisso. O líder assume responsabilidade pelos resultados da equipe, tanto os acertos quanto os erros. Envolve desenvolver pessoas, tomar decisões difíceis e agir com ética.</p>
+    <div class="box gold">Um verdadeiro líder entende que seu papel é <strong>servir à equipe</strong>, não se servir dela.</div>
+
+    <h2>O Líder como Referência</h2>
+    <p>O comportamento do líder define o padrão do grupo. A equipe observa atitudes mais do que palavras. Coerência, disciplina e respeito são essenciais. Um líder inspira quando pratica aquilo que cobra.</p>
+    <div class="box green"><strong>Liderança é presença.</strong></div>
+
+    <h3>Situação Prática</h3>
+    <div class="box dark">
+      Um líder que cobra organização, mas não se organiza, perde credibilidade diante da equipe.
+      <span class="dash"></span>
+    </div>
+
+  </div>
+</div>
+
+
+<!-- MÓDULO 1 — ATIVIDADE -->
+<div class="page activity">
+  <div class="page-header"><span>Módulo 1 — Atividade Prática</span></div>
+  <div class="page-footer"><span class="ft-brand">Liderança com Propósito</span><span class="ft-num">9</span></div>
+  <div class="page-body">
+
+    <h1 class="section-title gold">Atividade Prática</h1>
+
+    <div class="activity-block">
+      <div class="activity-q">Como minha equipe me enxerga hoje?</div>
+      <div class="activity-lines"><div class="a-line"></div><div class="a-line"></div><div class="a-line"></div><div class="a-line"></div></div>
+    </div>
+    <div class="sp-md"></div>
+    <div class="activity-block">
+      <div class="activity-q">Eu sou uma referência positiva?</div>
+      <div class="activity-lines"><div class="a-line"></div><div class="a-line"></div><div class="a-line"></div><div class="a-line"></div></div>
+    </div>
+    <div class="sp-md"></div>
+    <div class="activity-block">
+      <div class="activity-q">Eu direciono ou apenas cobro?</div>
+      <div class="activity-lines"><div class="a-line"></div><div class="a-line"></div><div class="a-line"></div><div class="a-line"></div></div>
+    </div>
+
+  </div>
+</div>
+
+
+<!-- MÓDULO 1 — DINÂMICA -->
+<div class="page activity">
+  <div class="page-header"><span>Módulo 1 — Dinâmica</span></div>
+  <div class="page-footer"><span class="ft-brand">Liderança com Propósito</span><span class="ft-num">10</span></div>
+  <div class="page-body">
+
+    <h1 class="section-title gold">Dinâmica — O Líder que Eu Sou Hoje</h1>
+    <p>Reflita individualmente e registre:</p>
+    <div class="sp-sm"></div>
+
+    <div class="activity-block">
+      <div class="activity-q">Que tipo de líder eu sou hoje?</div>
+      <div class="activity-lines"><div class="a-line"></div><div class="a-line"></div><div class="a-line"></div><div class="a-line"></div></div>
+    </div>
+    <div class="sp-md"></div>
+    <div class="activity-block">
+      <div class="activity-q">O que eu faço que fortalece minha liderança?</div>
+      <div class="activity-lines"><div class="a-line"></div><div class="a-line"></div><div class="a-line"></div><div class="a-line"></div></div>
+    </div>
+    <div class="sp-md"></div>
+    <div class="activity-block">
+      <div class="activity-q">O que eu faço que enfraquece minha liderança?</div>
+      <div class="activity-lines"><div class="a-line"></div><div class="a-line"></div><div class="a-line"></div><div class="a-line"></div></div>
+    </div>
+    <div class="sp-md"></div>
+    <div class="box green">Se fizer sentido para o momento, compartilhe um ponto com o grupo.</div>
+
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════
+     MÓDULO 2 — CAPA
+════════════════════════════════════════════════ -->
+<div class="page module-cover">
+  <div class="mc-left-block">
+    <div class="mc-mod-label">Módulo</div>
+    <div class="mc-mod-num">02</div>
+    <div style="margin-top:8mm">
+      <svg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg">
+        <!-- chat bubbles -->
+        <rect x="6" y="10" width="36" height="24" rx="6" fill="rgba(200,155,60,0.8)"/>
+        <polygon points="12,34 12,44 22,34" fill="rgba(200,155,60,0.6)"/>
+        <rect x="18" y="26" width="36" height="22" rx="6" fill="rgba(255,255,255,0.3)"/>
+        <polygon points="48,48 48,56 40,48" fill="rgba(255,255,255,0.25)"/>
+        <!-- dots in bubble -->
+        <circle cx="26" cy="22" r="2.5" fill="rgba(26,92,69,0.8)"/>
+        <circle cx="34" cy="22" r="2.5" fill="rgba(26,92,69,0.8)"/>
+        <circle cx="22" cy="22" r="2.5" fill="rgba(26,92,69,0.8)"/>
+      </svg>
+    </div>
+  </div>
+  <div class="mc-gold-stripe"></div>
+  <div class="mc-right-block">
+    <div class="mc-title">Comunicação e Influência na Liderança</div>
+    <p class="mc-desc">A forma como o líder se comunica impacta diretamente no comportamento da equipe, o clima do ambiente e os resultados do negócio. Grande parte dos problemas dentro das empresas começa na comunicação.</p>
+    <div style="margin-top:8mm">
+      <span class="mc-tag-inner">
+        Clareza · Escuta Ativa · Influência · Alinhamento
+      </span>
+    </div>
+  </div>
+</div>
+
+
+<!-- MÓDULO 2 — CONTEÚDO -->
+<div class="page content">
+  <div class="page-header"><span>Módulo 2 — Comunicação e Influência</span></div>
+  <div class="page-footer"><span class="ft-brand">Liderança com Propósito</span><span class="ft-num">12</span></div>
+  <div class="page-body">
+
+    <p class="lead">"Se a equipe não entendeu… a comunicação não aconteceu."</p>
+
+    <h2>Pontos Principais</h2>
+
+    <h3>Clareza na Orientação</h3>
+    <p>Transmitir informações de forma objetiva, sem ambiguidade, garantindo que todos saibam exatamente o que deve ser feito.</p>
+    <div class="reflexao">Minha equipe sabe exatamente o que eu espero dela?</div>
+
+    <h3>Escuta Ativa</h3>
+    <p>Ouvir com atenção, sem interrupções, demonstrando interesse genuíno e buscando compreender antes de responder.</p>
+    <div class="reflexao">Eu escuto para entender… ou para responder?</div>
+
+    <h3>Tom de Voz e Postura</h3>
+    <p>A forma como o líder se comunica impacta tanto quanto o conteúdo. Respeito, firmeza e empatia fazem diferença no entendimento.</p>
+    <div class="reflexao">Minha forma de falar aproxima ou afasta minha equipe?</div>
+
+    <h3>Alinhamento Constante</h3>
+    <p>Manter a equipe informada, revisar expectativas e garantir que todos estejam na mesma direção.</p>
+    <div class="reflexao">Eu reforço o combinado ou só cobro resultado?</div>
+
+    <h3>Influência no Ambiente</h3>
+    <p>Uma boa comunicação contribui para um clima organizacional saudável, com mais confiança, colaboração e menos conflitos.</p>
+    <div class="reflexao">Eu estou construindo um ambiente leve ou tenso?</div>
+
+  </div>
+</div>
+
+
+<!-- MÓDULO 2 — ATIVIDADE -->
+<div class="page activity">
+  <div class="page-header"><span>Módulo 2 — Aplicação Prática</span></div>
+  <div class="page-footer"><span class="ft-brand">Liderança com Propósito</span><span class="ft-num">19</span></div>
+  <div class="page-body">
+
+    <h1 class="section-title gold">Aplicação Prática — Módulo 2</h1>
+    <p>Pense em uma situação recente em que houve erro ou retrabalho na sua equipe.</p>
+    <div class="sp-sm"></div>
+    <p><strong>O problema foi:</strong></p>
+    <ul class="checkbox-list">
+      <li>Falta de clareza</li>
+      <li>Falta de escuta</li>
+      <li>Falha no alinhamento</li>
+      <li>Forma de comunicação</li>
+      <li>Outro: ___________________________________________</li>
+    </ul>
+
+    <div class="sp-md"></div>
+    <div class="activity-block">
+      <div class="activity-q">Qual dessas habilidades eu mais preciso desenvolver hoje?</div>
+      <div class="activity-lines"><div class="a-line"></div><div class="a-line"></div><div class="a-line"></div><div class="a-line"></div></div>
+    </div>
+    <div class="sp-md"></div>
+    <div class="activity-block">
+      <div class="activity-q">Como isso impacta minha equipe no dia a dia?</div>
+      <div class="activity-lines"><div class="a-line"></div><div class="a-line"></div><div class="a-line"></div><div class="a-line"></div></div>
+    </div>
+    <div class="sp-md"></div>
+    <div class="box dark">
+      Um colaborador erra não por falta de capacidade, mas por falta de orientação clara.
+      <span class="dash"></span>
+    </div>
+
+  </div>
+</div>
+
+<div class="page activity">
+  <div class="page-header"><span>Módulo 2 — Atividade Prática</span></div>
+  <div class="page-footer"><span class="ft-brand">Liderança com Propósito</span><span class="ft-num">21</span></div>
+  <div class="page-body">
+    <h1 class="section-title gold">Atividade Prática</h1>
+    <div class="activity-block">
+      <div class="activity-q">Minha equipe entende o que eu peço?</div>
+      <div class="activity-lines"><div class="a-line"></div><div class="a-line"></div><div class="a-line"></div><div class="a-line"></div></div>
+    </div>
+    <div class="sp-md"></div>
+    <div class="activity-block">
+      <div class="activity-q">Eu escuto ou apenas respondo?</div>
+      <div class="activity-lines"><div class="a-line"></div><div class="a-line"></div><div class="a-line"></div><div class="a-line"></div></div>
+    </div>
+    <div class="sp-md"></div>
+    <div class="activity-block">
+      <div class="activity-q">Quando corrijo alguém, ensino ou apenas pressiono?</div>
+      <div class="activity-lines"><div class="a-line"></div><div class="a-line"></div><div class="a-line"></div><div class="a-line"></div></div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════
+     MÓDULO 3 — CAPA
+════════════════════════════════════════════════ -->
+<div class="page module-cover">
+  <div class="mc-left-block">
+    <div class="mc-mod-label">Módulo</div>
+    <div class="mc-mod-num">03</div>
+    <div style="margin-top:8mm">
+      <svg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg">
+        <!-- 4 quadrants = 4 profiles -->
+        <rect x="4" y="4" width="24" height="24" rx="4" fill="rgba(200,155,60,0.85)"/>
+        <text x="16" y="20" font-family="Lato" font-size="9" fill="white" text-anchor="middle" font-weight="700">E</text>
+        <rect x="32" y="4" width="24" height="24" rx="4" fill="rgba(255,255,255,0.35)"/>
+        <text x="44" y="20" font-family="Lato" font-size="9" fill="white" text-anchor="middle" font-weight="700">C</text>
+        <rect x="4" y="32" width="24" height="24" rx="4" fill="rgba(255,255,255,0.25)"/>
+        <text x="16" y="48" font-family="Lato" font-size="9" fill="white" text-anchor="middle" font-weight="700">P</text>
+        <rect x="32" y="32" width="24" height="24" rx="4" fill="rgba(200,155,60,0.5)"/>
+        <text x="44" y="48" font-family="Lato" font-size="9" fill="white" text-anchor="middle" font-weight="700">A</text>
+        <line x1="30" y1="2" x2="30" y2="58" stroke="rgba(255,255,255,0.3)" stroke-width="1"/>
+        <line x1="2" y1="30" x2="58" y2="30" stroke="rgba(255,255,255,0.3)" stroke-width="1"/>
+      </svg>
+    </div>
+  </div>
+  <div class="mc-gold-stripe"></div>
+  <div class="mc-right-block">
+    <div class="mc-title">Perfis Comportamentais</div>
+    <p class="mc-desc">Pessoas diferentes pensam, sentem, agem e respondem de formas diferentes. Quando o líder ignora isso, tende a cobrar todos da mesma forma e se frustra com os resultados. Este módulo desenvolve percepção, autoconhecimento e adaptação.</p>
+    <div style="margin-top:8mm">
+      <span class="mc-tag-inner">
+        Executor · Comunicador · Planejador · Analista
+      </span>
+    </div>
+  </div>
+</div>
+
+
+<!-- MÓDULO 3 — CONTEÚDO -->
+<div class="page content">
+  <div class="page-header"><span>Módulo 3 — Perfis Comportamentais</span></div>
+  <div class="page-footer"><span class="ft-brand">Liderança com Propósito</span><span class="ft-num">23</span></div>
+  <div class="page-body">
+
+    <h2>Os Quatro Perfis</h2>
+    <div class="sp-sm"></div>
+
+    <div class="profile-grid">
+      <div class="profile-card pc-1">
+        <div class="pc-head">
+          <svg width="28" height="28" viewBox="0 0 28 28"><circle cx="14" cy="14" r="12" fill="rgba(255,255,255,0.15)"/><path d="M8 14 L20 8 L17 14 L20 20 Z" fill="rgba(200,155,60,0.9)"/></svg>
+          <div><div class="pc-title">Executor</div><div class="pc-sub">Ação e resultado</div></div>
+        </div>
+        <div class="pc-body">Focado em metas, rápido nas decisões, orientado para resultados. Pode ser impaciente com processos lentos ou muita análise.</div>
+      </div>
+      <div class="profile-card pc-2">
+        <div class="pc-head">
+          <svg width="28" height="28" viewBox="0 0 28 28"><circle cx="14" cy="14" r="12" fill="rgba(255,255,255,0.15)"/><circle cx="10" cy="12" r="3" fill="rgba(200,155,60,0.9)"/><circle cx="18" cy="12" r="3" fill="rgba(200,155,60,0.9)"/><path d="M7 20 Q14 16 21 20" fill="none" stroke="rgba(200,155,60,0.9)" stroke-width="2"/></svg>
+          <div><div class="pc-title">Comunicador</div><div class="pc-sub">Relacionamento</div></div>
+        </div>
+        <div class="pc-body">Extrovertido, entusiasta e persuasivo. Constrói relacionamentos facilmente. Pode se dispersar em detalhes e organização.</div>
+      </div>
+      <div class="profile-card pc-3">
+        <div class="pc-head">
+          <svg width="28" height="28" viewBox="0 0 28 28"><circle cx="14" cy="14" r="12" fill="rgba(255,255,255,0.15)"/><rect x="8" y="8" width="5" height="12" rx="1" fill="rgba(200,155,60,0.9)"/><rect x="15" y="11" width="5" height="9" rx="1" fill="rgba(255,255,255,0.5)"/></svg>
+          <div><div class="pc-title">Planejador</div><div class="pc-sub">Estabilidade</div></div>
+        </div>
+        <div class="pc-body">Paciente, leal e consistente. Trabalha bem em equipe, prefere rotina e previsibilidade. Tem dificuldade com mudanças bruscas.</div>
+      </div>
+      <div class="profile-card pc-4">
+        <div class="pc-head">
+          <svg width="28" height="28" viewBox="0 0 28 28"><circle cx="14" cy="14" r="12" fill="rgba(255,255,255,0.15)"/><path d="M8 20 L14 8 L20 20 Z" fill="none" stroke="rgba(200,155,60,0.9)" stroke-width="2"/><circle cx="14" cy="14" r="2" fill="rgba(200,155,60,0.9)"/></svg>
+          <div><div class="pc-title">Analista</div><div class="pc-sub">Detalhe e precisão</div></div>
+        </div>
+        <div class="pc-body">Metódico, crítico e perfeccionista. Precisa de dados para decidir. Pode ser lento por excesso de análise.</div>
+      </div>
+    </div>
+
+    <div class="sp-md"></div>
+    <div class="box green"><strong>Entender pessoas é o que permite o líder conduzir melhor cada situação.</strong></div>
+
+  </div>
+</div>
+
+
+<!-- MÓDULO 3 — ATIVIDADE -->
+<div class="page activity">
+  <div class="page-header"><span>Módulo 3 — Atividade e Dinâmica</span></div>
+  <div class="page-footer"><span class="ft-brand">Liderança com Propósito</span><span class="ft-num">27</span></div>
+  <div class="page-body">
+    <h1 class="section-title gold">Atividade Prática — Módulo 3</h1>
+    <div class="activity-block">
+      <div class="activity-q">Qual é meu perfil predominante?</div>
+      <div class="activity-lines"><div class="a-line"></div><div class="a-line"></div><div class="a-line"></div><div class="a-line"></div></div>
+    </div>
+    <div class="sp-md"></div>
+    <div class="activity-block">
+      <div class="activity-q">Eu trato todos da mesma forma?</div>
+      <div class="activity-lines"><div class="a-line"></div><div class="a-line"></div><div class="a-line"></div><div class="a-line"></div></div>
+    </div>
+    <div class="sp-md"></div>
+    <div class="activity-block">
+      <div class="activity-q">Qual perfil mais me desafia hoje?</div>
+      <div class="activity-lines"><div class="a-line"></div><div class="a-line"></div><div class="a-line"></div></div>
+    </div>
+    <div class="sp-sm"></div>
+    <h1 class="section-title gold" style="margin-top:6mm">Dinâmica — Cada Um Reage de Um Jeito</h1>
+    <p><strong>Situação:</strong> Um cliente chega insatisfeito e faz uma reclamação diante da equipe.</p>
+    <div class="sp-sm"></div>
+    <div class="activity-block">
+      <div class="activity-q">Responda como você agiria nessa situação:</div>
+      <div class="activity-lines"><div class="a-line"></div><div class="a-line"></div><div class="a-line"></div><div class="a-line"></div><div class="a-line"></div></div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════
+     MÓDULO 4 — CAPA
+════════════════════════════════════════════════ -->
+<div class="page module-cover">
+  <div class="mc-left-block">
+    <div class="mc-mod-label">Módulo</div>
+    <div class="mc-mod-num">04</div>
+    <div style="margin-top:8mm">
+      <svg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg">
+        <!-- org chart / team structure -->
+        <circle cx="30" cy="12" r="8" fill="rgba(200,155,60,0.9)"/>
+        <line x1="30" y1="20" x2="30" y2="30" stroke="rgba(255,255,255,0.5)" stroke-width="1.5"/>
+        <line x1="30" y1="30" x2="14" y2="30" stroke="rgba(255,255,255,0.5)" stroke-width="1.5"/>
+        <line x1="30" y1="30" x2="46" y2="30" stroke="rgba(255,255,255,0.5)" stroke-width="1.5"/>
+        <circle cx="14" cy="38" r="6" fill="rgba(255,255,255,0.4)"/>
+        <circle cx="30" cy="38" r="6" fill="rgba(255,255,255,0.4)"/>
+        <circle cx="46" cy="38" r="6" fill="rgba(255,255,255,0.4)"/>
+        <line x1="14" y1="30" x2="14" y2="32" stroke="rgba(255,255,255,0.5)" stroke-width="1.5"/>
+        <line x1="30" y1="30" x2="30" y2="32" stroke="rgba(255,255,255,0.5)" stroke-width="1.5"/>
+        <line x1="46" y1="30" x2="46" y2="32" stroke="rgba(255,255,255,0.5)" stroke-width="1.5"/>
+      </svg>
+    </div>
+  </div>
+  <div class="mc-gold-stripe"></div>
+  <div class="mc-right-block">
+    <div class="mc-title">Gestão de Equipe</div>
+    <p class="mc-desc">Este módulo traz a liderança para a prática do dia a dia. Não basta entender comportamento e comunicação — o líder também precisa saber conduzir a equipe de forma organizada. Em rotinas intensas, muitos líderes vivem apagando incêndios.</p>
+    <div style="margin-top:8mm">
+      <span class="mc-tag-inner">
+        Direcionamento · Acompanhamento · Engajamento · Delegação
+      </span>
+    </div>
+  </div>
+</div>
+
+
+<!-- MÓDULO 4 — CONTEÚDO -->
+<div class="page content">
+  <div class="page-header"><span>Módulo 4 — Gestão de Equipe</span></div>
+  <div class="page-footer"><span class="ft-brand">Liderança com Propósito</span><span class="ft-num">30</span></div>
+  <div class="page-body">
+
+    <h2>Pontos Principais</h2>
+    <div class="sp-sm"></div>
+
+    <div class="step-row">
+      <div class="step-label">Direcionamento Claro</div>
+      <div class="step-desc">Definir objetivos, prioridades e expectativas de forma objetiva, para que a equipe saiba exatamente o que fazer.</div>
+    </div>
+    <div class="step-row">
+      <div class="step-label">Acompanhamento e Presença</div>
+      <div class="step-desc">Estar próximo da equipe, acompanhando o andamento das atividades e oferecendo suporte quando necessário.</div>
+    </div>
+    <div class="step-row">
+      <div class="step-label">Engajamento da Equipe</div>
+      <div class="step-desc">Motivar e envolver as pessoas, criando senso de propósito e compromisso com os resultados.</div>
+    </div>
+    <div class="step-row">
+      <div class="step-label">Correção de Rota</div>
+      <div class="step-desc">Identificar rapidamente desvios e agir de forma assertiva para ajustar o caminho.</div>
+    </div>
+    <div class="step-row">
+      <div class="step-label">Distribuição de Responsabilidades</div>
+      <div class="step-desc">Delegar tarefas de forma equilibrada, considerando habilidades e garantindo responsabilidade compartilhada.</div>
+    </div>
+    <div class="step-row">
+      <div class="step-label">Observação do Clima</div>
+      <div class="step-desc">Perceber o ambiente da equipe, identificando sinais de desmotivação, conflitos ou sobrecarga.</div>
+    </div>
+
+    <div class="sp-md"></div>
+    <div class="box dark">
+      Equipes desorganizadas geralmente refletem liderança ausente ou desalinhada.
+      <span class="dash"></span>
+    </div>
+
+  </div>
+</div>
+
+
+<!-- MÓDULO 4 — ATIVIDADE -->
+<div class="page activity">
+  <div class="page-header"><span>Módulo 4 — Atividade Prática</span></div>
+  <div class="page-footer"><span class="ft-brand">Liderança com Propósito</span><span class="ft-num">31</span></div>
+  <div class="page-body">
+    <h1 class="section-title gold">Atividade Prática — Módulo 4</h1>
+    <div class="activity-block">
+      <div class="activity-q">Minha equipe sabe exatamente o que espero dela?</div>
+      <div class="activity-lines"><div class="a-line"></div><div class="a-line"></div><div class="a-line"></div><div class="a-line"></div></div>
+    </div>
+    <div class="sp-md"></div>
+    <div class="activity-block">
+      <div class="activity-q">Eu acompanho de verdade ou só apareço para cobrar?</div>
+      <div class="activity-lines"><div class="a-line"></div><div class="a-line"></div><div class="a-line"></div><div class="a-line"></div></div>
+    </div>
+    <div class="sp-md"></div>
+    <div class="activity-block">
+      <div class="activity-q">Os erros mostram apenas falha da equipe ou também falha na condução?</div>
+      <div class="activity-lines"><div class="a-line"></div><div class="a-line"></div><div class="a-line"></div><div class="a-line"></div></div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════
+     MÓDULO 5 — CAPA
+════════════════════════════════════════════════ -->
+<div class="page module-cover">
+  <div class="mc-left-block">
+    <div class="mc-mod-label">Módulo</div>
+    <div class="mc-mod-num">05</div>
+    <div style="margin-top:8mm">
+      <svg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg">
+        <!-- building/culture pillars -->
+        <rect x="8" y="38" width="44" height="4" rx="1" fill="rgba(200,155,60,0.9)"/>
+        <rect x="12" y="18" width="8" height="20" rx="1" fill="rgba(255,255,255,0.5)"/>
+        <rect x="26" y="10" width="8" height="28" rx="1" fill="rgba(200,155,60,0.8)"/>
+        <rect x="40" y="22" width="8" height="16" rx="1" fill="rgba(255,255,255,0.35)"/>
+        <!-- star on top of middle pillar -->
+        <polygon points="30,4 31.5,8 36,8 32.5,11 34,15 30,12 26,15 27.5,11 24,8 28.5,8" fill="rgba(200,155,60,0.9)"/>
+      </svg>
+    </div>
+  </div>
+  <div class="mc-gold-stripe"></div>
+  <div class="mc-right-block">
+    <div class="mc-title">Postura, Cultura e Responsabilidade</div>
+    <p class="mc-desc">A liderança não impacta apenas o desempenho — ela impacta o ambiente inteiro. Em pequenas empresas, isso é ainda mais visível. A postura do líder ajuda a construir ou enfraquecer a cultura da empresa todos os dias.</p>
+    <div style="margin-top:8mm">
+      <span class="mc-tag-inner">
+        Postura · Cultura · Exemplo · Confiança
+      </span>
+    </div>
+  </div>
+</div>
+
+
+<!-- MÓDULO 5 — CONTEÚDO -->
+<div class="page content">
+  <div class="page-header"><span>Módulo 5 — Postura, Cultura e Responsabilidade</span></div>
+  <div class="page-footer"><span class="ft-brand">Liderança com Propósito</span><span class="ft-num">33</span></div>
+  <div class="page-body">
+
+    <h2>Pontos Principais</h2>
+    <div class="sp-sm"></div>
+
+    <div class="step-row">
+      <div class="step-label">Postura Profissional</div>
+      <div class="step-desc">Agir com ética, respeito, equilíbrio e responsabilidade em todas as situações.</div>
+    </div>
+    <div class="step-row">
+      <div class="step-label">Cultura no Dia a Dia</div>
+      <div class="step-desc">Entender que a cultura organizacional é construída nas pequenas ações diárias, não apenas em discursos.</div>
+    </div>
+    <div class="step-row">
+      <div class="step-label">Responsabilidade Emocional</div>
+      <div class="step-desc">Reconhecer o impacto das próprias atitudes no emocional da equipe, mantendo controle e maturidade nas decisões.</div>
+    </div>
+    <div class="step-row">
+      <div class="step-label">Exemplo como Influência</div>
+      <div class="step-desc">O líder influencia mais pelo que faz do que pelo que fala — suas ações servem de referência constante.</div>
+    </div>
+    <div class="step-row">
+      <div class="step-label">Construção de Confiança</div>
+      <div class="step-desc">Desenvolver relações baseadas em transparência, coerência e segurança, fortalecendo o vínculo com a equipe.</div>
+    </div>
+
+    <div class="sp-md"></div>
+    <div class="box dark">
+      Um líder instável gera insegurança na equipe e enfraquece o ambiente.
+      <span class="dash"></span>
+    </div>
+
+  </div>
+</div>
+
+<!-- MÓDULO 5 — ATIVIDADE -->
+<div class="page activity">
+  <div class="page-header"><span>Módulo 5 — Atividade e Dinâmica</span></div>
+  <div class="page-footer"><span class="ft-brand">Liderança com Propósito</span><span class="ft-num">35</span></div>
+  <div class="page-body">
+    <h1 class="section-title gold">Atividade Prática — Módulo 5</h1>
+    <div class="activity-block">
+      <div class="activity-q">O que minha equipe aprende ao me observar?</div>
+      <div class="activity-lines"><div class="a-line"></div><div class="a-line"></div><div class="a-line"></div></div>
+    </div>
+    <div class="sp-md"></div>
+    <div class="activity-block">
+      <div class="activity-q">Minha postura fortalece ou enfraquece o ambiente?</div>
+      <div class="activity-lines"><div class="a-line"></div><div class="a-line"></div><div class="a-line"></div></div>
+    </div>
+    <div class="sp-md"></div>
+    <div class="activity-block">
+      <div class="activity-q">Estou ajudando a construir a cultura que a empresa deseja viver?</div>
+      <div class="activity-lines"><div class="a-line"></div><div class="a-line"></div><div class="a-line"></div></div>
+    </div>
+    <div class="sp-md"></div>
+    <h1 class="section-title gold">Dinâmica — O Exemplo Fala</h1>
+    <div class="activity-block">
+      <div class="activity-q">O que minha equipe copia de mim?</div>
+      <div class="activity-lines"><div class="a-line"></div><div class="a-line"></div><div class="a-line"></div></div>
+    </div>
+    <div class="sp-md"></div>
+    <div class="activity-block">
+      <div class="activity-q">Que comportamento meu se espalha sem eu perceber?</div>
+      <div class="activity-lines"><div class="a-line"></div><div class="a-line"></div><div class="a-line"></div></div>
+    </div>
+    <div class="sp-sm"></div>
+    <div class="box green">Dinâmica individual e anônima.</div>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════
+     MÓDULO 6 — CAPA
+════════════════════════════════════════════════ -->
+<div class="page module-cover">
+  <div class="mc-left-block">
+    <div class="mc-mod-label">Módulo</div>
+    <div class="mc-mod-num">06</div>
+    <div style="margin-top:8mm">
+      <svg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg">
+        <!-- lightning / pressure symbol -->
+        <polygon points="34,4 20,32 30,32 26,56 44,24 32,24" fill="rgba(200,155,60,0.9)"/>
+        <circle cx="30" cy="30" r="26" fill="none" stroke="rgba(255,255,255,0.2)" stroke-width="2"/>
+        <circle cx="30" cy="30" r="20" fill="none" stroke="rgba(255,255,255,0.15)" stroke-width="1"/>
+      </svg>
+    </div>
+  </div>
+  <div class="mc-gold-stripe"></div>
+  <div class="mc-right-block">
+    <div class="mc-title">Conflitos, Feedback e Liderança sob Pressão</div>
+    <p class="mc-desc">Liderar também exige equilíbrio para conduzir conversas difíceis, administrar conflitos e agir com clareza em momentos de pressão. O participante desenvolve recursos práticos para lidar com situações sensíveis sem perder direção.</p>
+    <div style="margin-top:8mm">
+      <span class="mc-tag-inner">
+        Conflitos · Feedback · Pressão · Motivação
+      </span>
+    </div>
+  </div>
+</div>
+
+
+<!-- MÓDULO 6 — GESTÃO DE CONFLITOS -->
+<div class="page content">
+  <div class="page-header"><span>Módulo 6 — Conflitos, Feedback e Pressão</span></div>
+  <div class="page-footer"><span class="ft-brand">Liderança com Propósito</span><span class="ft-num">37</span></div>
+  <div class="page-body">
+
+    <h2>5.1 Gestão de Conflitos</h2>
+    <p>Conflito é a divergência de percepções, interesses ou valores entre indivíduos ou grupos.</p>
+
+    <div class="compare-table" style="grid-template-columns:1fr 1fr 1fr">
+      <div class="compare-col left">
+        <div class="col-head">De Tarefa</div>
+        <div class="col-body"><div class="col-item">Relacionado ao conteúdo do trabalho</div><div class="col-item">Opiniões sobre como executar atividades</div><div class="col-item">Pode ser produtivo quando bem direcionado</div></div>
+      </div>
+      <div class="compare-col right">
+        <div class="col-head">De Relacionamento</div>
+        <div class="col-body"><div class="col-item">Envolve questões pessoais e emoções</div><div class="col-item">Dificuldades de convivência</div><div class="col-item">Costuma ser mais sensível</div></div>
+      </div>
+      <div class="compare-col right" style="--col-color:var(--gold)">
+        <div class="col-head" style="background:var(--gold)">De Processo</div>
+        <div class="col-body"><div class="col-item">Forma como o trabalho é realizado</div><div class="col-item">Divisão de responsabilidades</div><div class="col-item">Pode gerar desalinhamento</div></div>
+      </div>
+    </div>
+
+    <h2>Método de Gestão</h2>
+    <div class="step-row">
+      <div class="step-label">1. Diagnosticar</div>
+      <div class="step-desc">Entender o que realmente está acontecendo, indo além da superfície. Identificar fatos, envolvidos e o tipo de conflito.</div>
+    </div>
+    <div class="step-row">
+      <div class="step-label">2. Ouvir</div>
+      <div class="step-desc">Dar espaço para todas as partes se expressarem. Praticar escuta ativa, sem interrupções ou julgamentos precipitados.</div>
+    </div>
+    <div class="step-row">
+      <div class="step-label">3. Identificar Interesses</div>
+      <div class="step-desc">Ir além das posições (o que a pessoa diz que quer) e compreender os interesses reais (o porquê ela quer).</div>
+    </div>
+    <div class="step-row">
+      <div class="step-label">4. Construir Soluções</div>
+      <div class="step-desc">Buscar alternativas que atendam, na medida do possível, os interesses de todos, com foco em colaboração e resultado.</div>
+    </div>
+    <div class="step-row">
+      <div class="step-label">5. Formalizar Acordos</div>
+      <div class="step-desc">Definir claramente o que foi combinado, responsabilidades, prazos e expectativas para evitar novos conflitos.</div>
+    </div>
+
+  </div>
+</div>
+
+
+<!-- MÓDULO 6 — FEEDBACK -->
+<div class="page content">
+  <div class="page-header"><span>Módulo 6 — Feedback na Prática</span></div>
+  <div class="page-footer"><span class="ft-brand">Liderança com Propósito</span><span class="ft-num">38</span></div>
+  <div class="page-body">
+
+    <h2>5.2 Feedback na Prática</h2>
+    <p>Reconhecer, orientar e corrigir com clareza fortalece a relação com a equipe. O feedback é uma ferramenta essencial de desenvolvimento contínuo.</p>
+
+    <div class="box dark">
+      O objetivo do feedback não é apontar erro. É direcionar comportamento.
+      <span class="dash"></span>
+    </div>
+
+    <h3>Quando bem feito, o feedback:</h3>
+    <ul class="styled">
+      <li>Melhora o desempenho</li>
+      <li>Reduz retrabalho</li>
+      <li>Fortalece a confiança</li>
+      <li>Desenvolve pessoas</li>
+    </ul>
+
+    <h2>Estrutura Simples</h2>
+    <div class="step-row gold-row">
+      <div class="step-label">1. O que foi observado</div>
+      <div class="step-desc">Descreva o fato de forma objetiva, sem julgamento.</div>
+    </div>
+    <div class="step-row gold-row">
+      <div class="step-label">2. Impacto</div>
+      <div class="step-desc">Explique o que aquela situação gera na equipe ou no resultado.</div>
+    </div>
+    <div class="step-row gold-row">
+      <div class="step-label">3. Direcionamento</div>
+      <div class="step-desc">Deixe claro o que precisa ser ajustado, mantido ou elogiado.</div>
+    </div>
+
+    <div class="sp-sm"></div>
+    <div class="box gold">Evite usar <strong>"mas"</strong> e <strong>"porém"</strong>. Essas palavras anulam o que foi dito antes e fazem o colaborador focar apenas na crítica. Prefira conduzir o feedback com continuidade e clareza.</div>
+
+  </div>
+</div>
+
+
+<!-- MÓDULO 6 — EXEMPLOS FEEDBACK -->
+<div class="page content">
+  <div class="page-header"><span>Módulo 6 — Exemplos Práticos de Feedback</span></div>
+  <div class="page-footer"><span class="ft-brand">Liderança com Propósito</span><span class="ft-num">40</span></div>
+  <div class="page-body">
+
+    <h2>Exemplos Práticos</h2>
+    <div class="sp-sm"></div>
+
+    <div class="example-card">
+      <div class="ex-tag">Exemplo 1 — Reconhecimento + Ajuste</div>
+      <div class="ex-title">Atendimento ao cliente</div>
+      <div class="ex-text">"Seu atendimento foi muito bom hoje, você conduziu com atenção e clareza. Agora, vamos alinhar um ponto: o tempo de resposta pode ser mais ágil para melhorar ainda mais a experiência do cliente."</div>
+    </div>
+
+    <div class="example-card">
+      <div class="ex-tag">Exemplo 2 — Correção Direta</div>
+      <div class="ex-title">Atrasos frequentes</div>
+      <div class="ex-text">"Percebi que você tem chegado atrasado nos últimos dias. Isso impacta a organização da equipe. Preciso do seu compromisso com o horário a partir de agora."</div>
+    </div>
+
+    <div class="example-card">
+      <div class="ex-tag">Exemplo 3 — Potencial + Postura</div>
+      <div class="ex-title">Desenvolvimento de postura</div>
+      <div class="ex-text">"Você tem um bom conhecimento técnico e isso é um ponto forte. Agora precisamos trabalhar sua postura, principalmente na forma como se comunica com a equipe."</div>
+    </div>
+
+    <div class="example-card">
+      <div class="ex-tag">Exemplo 4 — Comportamento no Ambiente</div>
+      <div class="ex-title">Clima da equipe</div>
+      <div class="ex-text">"Quero te chamar atenção para um ponto importante. Algumas atitudes têm gerado desconforto na equipe. Vamos alinhar isso para manter um ambiente mais leve."</div>
+    </div>
+
+    <div class="example-card">
+      <div class="ex-tag">Exemplo 5 — Evolução Contínua</div>
+      <div class="ex-title">Reconhecendo progresso</div>
+      <div class="ex-text">"Você evoluiu bastante na organização das suas tarefas. O próximo passo agora é manter esse padrão todos os dias."</div>
+    </div>
+
+  </div>
+</div>
+
+
+<!-- MÓDULO 6 — ATIVIDADE FEEDBACK -->
+<div class="page activity">
+  <div class="page-header"><span>Módulo 6 — Aplicação Prática</span></div>
+  <div class="page-footer"><span class="ft-brand">Liderança com Propósito</span><span class="ft-num">42</span></div>
+  <div class="page-body">
+    <h1 class="section-title gold">Aplicação Prática — Feedback</h1>
+    <p>Escolha uma situação real da sua equipe e escreva como você daria esse feedback:</p>
+    <div class="sp-sm"></div>
+    <div class="activity-block">
+      <div class="activity-q">Situação:</div>
+      <div class="activity-lines"><div class="a-line"></div><div class="a-line"></div></div>
+    </div>
+    <div class="sp-md"></div>
+    <div class="activity-block">
+      <div class="activity-q">Como eu daria o feedback:</div>
+      <div class="activity-lines"><div class="a-line"></div><div class="a-line"></div><div class="a-line"></div><div class="a-line"></div><div class="a-line"></div></div>
+    </div>
+    <div class="sp-md"></div>
+    <p><strong>Reflexão — Eu tenho mais dificuldade em:</strong></p>
+    <ul class="checkbox-list">
+      <li>Reconhecer</li>
+      <li>Corrigir</li>
+      <li>Dar clareza</li>
+      <li>Falar no momento certo</li>
+    </ul>
+    <div class="sp-md"></div>
+    <div class="box dark">
+      Feedback não é confronto. É direção. E quando falta direção… o erro se repete.
+      <span class="dash"></span>
+    </div>
+  </div>
+</div>
+
+
+<!-- MÓDULO 6 — SBI -->
+<div class="page content">
+  <div class="page-header"><span>Módulo 6 — Modelo SBI</span></div>
+  <div class="page-footer"><span class="ft-brand">Liderança com Propósito</span><span class="ft-num">43</span></div>
+  <div class="page-body">
+
+    <h2>Modelo SBI de Feedback</h2>
+    <p>Uma forma simples e eficaz de estruturar o feedback:</p>
+    <div class="sp-sm"></div>
+
+    <div class="sbi-row"><div class="sbi-label">S<br><small style="font-size:8px;font-weight:400">Situação</small></div><div class="sbi-desc"><strong>Situação</strong> — Descreva o contexto específico em que ocorreu o fato.</div></div>
+    <div class="sbi-row"><div class="sbi-label">B<br><small style="font-size:8px;font-weight:400">Behavior</small></div><div class="sbi-desc"><strong>Comportamento</strong> — Explique o que foi observado, de forma objetiva e sem julgamentos.</div></div>
+    <div class="sbi-row"><div class="sbi-label">I<br><small style="font-size:8px;font-weight:400">Impacto</small></div><div class="sbi-desc"><strong>Impacto</strong> — Mostre as consequências daquela ação para a equipe, o trabalho ou o resultado.</div></div>
+
+    <div class="sp-md"></div>
+    <h2>Boas Práticas</h2>
+    <ul class="styled">
+      <li><strong>Clareza</strong> — Seja direto e evite mensagens ambíguas.</li>
+      <li><strong>Objetividade</strong> — Foque em fatos concretos, não em opiniões ou interpretações.</li>
+      <li><strong>Respeito</strong> — Mantenha um tom adequado, preservando a relação e a confiança.</li>
+    </ul>
+
+    <div class="sp-md"></div>
+    <h2>5.3 Liderança sob Pressão</h2>
+    <p>Em momentos de tensão, a forma como o líder reage impacta diretamente o ambiente, a confiança da equipe e a capacidade de resposta diante dos desafios. Mais do que resolver o problema, o líder precisa manter equilíbrio para conduzir a situação com clareza e direção.</p>
+
+    <h3>Competências Essenciais</h3>
+    <ul class="styled">
+      <li>Autocontrole emocional</li>
+      <li>Tomada de decisão com clareza</li>
+      <li>Comunicação assertiva mesmo sob tensão</li>
+      <li>Manutenção do foco em soluções</li>
+      <li>Capacidade de tranquilizar e direcionar a equipe</li>
+    </ul>
+
+  </div>
+</div>
+
+<!-- MÓDULO 6 — ATIVIDADE CONFLITO -->
+<div class="page activity">
+  <div class="page-header"><span>Módulo 6 — Dinâmica</span></div>
+  <div class="page-footer"><span class="ft-brand">Liderança com Propósito</span><span class="ft-num">49</span></div>
+  <div class="page-body">
+    <h1 class="section-title gold">Dinâmica — Situação Proposta</h1>
+    <p>Um colaborador apresenta atrasos frequentes ou postura inadequada no dia a dia.</p>
+    <div class="sp-sm"></div>
+    <div class="activity-block">
+      <div class="activity-q">Como você falaria? Descreva como você faria essa abordagem.</div>
+      <div class="activity-lines"><div class="a-line"></div><div class="a-line"></div><div class="a-line"></div><div class="a-line"></div><div class="a-line"></div><div class="a-line"></div><div class="a-line"></div></div>
+    </div>
+    <div class="sp-md"></div>
+    <div class="activity-block">
+      <div class="activity-q">Reconstrua a situação com base no modelo SBI:</div>
+      <div class="activity-lines"><div class="a-line"></div><div class="a-line"></div><div class="a-line"></div><div class="a-line"></div><div class="a-line"></div></div>
+    </div>
+  </div>
+</div>
+
+
+<!-- MOTIVAÇÃO E ALINHAMENTO -->
+<div class="page content">
+  <div class="page-header"><span>Motivação, Reconhecimento e Alinhamento</span></div>
+  <div class="page-footer"><span class="ft-brand">Liderança com Propósito</span><span class="ft-num">50</span></div>
+  <div class="page-body">
+
+    <h2>Motivação e Reconhecimento</h2>
+    <p>A valorização genuína fortalece o engajamento no dia a dia. Reconhecer avanços, atitudes e esforços demonstra atenção do líder e reforça o sentimento de pertencimento da equipe.</p>
+    <p>Mais do que elogiar resultados, o reconhecimento deve destacar comportamentos positivos, incentivando sua repetição e contribuindo para relações mais saudáveis e produtivas.</p>
+
+    <div class="sp-md"></div>
+    <h2>Alinhamento entre Liderança e Direção</h2>
+    <p>Especialmente em pequenas empresas, o líder exerce um papel fundamental como ponte entre a direção e a equipe. É essencial que o líder compreenda e traduza três pilares da empresa:</p>
+    <div class="sp-sm"></div>
+
+    <div class="pillar-row">
+      <div class="p-label" style="background:var(--green-dark)">Missão</div>
+      <div class="p-desc">Define o propósito da empresa. O porquê ela existe. O líder deve conectar as atividades do dia a dia a esse propósito.</div>
+    </div>
+    <div class="pillar-row">
+      <div class="p-label" style="background:var(--green-mid)">Visão</div>
+      <div class="p-desc">Representa onde a empresa quer chegar. O líder ajuda a equipe a entender o caminho e o direcionamento futuro.</div>
+    </div>
+    <div class="pillar-row">
+      <div class="p-label" style="background:var(--gold)">Valores</div>
+      <div class="p-desc">São os princípios que orientam comportamentos e decisões. O líder deve praticá-los e reforçá-los constantemente na equipe.</div>
+    </div>
+
+    <div class="sp-md"></div>
+    <div class="box green"><strong>Quando o líder comunica e pratica esses três elementos com clareza, ele transforma estratégia em ação, fortalece a cultura e reduz desalinhamentos.</strong></div>
+
+  </div>
+</div>
+
+
+<!-- EXERCÍCIO MISSÃO VISÃO VALORES -->
+<div class="page content">
+  <div class="page-header"><span>Exercício — Missão, Visão e Valores</span></div>
+  <div class="page-footer"><span class="ft-brand">Liderança com Propósito</span><span class="ft-num">54</span></div>
+  <div class="page-body">
+
+    <h1 class="section-title">Exercício — Conectando Missão, Visão e Valores à Rotina</h1>
+    <div class="box gold" style="margin-bottom:5mm"><strong>Objetivo:</strong> Ações concretas com a equipe.</div>
+
+    <div class="step-row">
+      <div class="step-label">Passo 1<br>Revisar os Conceitos</div>
+      <div class="step-desc">O líder deve ter clareza sobre: Missão da empresa, Visão de futuro e Valores organizacionais. Se necessário, escrever com suas próprias palavras para facilitar a comunicação.</div>
+    </div>
+    <div class="step-row">
+      <div class="step-label">Passo 2<br>Trazer para a Realidade</div>
+      <div class="step-desc"><b>Missão:</b> Como o trabalho da minha equipe contribui para isso no dia a dia? <b>Visão:</b> O que precisamos fazer hoje que nos aproxima desse objetivo? <b>Valores:</b> Quais comportamentos da equipe refletem (ou não) esses valores?</div>
+    </div>
+    <div class="step-row">
+      <div class="step-label">Passo 3<br>Conversa com a Equipe</div>
+      <div class="step-desc">Reunir a equipe, explicar missão/visão/valores de forma simples, dar exemplos reais e perguntar: "Onde vocês enxergam isso no nosso trabalho?" / "O que podemos melhorar?"</div>
+    </div>
+    <div class="step-row">
+      <div class="step-label">Passo 4<br>Definir Ações</div>
+      <div class="step-desc">1 a 3 comportamentos que devem ser reforçados, 1 ponto de melhoria da equipe e combinar atitudes esperadas.</div>
+    </div>
+    <div class="step-row">
+      <div class="step-label">Passo 5<br>Reforço Contínuo</div>
+      <div class="step-desc">Reconhecer quando alguém pratica os valores, corrigir quando houver desvios e retomar o tema em reuniões periódicas.</div>
+    </div>
+
+    <div class="sp-sm"></div>
+    <h3>Resultado Esperado</h3>
+    <ul class="styled">
+      <li>Mais clareza de propósito</li>
+      <li>Maior engajamento da equipe</li>
+      <li>Coerência entre discurso e prática</li>
+      <li>Cultura mais forte no dia a dia</li>
+    </ul>
+
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════
+     PLANO DE AÇÃO
+════════════════════════════════════════════════ -->
+<div class="page activity">
+  <div class="page-header"><span>Plano de Ação</span></div>
+  <div class="page-footer"><span class="ft-brand">Liderança com Propósito</span><span class="ft-num">55</span></div>
+  <div class="page-body">
+
+    <h1 class="section-title gold">Plano de Ação</h1>
+    <div class="sp-sm"></div>
+
+    <div class="plan-row">
+      <div class="plan-num">1</div>
+      <div class="plan-body">
+        <div class="plan-label">Ponto de Melhoria</div>
+        <div class="plan-lines"><div class="pl"></div><div class="pl"></div><div class="pl"></div><div class="pl"></div></div>
+      </div>
+    </div>
+
+    <div class="plan-row">
+      <div class="plan-num">2</div>
+      <div class="plan-body">
+        <div class="plan-label">Ação Prática</div>
+        <div class="plan-lines"><div class="pl"></div><div class="pl"></div><div class="pl"></div><div class="pl"></div></div>
+      </div>
+    </div>
+
+    <div class="plan-row">
+      <div class="plan-num">3</div>
+      <div class="plan-body">
+        <div class="plan-label">Prazo</div>
+        <div class="plan-lines"><div class="pl"></div><div class="pl"></div><div class="pl"></div><div class="pl"></div></div>
+      </div>
+    </div>
+
+    <div class="plan-row">
+      <div class="plan-num">4</div>
+      <div class="plan-body">
+        <div class="plan-label">Indicador</div>
+        <div class="plan-lines"><div class="pl"></div><div class="pl"></div><div class="pl"></div><div class="pl"></div></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+
+<!-- PLANO DE AÇÃO — EXEMPLO -->
+<div class="page content">
+  <div class="page-header"><span>Plano de Ação — Exemplo Prático</span></div>
+  <div class="page-footer"><span class="ft-brand">Liderança com Propósito</span><span class="ft-num">56</span></div>
+  <div class="page-body">
+
+    <h1 class="section-title">Plano de Ação — Exemplo Prático</h1>
+    <div class="sp-sm"></div>
+
+    <div class="ex-plan-row"><div class="ep-label">1. Objetivo</div><div class="ep-val">Melhorar a comunicação da equipe no dia a dia</div></div>
+    <div class="ex-plan-row"><div class="ep-label">2. Ação</div><div class="ep-val">Realizar uma reunião rápida no início do dia (10 minutos)</div></div>
+    <div class="ex-plan-row"><div class="ep-label">3. Responsável</div><div class="ep-val">Líder da equipe</div></div>
+    <div class="ex-plan-row"><div class="ep-label">4. Prazo</div><div class="ep-val">Diariamente</div></div>
+
+    <div class="sp-md"></div>
+    <h3>5. Checklist (Execução)</h3>
+    <p>Utilizado para acompanhar se a ação foi realizada conforme o combinado:</p>
+    <ul class="checkbox-list">
+      <li>Reunião realizada</li>
+      <li>Atividades do dia alinhadas</li>
+      <li>Dúvidas esclarecidas</li>
+    </ul>
+
+    <div class="sp-md"></div>
+    <h3>6. Indicadores (Resultado)</h3>
+    <p>Utilizados para avaliar se a ação está gerando melhoria real:</p>
+    <ul class="styled">
+      <li>Redução de erros nas tarefas</li>
+      <li>Diminuição de retrabalho</li>
+      <li>Equipe com mais autonomia na execução das atividades</li>
+    </ul>
+
+    <div class="sp-md"></div>
+    <div class="box green">
+      <strong>Como explicar para a equipe:</strong><br>
+      "O checklist mostra se estamos fazendo o combinado. O indicador mostra se isso está realmente melhorando nosso trabalho."
+    </div>
+
+    <div class="sp-md"></div>
+    <h2>Outro Exemplo — Feedbacks Semanais</h2>
+    <h3>Checklist</h3>
+    <ul class="checkbox-list">
+      <li>Feedback realizado</li>
+      <li>Pontos positivos apresentados</li>
+      <li>Pontos de melhoria alinhados</li>
+    </ul>
+    <h3>Indicadores</h3>
+    <ul class="styled">
+      <li>Melhoria no desempenho do colaborador</li>
+      <li>Redução na repetição de erros</li>
+      <li>Maior clareza sobre responsabilidades</li>
+    </ul>
+
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════
+     DINÂMICA FINAL + CONCLUSÃO
+════════════════════════════════════════════════ -->
+<div class="page activity">
+  <div class="page-header"><span>Dinâmica Final</span></div>
+  <div class="page-footer"><span class="ft-brand">Liderança com Propósito</span><span class="ft-num">58</span></div>
+  <div class="page-body">
+
+    <h1 class="section-title gold">Dinâmica Final — Compromisso Real</h1>
+    <p>Ao final do encontro, cada líder deverá registrar:</p>
+    <div class="sp-md"></div>
+
+    <div class="activity-block">
+      <div class="activity-q">🔴  Um comportamento que vou PARAR.</div>
+      <div class="activity-lines"><div class="a-line"></div><div class="a-line"></div><div class="a-line"></div></div>
+    </div>
+    <div class="sp-md"></div>
+    <div class="activity-block">
+      <div class="activity-q">🟢  Um comportamento que vou COMEÇAR.</div>
+      <div class="activity-lines"><div class="a-line"></div><div class="a-line"></div><div class="a-line"></div></div>
+    </div>
+    <div class="sp-md"></div>
+    <div class="activity-block">
+      <div class="activity-q">🟡  Um comportamento que vou MELHORAR.</div>
+      <div class="activity-lines"><div class="a-line"></div><div class="a-line"></div><div class="a-line"></div></div>
+    </div>
+
+  </div>
+</div>
+
+<div class="page content">
+  <div class="page-header"><span>Conclusão e Aplicação Final</span></div>
+  <div class="page-footer"><span class="ft-brand">Liderança com Propósito</span><span class="ft-num">59</span></div>
+  <div class="page-body">
+
+    <h1 class="section-title">Conclusão</h1>
+    <p>Desenvolver essas habilidades é essencial para o crescimento profissional e para a construção de equipes mais alinhadas, produtivas e saudáveis.</p>
+    <div class="box dark">
+      Desenvolver liderança não é opção. É necessidade para qualquer empresa que deseja crescer com consistência.
+      <span class="dash"></span>
+    </div>
+
+    <div class="sp-md"></div>
+    <h1 class="section-title">Aplicação Final</h1>
+    <div class="sp-sm"></div>
+
+    <div class="activity-block">
+      <div class="activity-q">Qual o maior desafio da minha liderança hoje?</div>
+      <div class="activity-lines"><div class="a-line"></div><div class="a-line"></div><div class="a-line"></div></div>
+    </div>
+    <div class="sp-md"></div>
+    <div class="activity-block">
+      <div class="activity-q">Que ajuste eu preciso fazer na minha comunicação?</div>
+      <div class="activity-lines"><div class="a-line"></div><div class="a-line"></div><div class="a-line"></div></div>
+    </div>
+    <div class="sp-md"></div>
+    <div class="activity-block">
+      <div class="activity-q">Como posso liderar melhor pessoas com perfis diferentes?</div>
+      <div class="activity-lines"><div class="a-line"></div><div class="a-line"></div><div class="a-line"></div></div>
+    </div>
+    <div class="sp-md"></div>
+    <div class="activity-block">
+      <div class="activity-q">Que atitude minha está impactando a equipe de forma positiva ou negativa?</div>
+      <div class="activity-lines"><div class="a-line"></div><div class="a-line"></div><div class="a-line"></div></div>
+    </div>
+
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════
+     PÁGINA FINAL
+════════════════════════════════════════════════ -->
+<div class="page final-page">
+  <!-- decorative circles -->
+  <svg style="position:absolute;inset:0;width:100%;height:100%;pointer-events:none" viewBox="0 0 595 842" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="80" cy="80" r="180" fill="rgba(46,125,88,0.3)"/>
+    <circle cx="520" cy="760" r="200" fill="rgba(46,125,88,0.2)"/>
+    <circle cx="500" cy="100" r="60" fill="rgba(200,155,60,0.12)"/>
+    <circle cx="100" cy="720" r="40" fill="rgba(200,155,60,0.1)"/>
+    <line x1="0" y1="420" x2="595" y2="420" stroke="rgba(46,125,88,0.2)" stroke-width="1"/>
+    <line x1="297" y1="0" x2="297" y2="842" stroke="rgba(46,125,88,0.1)" stroke-width="1"/>
+  </svg>
+
+  <div style="position:relative;z-index:2;text-align:center;padding:0 20mm">
+    <div class="fp-quote">
+      "Um bom líder não é o que faz por todos. É o que acompanha e desenvolve sua equipe."
+    </div>
+    <div class="fp-rule" style="margin:0 auto 8mm"></div>
+    <div class="fp-author">Cristiele Rodrigues</div>
+    <div class="fp-brand">RH com Propósito</div>
+
+    <!-- small decorative -->
+    <div style="margin-top:20mm">
+      <svg width="80" height="40" viewBox="0 0 80 40" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="10" cy="20" r="6" fill="rgba(200,155,60,0.4)"/>
+        <circle cx="30" cy="20" r="6" fill="rgba(200,155,60,0.6)"/>
+        <circle cx="50" cy="20" r="6" fill="rgba(200,155,60,0.8)"/>
+        <circle cx="70" cy="20" r="6" fill="rgba(200,155,60,1)"/>
+      </svg>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

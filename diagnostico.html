@@ -1,0 +1,1714 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Diagnóstico Organizacional — RH com Propósito</title>
+<link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700;900&family=Playfair+Display:ital,wght@0,600;0,700;1,500;1,600&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --green:#1A5C45;--green-mid:#2E7D58;--green-light:#4A9A72;
+  --green-pale:#F0F9F4;--green-xpale:#F8FDFB;
+  --gold:#C89B3C;--gold-light:#E8C96A;--gold-pale:#FDF6E7;
+  --dark:#0A1C12;--gray:#5A6A62;--white:#fff;
+  --r:14px;
+}
+html{scroll-behavior:smooth;font-size:16px}
+body{font-family:'Lato',sans-serif;background:var(--dark);color:var(--white);min-height:100vh;overflow-x:hidden}
+::-webkit-scrollbar{width:5px}
+::-webkit-scrollbar-track{background:#0A1C12}
+::-webkit-scrollbar-thumb{background:var(--gold);border-radius:3px}
+
+/* ── VIEWS ── */
+.view{display:none;min-height:100vh;padding:0}
+.view.active{display:block}
+
+/* ── SETUP BANNERS ── */
+.banner{
+  display:none;
+  background:linear-gradient(90deg,rgba(200,155,60,.12),rgba(200,155,60,.06));
+  border:1px solid rgba(200,155,60,.3);
+  border-radius:10px;padding:14px 20px;
+  margin:0 0 20px;
+  font-size:13px;color:rgba(255,255,255,.85);
+  gap:14px;align-items:flex-start;
+}
+.banner.show{display:flex}
+.banner-icon{font-size:20px;flex-shrink:0;margin-top:2px}
+.banner strong{color:var(--gold)}
+.banner a{color:var(--gold-light);text-decoration:underline}
+.banner input{
+  width:100%;margin-top:8px;padding:8px 12px;border-radius:7px;
+  border:1px solid rgba(200,155,60,.4);
+  background:rgba(0,0,0,.3);color:white;font-size:13px;
+}
+.banner input:focus{outline:none;border-color:var(--gold)}
+.banner-btn{
+  margin-top:8px;padding:7px 14px;border-radius:7px;
+  background:var(--gold);color:#0A1C12;font-weight:700;font-size:12px;
+  border:none;cursor:pointer;letter-spacing:.5px;
+}
+.banner-ok{color:#4ADE80;font-weight:700;margin-top:8px;font-size:12px;display:none}
+
+/* ── COVER ── */
+.cover{
+  min-height:100vh;
+  background:linear-gradient(145deg,#070F09 0%,var(--green) 55%,#0F3D2A 100%);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  padding:40px 24px;position:relative;overflow:hidden;
+}
+.cover::before{
+  content:'';position:absolute;
+  width:600px;height:600px;border-radius:50%;
+  background:radial-gradient(circle,rgba(200,155,60,.07) 0%,transparent 70%);
+  top:-200px;right:-200px;pointer-events:none;
+}
+.cover::after{
+  content:'';position:absolute;
+  width:400px;height:400px;border-radius:50%;
+  background:radial-gradient(circle,rgba(46,125,88,.2) 0%,transparent 70%);
+  bottom:-100px;left:-100px;pointer-events:none;
+}
+.cover-inner{width:100%;max-width:860px;position:relative;z-index:2;text-align:center}
+.cover-logo{width:90px;height:auto;margin:0 auto 28px;display:block;opacity:.95}
+.cover-eyebrow{
+  font-size:11px;font-weight:700;letter-spacing:3px;text-transform:uppercase;
+  color:var(--gold);margin-bottom:16px;
+}
+.cover-title{
+  font-family:'Playfair Display',serif;
+  font-size:clamp(28px,5vw,48px);font-weight:700;color:white;
+  line-height:1.15;margin-bottom:12px;
+}
+.cover-title span{color:var(--gold);font-style:italic}
+.cover-sub{font-size:15px;color:rgba(255,255,255,.55);max-width:540px;margin:0 auto 40px;line-height:1.7}
+
+.company-row{
+  display:flex;align-items:center;gap:12px;
+  max-width:420px;margin:0 auto 48px;
+}
+.company-row label{font-size:13px;color:rgba(255,255,255,.5);font-weight:700;letter-spacing:.5px;white-space:nowrap}
+.company-row input{
+  flex:1;padding:11px 16px;border-radius:10px;
+  border:1.5px solid rgba(200,155,60,.3);
+  background:rgba(255,255,255,.05);color:white;
+  font-size:14px;font-family:'Lato',sans-serif;
+  transition:border-color .2s;
+}
+.company-row input:focus{outline:none;border-color:var(--gold)}
+
+.role-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;max-width:660px;margin:0 auto 48px}
+@media(max-width:600px){.role-grid{grid-template-columns:1fr}}
+.role-card{
+  background:rgba(255,255,255,.06);
+  border:1.5px solid rgba(255,255,255,.1);
+  border-radius:16px;padding:28px 24px;
+  cursor:pointer;text-align:left;
+  transition:all .25s ease;
+  position:relative;overflow:hidden;
+}
+.role-card::before{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(135deg,rgba(200,155,60,.08) 0%,transparent 60%);
+  opacity:0;transition:opacity .25s;
+}
+.role-card:hover{border-color:rgba(200,155,60,.5);transform:translateY(-3px);box-shadow:0 12px 36px rgba(0,0,0,.3)}
+.role-card:hover::before{opacity:1}
+.role-card.admin-card{border-color:rgba(200,155,60,.2);background:rgba(200,155,60,.05)}
+.role-icon{
+  width:48px;height:48px;border-radius:12px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:22px;margin-bottom:16px;
+}
+.icon-green{background:rgba(46,125,88,.25);border:1px solid rgba(46,125,88,.4)}
+.icon-blue{background:rgba(59,130,246,.15);border:1px solid rgba(59,130,246,.3)}
+.icon-purple{background:rgba(139,92,246,.15);border:1px solid rgba(139,92,246,.3)}
+.icon-gold{background:rgba(200,155,60,.15);border:1px solid rgba(200,155,60,.4)}
+.role-label{font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--gold);margin-bottom:6px}
+.role-name{font-family:'Playfair Display',serif;font-size:20px;font-weight:700;color:white;margin-bottom:8px}
+.role-desc{font-size:13px;color:rgba(255,255,255,.45);line-height:1.55}
+.role-lock{
+  position:absolute;top:20px;right:20px;
+  width:28px;height:28px;border-radius:50%;
+  background:rgba(255,255,255,.07);
+  display:flex;align-items:center;justify-content:center;
+  font-size:13px;
+}
+
+.cover-banners{max-width:660px;margin:0 auto;text-align:left}
+
+/* ── PASSWORD MODAL ── */
+.modal-overlay{
+  display:none;position:fixed;inset:0;z-index:900;
+  background:rgba(0,0,0,.7);backdrop-filter:blur(6px);
+  align-items:center;justify-content:center;padding:20px;
+}
+.modal-overlay.open{display:flex}
+.modal-box{
+  background:linear-gradient(145deg,#0F2B1E,#1A5C45);
+  border:1px solid rgba(200,155,60,.3);
+  border-radius:20px;padding:40px 36px;
+  width:100%;max-width:400px;text-align:center;
+  box-shadow:0 24px 60px rgba(0,0,0,.5);
+}
+.modal-icon{font-size:36px;margin-bottom:16px}
+.modal-title{font-family:'Playfair Display',serif;font-size:22px;font-weight:700;color:white;margin-bottom:8px}
+.modal-sub{font-size:14px;color:rgba(255,255,255,.5);margin-bottom:28px;line-height:1.6}
+.modal-input{
+  width:100%;padding:13px 16px;border-radius:10px;
+  border:1.5px solid rgba(200,155,60,.3);
+  background:rgba(0,0,0,.3);color:white;
+  font-size:15px;letter-spacing:2px;text-align:center;
+  font-family:'Lato',sans-serif;margin-bottom:16px;
+  transition:border-color .2s;
+}
+.modal-input:focus{outline:none;border-color:var(--gold)}
+.modal-input.error{border-color:#F87171;animation:shake .3s}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
+.modal-error{font-size:12px;color:#F87171;margin-bottom:12px;display:none}
+.modal-btn{
+  width:100%;padding:13px;border-radius:10px;
+  background:var(--gold);color:#0A1C12;
+  font-weight:700;font-size:14px;letter-spacing:.5px;
+  border:none;cursor:pointer;
+  transition:all .2s;margin-bottom:12px;
+}
+.modal-btn:hover{background:var(--gold-light);transform:translateY(-1px)}
+.modal-cancel{
+  font-size:13px;color:rgba(255,255,255,.35);
+  background:none;border:none;cursor:pointer;
+  letter-spacing:.5px;text-transform:uppercase;
+}
+.modal-cancel:hover{color:rgba(255,255,255,.6)}
+
+/* ── QUESTIONNAIRE SHELL ── */
+.qshell{
+  min-height:100vh;
+  background:linear-gradient(145deg,#070F09 0%,#0F2B1E 50%,#1A5C45 100%);
+  padding:0 0 80px;
+}
+.q-topbar{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:16px 32px;
+  background:rgba(0,0,0,.2);backdrop-filter:blur(12px);
+  border-bottom:1px solid rgba(255,255,255,.06);
+  position:sticky;top:0;z-index:100;
+}
+.q-topbar-logo{height:36px;width:auto}
+.q-topbar-badge{
+  display:flex;align-items:center;gap:8px;
+  font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;
+  color:rgba(255,255,255,.4);
+}
+.q-topbar-dot{width:8px;height:8px;border-radius:50%;background:var(--gold)}
+.q-back{
+  background:none;border:none;cursor:pointer;
+  font-size:12px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;
+  color:rgba(255,255,255,.3);transition:color .2s;
+  display:flex;align-items:center;gap:6px;
+}
+.q-back:hover{color:rgba(255,255,255,.6)}
+
+.q-hero{
+  text-align:center;padding:48px 32px 40px;
+  max-width:700px;margin:0 auto;
+}
+.q-eyebrow{font-size:11px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--gold);margin-bottom:12px}
+.q-title{font-family:'Playfair Display',serif;font-size:clamp(22px,4vw,34px);font-weight:700;color:white;margin-bottom:12px;line-height:1.2}
+.q-sub{font-size:14px;color:rgba(255,255,255,.45);line-height:1.7}
+
+.q-form{max-width:680px;margin:0 auto;padding:0 24px}
+
+.q-card{
+  background:rgba(255,255,255,.055);
+  border:1px solid rgba(255,255,255,.09);
+  border-radius:16px;padding:28px 32px;
+  margin-bottom:20px;
+  backdrop-filter:blur(10px);
+  transition:border-color .2s;
+}
+.q-card:focus-within{border-color:rgba(200,155,60,.4)}
+.q-num{
+  font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;
+  color:var(--gold);margin-bottom:8px;
+}
+.q-label{font-size:16px;font-weight:700;color:white;margin-bottom:8px;line-height:1.4}
+.q-hint{font-size:13px;color:rgba(255,255,255,.35);margin-bottom:16px;line-height:1.5}
+.q-input{
+  width:100%;background:rgba(0,0,0,.25);
+  border:1.5px solid rgba(255,255,255,.1);
+  border-radius:10px;padding:13px 16px;
+  color:white;font-size:14px;font-family:'Lato',sans-serif;
+  resize:vertical;min-height:100px;line-height:1.6;
+  transition:border-color .25s;
+}
+.q-input:focus{outline:none;border-color:var(--gold)}
+.q-input::placeholder{color:rgba(255,255,255,.2)}
+
+.q-input-sm{min-height:48px;resize:none}
+
+/* Identification row */
+.id-row{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media(max-width:520px){.id-row{grid-template-columns:1fr}}
+.id-field label{display:block;font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--gold);margin-bottom:8px}
+.id-field input{
+  width:100%;background:rgba(0,0,0,.25);border:1.5px solid rgba(255,255,255,.1);
+  border-radius:10px;padding:11px 14px;color:white;font-size:14px;
+  font-family:'Lato',sans-serif;transition:border-color .2s;
+}
+.id-field input:focus{outline:none;border-color:var(--gold)}
+
+/* Submit area */
+.q-submit-area{text-align:center;padding-top:16px;padding-bottom:40px}
+.q-submit{
+  padding:15px 40px;border-radius:10px;
+  background:var(--gold);color:#0A1C12;
+  font-weight:900;font-size:15px;letter-spacing:.5px;
+  border:none;cursor:pointer;
+  transition:all .25s ease;
+  box-shadow:0 6px 20px rgba(200,155,60,.3);
+}
+.q-submit:hover:not(:disabled){background:var(--gold-light);transform:translateY(-2px);box-shadow:0 10px 28px rgba(200,155,60,.4)}
+.q-submit:disabled{opacity:.5;cursor:not-allowed;transform:none}
+.q-submit-note{font-size:12px;color:rgba(255,255,255,.25);margin-top:12px;letter-spacing:.3px}
+
+/* ── THANK YOU ── */
+.thanks-view{
+  min-height:100vh;
+  background:linear-gradient(145deg,#070F09,#0F2B1E,#1A5C45);
+  display:flex;align-items:center;justify-content:center;padding:40px 24px;
+}
+.thanks-box{
+  background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);
+  border-radius:24px;padding:56px 48px;max-width:520px;width:100%;text-align:center;
+  backdrop-filter:blur(16px);
+}
+.thanks-icon{font-size:56px;margin-bottom:24px}
+.thanks-title{font-family:'Playfair Display',serif;font-size:28px;font-weight:700;color:white;margin-bottom:12px}
+.thanks-sub{font-size:15px;color:rgba(255,255,255,.5);line-height:1.7;margin-bottom:32px}
+.thanks-btn{
+  padding:13px 32px;border-radius:10px;background:var(--gold);color:#0A1C12;
+  font-weight:700;font-size:14px;border:none;cursor:pointer;letter-spacing:.5px;
+  transition:all .2s;
+}
+.thanks-btn:hover{background:var(--gold-light);transform:translateY(-1px)}
+
+/* ── ADMIN PANEL ── */
+.admin-shell{
+  min-height:100vh;
+  background:linear-gradient(145deg,#050C08,#0D2419,#1A5C45);
+  padding-bottom:80px;
+}
+.admin-topbar{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:16px 32px;
+  background:rgba(200,155,60,.07);
+  border-bottom:1px solid rgba(200,155,60,.2);
+  position:sticky;top:0;z-index:100;backdrop-filter:blur(12px);
+}
+.admin-badge{
+  display:flex;align-items:center;gap:8px;
+  font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;
+  color:var(--gold);
+}
+.admin-badge::before{
+  content:'';display:inline-block;width:8px;height:8px;border-radius:50%;
+  background:var(--gold);box-shadow:0 0 8px var(--gold);
+}
+
+.admin-hero{
+  text-align:center;padding:52px 32px 40px;max-width:760px;margin:0 auto;
+}
+.admin-title{font-family:'Playfair Display',serif;font-size:clamp(24px,4vw,36px);font-weight:700;color:white;margin-bottom:10px}
+.admin-sub{font-size:14px;color:rgba(255,255,255,.4);line-height:1.7}
+
+.admin-body{max-width:820px;margin:0 auto;padding:0 24px}
+
+/* Admin tabs */
+.admin-tabs{
+  display:flex;gap:4px;
+  background:rgba(0,0,0,.3);border:1px solid rgba(255,255,255,.07);
+  border-radius:12px;padding:4px;margin-bottom:32px;
+}
+.admin-tab{
+  flex:1;padding:10px 16px;border-radius:9px;
+  font-size:12px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;
+  color:rgba(255,255,255,.4);background:none;border:none;cursor:pointer;
+  transition:all .2s;
+}
+.admin-tab.active{background:var(--gold);color:#0A1C12}
+.admin-tab-panel{display:none}
+.admin-tab-panel.active{display:block}
+
+/* Section cards */
+.a-section{
+  background:rgba(255,255,255,.05);
+  border:1px solid rgba(255,255,255,.09);
+  border-radius:16px;padding:28px 32px;margin-bottom:20px;
+  backdrop-filter:blur(8px);
+}
+.a-section-header{margin-bottom:20px}
+.a-section-eyebrow{font-size:10px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--gold);margin-bottom:6px}
+.a-section-title{font-family:'Playfair Display',serif;font-size:20px;color:white;font-weight:700}
+.a-section-sub{font-size:13px;color:rgba(255,255,255,.35);margin-top:6px;line-height:1.55}
+
+/* Checklist */
+.chk-list{display:flex;flex-direction:column;gap:12px;margin-bottom:20px}
+.chk-item{
+  display:flex;align-items:center;gap:14px;padding:14px 16px;
+  background:rgba(0,0,0,.2);border-radius:10px;
+  border:1px solid rgba(255,255,255,.07);cursor:pointer;
+  transition:border-color .2s;
+}
+.chk-item:hover{border-color:rgba(200,155,60,.3)}
+.chk-item input[type="checkbox"]{display:none}
+.chk-box{
+  width:20px;height:20px;border-radius:5px;
+  border:2px solid rgba(255,255,255,.2);flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;
+  transition:all .2s;
+}
+.chk-item input:checked + .chk-box{background:var(--gold);border-color:var(--gold)}
+.chk-item input:checked + .chk-box::after{content:'✓';font-size:11px;font-weight:700;color:#0A1C12}
+.chk-text{font-size:14px;color:rgba(255,255,255,.75);line-height:1.45}
+.chk-status{
+  margin-left:auto;font-size:11px;font-weight:700;letter-spacing:.5px;
+  text-transform:uppercase;color:rgba(255,255,255,.25);white-space:nowrap;
+}
+.chk-item:has(input:checked) .chk-status{color:var(--gold)}
+
+/* Response compilation textareas */
+.compile-grid{display:flex;flex-direction:column;gap:16px}
+.compile-group label{
+  display:block;font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;
+  color:var(--gold);margin-bottom:8px;
+}
+.compile-input{
+  width:100%;min-height:110px;background:rgba(0,0,0,.25);
+  border:1.5px solid rgba(255,255,255,.1);border-radius:10px;
+  padding:13px 16px;color:white;font-size:13.5px;
+  font-family:'Lato',sans-serif;resize:vertical;line-height:1.65;
+  transition:border-color .2s;
+}
+.compile-input:focus{outline:none;border-color:var(--gold)}
+.compile-input::placeholder{color:rgba(255,255,255,.18)}
+
+/* Generate button */
+.generate-area{text-align:center;padding:32px 0 16px}
+.generate-btn{
+  display:inline-flex;align-items:center;gap:12px;
+  padding:16px 40px;border-radius:12px;
+  background:linear-gradient(135deg,var(--gold),var(--gold-light));
+  color:#0A1C12;font-weight:900;font-size:15px;letter-spacing:.5px;
+  border:none;cursor:pointer;
+  box-shadow:0 8px 28px rgba(200,155,60,.35);
+  transition:all .25s ease;
+}
+.generate-btn:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 14px 36px rgba(200,155,60,.45)}
+.generate-btn:disabled{opacity:.5;cursor:not-allowed;transform:none}
+.generate-note{font-size:12px;color:rgba(255,255,255,.25);margin-top:12px}
+
+/* Output */
+.output-box{
+  display:none;
+  background:rgba(255,255,255,.97);
+  border-radius:16px;padding:36px;
+  margin-top:24px;color:#111;
+}
+.output-box.show{display:block}
+.output-header{
+  display:flex;align-items:center;justify-content:space-between;
+  margin-bottom:24px;padding-bottom:20px;
+  border-bottom:2px solid #E0EDE7;
+  flex-wrap:wrap;gap:12px;
+}
+.output-logo-text{
+  font-family:'Playfair Display',serif;
+  font-size:16px;font-weight:700;color:var(--green);
+}
+.output-meta{font-size:12px;color:#888}
+.output-section{margin-bottom:28px}
+.output-section-title{
+  font-size:12px;font-weight:700;letter-spacing:2px;text-transform:uppercase;
+  color:var(--green);margin-bottom:8px;padding-bottom:6px;
+  border-bottom:1px solid #E0EDE7;
+}
+.output-section h3{font-family:'Playfair Display',serif;font-size:18px;color:#1A1A1A;margin-bottom:10px}
+.output-content{
+  font-size:14px;color:#444;line-height:1.8;
+  white-space:pre-wrap;
+}
+.output-actions{
+  display:flex;gap:12px;justify-content:flex-end;margin-top:24px;padding-top:20px;
+  border-top:1px solid #E0EDE7;
+}
+.out-btn{
+  padding:10px 22px;border-radius:8px;font-weight:700;font-size:13px;
+  cursor:pointer;border:none;letter-spacing:.3px;transition:all .2s;
+}
+.out-btn-print{background:var(--green);color:white}
+.out-btn-print:hover{background:var(--green-mid)}
+.out-btn-copy{background:#E0EDE7;color:var(--green)}
+.out-btn-copy:hover{background:#C8DFCF}
+
+/* Spinner */
+.spinner{
+  display:inline-block;width:20px;height:20px;
+  border:3px solid rgba(10,28,18,.3);
+  border-top-color:#0A1C12;border-radius:50%;
+  animation:spin .8s linear infinite;
+}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* Divider */
+.divider{height:1px;background:rgba(255,255,255,.07);margin:8px 0 28px}
+
+/* Checkbox group with textarea */
+.chk-group{margin-bottom:16px}
+.chk-group .chk-item{margin-bottom:6px}
+.chk-obs{
+  width:100%;background:rgba(0,0,0,.2);
+  border:1.5px solid rgba(255,255,255,.08);
+  border-radius:8px;padding:10px 14px;
+  color:white;font-size:13px;font-family:'Lato',sans-serif;
+  resize:vertical;min-height:64px;line-height:1.55;
+  transition:border-color .2s;
+}
+.chk-obs:focus{outline:none;border-color:rgba(200,155,60,.5)}
+.chk-obs::placeholder{color:rgba(255,255,255,.18)}
+
+/* Response counter badges */
+.resp-badge{
+  display:inline-flex;align-items:center;gap:6px;
+  background:rgba(200,155,60,.12);border:1px solid rgba(200,155,60,.25);
+  border-radius:20px;padding:4px 12px;
+  font-size:12px;font-weight:700;color:var(--gold);
+}
+.resp-summary{display:flex;flex-direction:column;gap:12px;margin-bottom:20px}
+.resp-row{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:14px 18px;background:rgba(0,0,0,.2);border-radius:10px;
+  border:1px solid rgba(255,255,255,.07);
+}
+.resp-row-label{font-size:14px;color:rgba(255,255,255,.75)}
+.resp-row-count{font-size:13px;font-weight:700;color:var(--gold)}
+
+/* Obs field */
+.obs-field{margin-top:16px}
+.obs-field label{display:block;font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,.35);margin-bottom:8px}
+
+/* Company info in admin */
+.company-display{
+  display:inline-flex;align-items:center;gap:8px;
+  background:rgba(200,155,60,.1);border:1px solid rgba(200,155,60,.25);
+  border-radius:8px;padding:6px 14px;
+  font-size:13px;color:var(--gold);font-weight:700;
+}
+
+@media(max-width:600px){
+  .q-topbar,.admin-topbar{padding:14px 20px}
+  .q-form,.admin-body{padding:0 16px}
+  .q-card,.a-section{padding:22px 20px}
+  .thanks-box{padding:40px 28px}
+  .admin-tabs{flex-direction:column}
+}
+
+/* Print styles */
+@media print{
+  body{background:white;color:black}
+  .admin-shell,.admin-topbar,.admin-tabs,.a-section,.generate-area,.output-actions{display:none!important}
+  .output-box{display:block!important;border:none;padding:0;background:white}
+  .output-box *{color:black!important}
+}
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════
+     COVER VIEW
+════════════════════════════════════════════ -->
+<div id="view-cover" class="view active">
+  <div class="cover">
+    <div class="cover-inner">
+      <!-- Logo -->
+      <svg class="cover-logo" viewBox="0 0 900.76 921.01" xmlns="http://www.w3.org/2000/svg">
+        <path fill="#f8f1eb" d="M403.28,261.57c-.83.35-1.09.02-.54-.67,1.02-4.13,2.26-8.24,3.71-12.35,1.49-4.52,3.22-8.83,5.2-12.93l-.65-.82c.24-1.23,1.85-5.36,3.2-5.22,1.83-4.96,4.4-10.39,7.09-15.12.05-.1.24-.12.46-.12-.19-.15-.36-.3-.42-.49-.18-.55,3.92-7.53,4.61-8.5l1.13-.11c.27-1.56,1.75-3.76,2.97-4.7,1.01-3.45,2.81-6.64,5.42-9.57,2.3-3.73,5.11-6.83,8.43-9.31l.57-1.66c5.75-7.98,12.8-15.04,19.86-21.9,1.48-.74,2.91-1.62,4.27-2.64l-.18-1.03c6.17-4.51,11.89-9.55,17.19-15.13l7.72-10.09,1.12-.53c2.33-2.92,4.78-5.46,7.33-7.64l-.37-.95,23.24-24.44,1.02.04c.38-1.42-.45-1.1-1.51-.67.16.33.35.86.14,1-8.62,5.88-18.3,12.08-27.25,17.47l-.96-.48-1.34,1.34c-7.79,6.07-15.63,12.14-23.51,18.21l-1.8.76c-1.9,2.18-4.09,4.35-6.58,6.49.54.78,0,1.35-.79.85-1,1.48-2.17,2.91-3.51,4.29l-1.11-.2c-1.5,2.32-3.83,4.58-5.98,6.15-.4,1.05-.84,2.11-1.57,2.98-3.46,4.12-6.92,8.26-10.38,12.38-.73.87-1.7,1.49-2.67,2.07-.97,2.09-2.91,5.17-4.72,6.54l-.25,1.4c-3.76,5.69-7.39,11.48-10.89,17.37l-2.01,1.84c-.36,1.84-1.56,4.19-2.86,5.58,1.28.56.44,3.26-.94,3.18-1.85,2.98-3.46,6.13-4.82,9.45l-.42.14c-.16,1.24-.53,2.44-1.1,3.61.5.93-.19,2.16-1.36,1.96-.96,3.06-2.05,6.12-3.27,9.19-1.49,3.97-3.02,7.82-4.61,11.56-.89,4.01-2.53,8.89-4.36,12.67l.72.71c-1.55,5.13-3.8,11.29-5.84,16.27-.85,2.07-1.71,3.83-3.02,5.67-5.94,12.72-20.4,29.32-33.68,34.42-3.48,1.34-7.42.67-10.29-1.5-2.47-1.86-4.21-5.38-3.76-8.86.64-4.89,3.59-8.92,7.68-11.61,6.11-4.02,10.95-9.06,14.23-15.68,7.84-15.78,10.86-44.32,9.25-61.99l-2.72-29.94c-4.06-44.62,14.8-88.21,46.76-118.84,14.62-14.01,31.39-25.61,50.85-31.51,6.81-2.07,13.08-4.44,19.71-6.99,7.23-2.78,14.39-4.88,22.04-6.48,14.1-2.95,27.95-4.98,42.38-6l35.26-2.49c13.92-.98,27.51-1.73,41.2-4.2,6.4-1.16,9-5.09,11.66-3.44.76.47,1.82,1.64,2.02,2.93,1.02,6.42.97,12.63.95,19.24-.06,15.85-1.36,31.14-3.1,46.93-4.46,40.65-15.24,77.61-38.7,111.31-6.59,9.47-13.61,18.07-22.12,25.8-14.44,13.11-31.29,22.39-49.91,28.31-16.44,5.23-33.04,8.41-50.19,10.09l-28.18,2.77c-10.3,1.01-20,3.68-29.83,6.9-5.48,1.79-10.5,4.22-15.32,6.9Z"/>
+        <text style="font-family:Inter-Medium,Inter;font-size:104.57px;font-weight:500;fill:#f8f1eb" transform="translate(16.34 834.11)">COM PROPÓSITO</text>
+        <text style="font-family:MinionConceptRoman-Semibold,'Minion Variable Concept';font-size:620.66px;font-weight:600;fill:#f8f1eb" transform="translate(0 702.57)">RH</text>
+      </svg>
+
+      <div class="cover-eyebrow">Ferramenta de Diagnóstico</div>
+      <h1 class="cover-title">Diagnóstico <span>Organizacional</span></h1>
+      <p class="cover-sub">Cada grupo acessa o questionário específico do seu papel. As respostas são sigilosas e utilizadas exclusivamente para o desenvolvimento da sua equipe.</p>
+
+      <div class="company-row">
+        <label>EMPRESA</label>
+        <input type="text" id="companyName" placeholder="Nome da empresa (obrigatório)" oninput="localStorage.setItem('diag_company',this.value)">
+      </div>
+      <p style="font-size:12px;color:rgba(255,255,255,.35);margin:-36px auto 40px;max-width:420px;text-align:center;line-height:1.5">
+        Preencha o nome da empresa antes de acessar qualquer questionário.
+      </p>
+
+      <div class="role-grid">
+        <div class="role-card" onclick="tryAccess('direcao')">
+          <div class="role-lock">🔒</div>
+          <div class="role-icon icon-green">🏛️</div>
+          <div class="role-label">Seção 1</div>
+          <div class="role-name">Direção</div>
+          <div class="role-desc">Reunião com a direção — visão estratégica e expectativas para a empresa.</div>
+        </div>
+        <div class="role-card" onclick="tryAccess('gestores')">
+          <div class="role-lock">🔒</div>
+          <div class="role-icon icon-blue">📋</div>
+          <div class="role-label">Seção 2</div>
+          <div class="role-name">Gestores</div>
+          <div class="role-desc">Entrevista com gestores — desafios de liderança e gestão de equipes.</div>
+        </div>
+        <div class="role-card" onclick="tryAccess('colaboradores')">
+          <div class="role-lock">🔒</div>
+          <div class="role-icon icon-purple">💬</div>
+          <div class="role-label">Seção 3</div>
+          <div class="role-name">Colaboradores</div>
+          <div class="role-desc">Conversa com colaboradores — percepção sobre a empresa e comunicação.</div>
+        </div>
+        <div class="role-card admin-card" onclick="tryAccess('admin')">
+          <div class="role-lock">⚙️</div>
+          <div class="role-icon icon-gold">📊</div>
+          <div class="role-label">Painel</div>
+          <div class="role-name">Admin — Cristiele</div>
+          <div class="role-desc">Avaliação da comunicação, compilação e geração do relatório final com IA.</div>
+        </div>
+      </div>
+
+      <div class="cover-banners">
+        <!-- Web3Forms Banner -->
+        <div class="banner" id="w3f-banner">
+          <div class="banner-icon">📧</div>
+          <div style="flex:1">
+            <strong>Configure o recebimento por e-mail</strong><br>
+            Para receber as respostas no seu e-mail, cadastre sua chave <a href="https://web3forms.com" target="_blank">Web3Forms</a> (gratuito).<br>
+            <input type="text" id="w3fKeyInput" placeholder="Cole aqui sua chave de acesso Web3Forms">
+            <button class="banner-btn" onclick="saveW3F()">Salvar chave</button>
+            <div class="banner-ok" id="w3fOk">✓ Chave salva! Respostas serão enviadas para seu e-mail.</div>
+          </div>
+        </div>
+        <!-- Claude API Banner -->
+        <div class="banner" id="claude-banner">
+          <div class="banner-icon">🤖</div>
+          <div style="flex:1">
+            <strong>Configure a IA para geração do Relatório Final</strong><br>
+            Insira sua chave da <a href="https://console.anthropic.com" target="_blank">API Claude (Anthropic)</a> para gerar automaticamente a Seção 5 e o Relatório Final.<br>
+            <input type="password" id="claudeKeyInput" placeholder="sk-ant-...">
+            <button class="banner-btn" onclick="saveClaudeKey()">Salvar chave</button>
+            <div class="banner-ok" id="claudeOk">✓ Chave salva! Geração automática ativada.</div>
+          </div>
+        </div>
+        <!-- Supabase Banner -->
+        <div class="banner" id="supabase-banner">
+          <div class="banner-icon">🗄️</div>
+          <div style="flex:1">
+            <strong>Configure o banco de dados (multi-dispositivo)</strong><br>
+            Para coletar respostas de vários dispositivos ao mesmo tempo, conecte um projeto <a href="https://supabase.com" target="_blank">Supabase</a> (gratuito).<br>
+            <div style="display:grid;grid-template-columns:1fr;gap:6px;margin-top:8px">
+              <input type="text" id="sbUrlInput" placeholder="URL do projeto (https://xxxx.supabase.co)">
+              <input type="password" id="sbKeyInput" placeholder="Chave anon/public">
+            </div>
+            <button class="banner-btn" onclick="saveSupabaseConfig()">Salvar configuração</button>
+            <div class="banner-ok" id="sbOk">✓ Supabase conectado! Respostas serão salvas na nuvem.</div>
+            <div style="margin-top:10px;font-size:11px;color:rgba(255,255,255,.4);line-height:1.6">
+              <strong style="color:rgba(255,255,255,.6)">Como configurar:</strong>
+              1. Crie um projeto grátis em supabase.com → 2. Vá em SQL Editor e execute o script abaixo → 3. Copie a URL e a chave anon em Settings → API
+            </div>
+            <details style="margin-top:8px">
+              <summary style="font-size:11px;color:var(--gold);cursor:pointer;letter-spacing:.5px">Ver script SQL →</summary>
+              <pre style="margin-top:8px;background:rgba(0,0,0,.4);border-radius:6px;padding:12px;font-size:11px;color:rgba(255,255,255,.7);overflow-x:auto;white-space:pre-wrap">CREATE TABLE responses (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  section TEXT NOT NULL,
+  company TEXT,
+  nome TEXT,
+  cargo_setor TEXT,
+  data_resposta TEXT,
+  r1 TEXT, r2 TEXT, r3 TEXT,
+  r4 TEXT, r5 TEXT, r6 TEXT,
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+ALTER TABLE responses ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "insert" ON responses FOR INSERT WITH CHECK (true);
+CREATE POLICY "select" ON responses FOR SELECT USING (true);</pre>
+            </details>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     DIREÇÃO VIEW
+════════════════════════════════════════════ -->
+<div id="view-direcao" class="view">
+  <div class="qshell">
+    <div class="q-topbar">
+      <svg class="q-topbar-logo" viewBox="0 0 900.76 921.01" xmlns="http://www.w3.org/2000/svg">
+        <path fill="#f8f1eb" d="M403.28,261.57c-.83.35-1.09.02-.54-.67,1.02-4.13,2.26-8.24,3.71-12.35,1.49-4.52,3.22-8.83,5.2-12.93l-.65-.82c.24-1.23,1.85-5.36,3.2-5.22,1.83-4.96,4.4-10.39,7.09-15.12.05-.1.24-.12.46-.12-.19-.15-.36-.3-.42-.49-.18-.55,3.92-7.53,4.61-8.5l1.13-.11c.27-1.56,1.75-3.76,2.97-4.7,1.01-3.45,2.81-6.64,5.42-9.57,2.3-3.73,5.11-6.83,8.43-9.31l.57-1.66c5.75-7.98,12.8-15.04,19.86-21.9,1.48-.74,2.91-1.62,4.27-2.64l-.18-1.03c6.17-4.51,11.89-9.55,17.19-15.13l7.72-10.09,1.12-.53c2.33-2.92,4.78-5.46,7.33-7.64l-.37-.95,23.24-24.44,1.02.04c.38-1.42-.45-1.1-1.51-.67.16.33.35.86.14,1-8.62,5.88-18.3,12.08-27.25,17.47l-.96-.48-1.34,1.34c-7.79,6.07-15.63,12.14-23.51,18.21l-1.8.76c-1.9,2.18-4.09,4.35-6.58,6.49.54.78,0,1.35-.79.85-1,1.48-2.17,2.91-3.51,4.29l-1.11-.2c-1.5,2.32-3.83,4.58-5.98,6.15-.4,1.05-.84,2.11-1.57,2.98-3.46,4.12-6.92,8.26-10.38,12.38-.73.87-1.7,1.49-2.67,2.07-.97,2.09-2.91,5.17-4.72,6.54l-.25,1.4c-3.76,5.69-7.39,11.48-10.89,17.37l-2.01,1.84c-.36,1.84-1.56,4.19-2.86,5.58,1.28.56.44,3.26-.94,3.18-1.85,2.98-3.46,6.13-4.82,9.45l-.42.14c-.16,1.24-.53,2.44-1.1,3.61.5.93-.19,2.16-1.36,1.96-.96,3.06-2.05,6.12-3.27,9.19-1.49,3.97-3.02,7.82-4.61,11.56-.89,4.01-2.53,8.89-4.36,12.67l.72.71c-1.55,5.13-3.8,11.29-5.84,16.27-.85,2.07-1.71,3.83-3.02,5.67-5.94,12.72-20.4,29.32-33.68,34.42-3.48,1.34-7.42.67-10.29-1.5-2.47-1.86-4.21-5.38-3.76-8.86.64-4.89,3.59-8.92,7.68-11.61,6.11-4.02,10.95-9.06,14.23-15.68,7.84-15.78,10.86-44.32,9.25-61.99l-2.72-29.94c-4.06-44.62,14.8-88.21,46.76-118.84,14.62-14.01,31.39-25.61,50.85-31.51,6.81-2.07,13.08-4.44,19.71-6.99,7.23-2.78,14.39-4.88,22.04-6.48,14.1-2.95,27.95-4.98,42.38-6l35.26-2.49c13.92-.98,27.51-1.73,41.2-4.2,6.4-1.16,9-5.09,11.66-3.44.76.47,1.82,1.64,2.02,2.93,1.02,6.42.97,12.63.95,19.24-.06,15.85-1.36,31.14-3.1,46.93-4.46,40.65-15.24,77.61-38.7,111.31-6.59,9.47-13.61,18.07-22.12,25.8-14.44,13.11-31.29,22.39-49.91,28.31-16.44,5.23-33.04,8.41-50.19,10.09l-28.18,2.77c-10.3,1.01-20,3.68-29.83,6.9-5.48,1.79-10.5,4.22-15.32,6.9Z"/>
+        <text style="font-family:Inter-Medium,Inter;font-size:104.57px;font-weight:500;fill:#f8f1eb" transform="translate(16.34 834.11)">COM PROPÓSITO</text>
+        <text style="font-family:MinionConceptRoman-Semibold,'Minion Variable Concept';font-size:620.66px;font-weight:600;fill:#f8f1eb" transform="translate(0 702.57)">RH</text>
+      </svg>
+      <div class="q-topbar-badge"><div class="q-topbar-dot"></div>Seção 1 — Direção</div>
+      <button class="q-back" onclick="backToCover()">← Início</button>
+    </div>
+
+    <div class="q-hero">
+      <div class="q-eyebrow">Reunião com a Direção</div>
+      <h2 class="q-title">Visão estratégica e<br>expectativas para a empresa</h2>
+      <p class="q-sub">Suas respostas são confidenciais e servirão exclusivamente para personalizar o trabalho de desenvolvimento da equipe.</p>
+    </div>
+
+    <div class="q-form">
+      <div class="q-card">
+        <div class="id-row">
+          <div class="id-field"><label>NOME</label><input type="text" id="d-nome" placeholder="Seu nome completo"></div>
+          <div class="id-field"><label>CARGO</label><input type="text" id="d-cargo" placeholder="Seu cargo"></div>
+        </div>
+        <div style="margin-top:14px" class="id-field">
+          <label>DATA</label>
+          <input type="date" id="d-data" style="max-width:200px">
+        </div>
+      </div>
+
+      <div class="q-card">
+        <div class="q-num">Pergunta 1</div>
+        <div class="q-label">Conte brevemente a história da empresa.</div>
+        <div class="q-hint">Como surgiu, principais marcos e onde está hoje.</div>
+        <textarea class="q-input" id="d1" placeholder="Escreva sua resposta aqui..."></textarea>
+      </div>
+      <div class="q-card">
+        <div class="q-num">Pergunta 2</div>
+        <div class="q-label">Quais são os principais objetivos da empresa para os próximos anos?</div>
+        <div class="q-hint">Metas, crescimento, novos mercados, produtos ou serviços.</div>
+        <textarea class="q-input" id="d2" placeholder="Escreva sua resposta aqui..."></textarea>
+      </div>
+      <div class="q-card">
+        <div class="q-num">Pergunta 3</div>
+        <div class="q-label">Quais são os maiores desafios enfrentados atualmente?</div>
+        <div class="q-hint">Internos, externos, de mercado ou de equipe.</div>
+        <textarea class="q-input" id="d3" placeholder="Escreva sua resposta aqui..."></textarea>
+      </div>
+      <div class="q-card">
+        <div class="q-num">Pergunta 4</div>
+        <div class="q-label">Quais comportamentos você espera dos colaboradores?</div>
+        <div class="q-hint">Atitudes, valores e postura que considera essenciais.</div>
+        <textarea class="q-input" id="d4" placeholder="Escreva sua resposta aqui..."></textarea>
+      </div>
+      <div class="q-card">
+        <div class="q-num">Pergunta 5</div>
+        <div class="q-label">O que você acredita que precisa melhorar na equipe?</div>
+        <div class="q-hint">Habilidades, comportamentos, processos ou comunicação.</div>
+        <textarea class="q-input" id="d5" placeholder="Escreva sua resposta aqui..."></textarea>
+      </div>
+      <div class="q-card">
+        <div class="q-num">Pergunta 6</div>
+        <div class="q-label">Como você gostaria que a empresa fosse reconhecida pelos clientes?</div>
+        <div class="q-hint">Imagem, reputação e diferenciais que deseja construir.</div>
+        <textarea class="q-input" id="d6" placeholder="Escreva sua resposta aqui..."></textarea>
+      </div>
+
+      <div class="q-submit-area">
+        <button class="q-submit" id="d-submit" onclick="submitDirecao()">Enviar respostas</button>
+        <div class="q-submit-note">Suas respostas serão enviadas de forma segura e confidencial.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     GESTORES VIEW
+════════════════════════════════════════════ -->
+<div id="view-gestores" class="view">
+  <div class="qshell">
+    <div class="q-topbar">
+      <svg class="q-topbar-logo" viewBox="0 0 900.76 921.01" xmlns="http://www.w3.org/2000/svg">
+        <path fill="#f8f1eb" d="M403.28,261.57c-.83.35-1.09.02-.54-.67,1.02-4.13,2.26-8.24,3.71-12.35,1.49-4.52,3.22-8.83,5.2-12.93l-.65-.82c.24-1.23,1.85-5.36,3.2-5.22,1.83-4.96,4.4-10.39,7.09-15.12.05-.1.24-.12.46-.12-.19-.15-.36-.3-.42-.49-.18-.55,3.92-7.53,4.61-8.5l1.13-.11c.27-1.56,1.75-3.76,2.97-4.7,1.01-3.45,2.81-6.64,5.42-9.57,2.3-3.73,5.11-6.83,8.43-9.31l.57-1.66c5.75-7.98,12.8-15.04,19.86-21.9,1.48-.74,2.91-1.62,4.27-2.64l-.18-1.03c6.17-4.51,11.89-9.55,17.19-15.13l7.72-10.09,1.12-.53c2.33-2.92,4.78-5.46,7.33-7.64l-.37-.95,23.24-24.44,1.02.04c.38-1.42-.45-1.1-1.51-.67.16.33.35.86.14,1-8.62,5.88-18.3,12.08-27.25,17.47l-.96-.48-1.34,1.34c-7.79,6.07-15.63,12.14-23.51,18.21l-1.8.76c-1.9,2.18-4.09,4.35-6.58,6.49.54.78,0,1.35-.79.85-1,1.48-2.17,2.91-3.51,4.29l-1.11-.2c-1.5,2.32-3.83,4.58-5.98,6.15-.4,1.05-.84,2.11-1.57,2.98-3.46,4.12-6.92,8.26-10.38,12.38-.73.87-1.7,1.49-2.67,2.07-.97,2.09-2.91,5.17-4.72,6.54l-.25,1.4c-3.76,5.69-7.39,11.48-10.89,17.37l-2.01,1.84c-.36,1.84-1.56,4.19-2.86,5.58,1.28.56.44,3.26-.94,3.18-1.85,2.98-3.46,6.13-4.82,9.45l-.42.14c-.16,1.24-.53,2.44-1.1,3.61.5.93-.19,2.16-1.36,1.96-.96,3.06-2.05,6.12-3.27,9.19-1.49,3.97-3.02,7.82-4.61,11.56-.89,4.01-2.53,8.89-4.36,12.67l.72.71c-1.55,5.13-3.8,11.29-5.84,16.27-.85,2.07-1.71,3.83-3.02,5.67-5.94,12.72-20.4,29.32-33.68,34.42-3.48,1.34-7.42.67-10.29-1.5-2.47-1.86-4.21-5.38-3.76-8.86.64-4.89,3.59-8.92,7.68-11.61,6.11-4.02,10.95-9.06,14.23-15.68,7.84-15.78,10.86-44.32,9.25-61.99l-2.72-29.94c-4.06-44.62,14.8-88.21,46.76-118.84,14.62-14.01,31.39-25.61,50.85-31.51,6.81-2.07,13.08-4.44,19.71-6.99,7.23-2.78,14.39-4.88,22.04-6.48,14.1-2.95,27.95-4.98,42.38-6l35.26-2.49c13.92-.98,27.51-1.73,41.2-4.2,6.4-1.16,9-5.09,11.66-3.44.76.47,1.82,1.64,2.02,2.93,1.02,6.42.97,12.63.95,19.24-.06,15.85-1.36,31.14-3.1,46.93-4.46,40.65-15.24,77.61-38.7,111.31-6.59,9.47-13.61,18.07-22.12,25.8-14.44,13.11-31.29,22.39-49.91,28.31-16.44,5.23-33.04,8.41-50.19,10.09l-28.18,2.77c-10.3,1.01-20,3.68-29.83,6.9-5.48,1.79-10.5,4.22-15.32,6.9Z"/>
+        <text style="font-family:Inter-Medium,Inter;font-size:104.57px;font-weight:500;fill:#f8f1eb" transform="translate(16.34 834.11)">COM PROPÓSITO</text>
+        <text style="font-family:MinionConceptRoman-Semibold,'Minion Variable Concept';font-size:620.66px;font-weight:600;fill:#f8f1eb" transform="translate(0 702.57)">RH</text>
+      </svg>
+      <div class="q-topbar-badge"><div class="q-topbar-dot"></div>Seção 2 — Gestores</div>
+      <button class="q-back" onclick="backToCover()">← Início</button>
+    </div>
+
+    <div class="q-hero">
+      <div class="q-eyebrow">Entrevista com Gestores</div>
+      <h2 class="q-title">Desafios de liderança<br>e gestão de equipes</h2>
+      <p class="q-sub">Suas respostas são confidenciais e servirão para identificar como fortalecer sua liderança e o desempenho da equipe.</p>
+    </div>
+
+    <div class="q-form">
+      <div class="q-card">
+        <div class="id-row">
+          <div class="id-field"><label>NOME</label><input type="text" id="g-nome" placeholder="Seu nome completo"></div>
+          <div class="id-field"><label>SETOR / EQUIPE</label><input type="text" id="g-setor" placeholder="Área que você lidera"></div>
+        </div>
+        <div style="margin-top:14px" class="id-field">
+          <label>DATA</label>
+          <input type="date" id="g-data" style="max-width:200px">
+        </div>
+      </div>
+
+      <div class="q-card">
+        <div class="q-num">Pergunta 1</div>
+        <div class="q-label">Qual o principal desafio da sua equipe atualmente?</div>
+        <div class="q-hint">O que mais dificulta o trabalho e os resultados do seu time.</div>
+        <textarea class="q-input" id="g1" placeholder="Escreva sua resposta aqui..."></textarea>
+      </div>
+      <div class="q-card">
+        <div class="q-num">Pergunta 2</div>
+        <div class="q-label">Quais conflitos são mais frequentes?</div>
+        <div class="q-hint">Entre pessoas, setores ou sobre processos e prioridades.</div>
+        <textarea class="q-input" id="g2" placeholder="Escreva sua resposta aqui..."></textarea>
+      </div>
+      <div class="q-card">
+        <div class="q-num">Pergunta 3</div>
+        <div class="q-label">Como ocorre a comunicação entre os setores?</div>
+        <div class="q-hint">O que funciona bem e o que gera ruídos ou falhas.</div>
+        <textarea class="q-input" id="g3" placeholder="Escreva sua resposta aqui..."></textarea>
+      </div>
+      <div class="q-card">
+        <div class="q-num">Pergunta 4</div>
+        <div class="q-label">O que mais impacta os resultados da equipe?</div>
+        <div class="q-hint">Fatores positivos e negativos que influenciam o desempenho.</div>
+        <textarea class="q-input" id="g4" placeholder="Escreva sua resposta aqui..."></textarea>
+      </div>
+      <div class="q-card">
+        <div class="q-num">Pergunta 5</div>
+        <div class="q-label">Que apoio você precisa da empresa para liderar melhor?</div>
+        <div class="q-hint">Recursos, treinamentos, processos ou suporte da direção.</div>
+        <textarea class="q-input" id="g5" placeholder="Escreva sua resposta aqui..."></textarea>
+      </div>
+
+      <div class="q-submit-area">
+        <button class="q-submit" id="g-submit" onclick="submitGestores()">Enviar respostas</button>
+        <div class="q-submit-note">Suas respostas serão enviadas de forma segura e confidencial.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     COLABORADORES VIEW
+════════════════════════════════════════════ -->
+<div id="view-colaboradores" class="view">
+  <div class="qshell">
+    <div class="q-topbar">
+      <svg class="q-topbar-logo" viewBox="0 0 900.76 921.01" xmlns="http://www.w3.org/2000/svg">
+        <path fill="#f8f1eb" d="M403.28,261.57c-.83.35-1.09.02-.54-.67,1.02-4.13,2.26-8.24,3.71-12.35,1.49-4.52,3.22-8.83,5.2-12.93l-.65-.82c.24-1.23,1.85-5.36,3.2-5.22,1.83-4.96,4.4-10.39,7.09-15.12.05-.1.24-.12.46-.12-.19-.15-.36-.3-.42-.49-.18-.55,3.92-7.53,4.61-8.5l1.13-.11c.27-1.56,1.75-3.76,2.97-4.7,1.01-3.45,2.81-6.64,5.42-9.57,2.3-3.73,5.11-6.83,8.43-9.31l.57-1.66c5.75-7.98,12.8-15.04,19.86-21.9,1.48-.74,2.91-1.62,4.27-2.64l-.18-1.03c6.17-4.51,11.89-9.55,17.19-15.13l7.72-10.09,1.12-.53c2.33-2.92,4.78-5.46,7.33-7.64l-.37-.95,23.24-24.44,1.02.04c.38-1.42-.45-1.1-1.51-.67.16.33.35.86.14,1-8.62,5.88-18.3,12.08-27.25,17.47l-.96-.48-1.34,1.34c-7.79,6.07-15.63,12.14-23.51,18.21l-1.8.76c-1.9,2.18-4.09,4.35-6.58,6.49.54.78,0,1.35-.79.85-1,1.48-2.17,2.91-3.51,4.29l-1.11-.2c-1.5,2.32-3.83,4.58-5.98,6.15-.4,1.05-.84,2.11-1.57,2.98-3.46,4.12-6.92,8.26-10.38,12.38-.73.87-1.7,1.49-2.67,2.07-.97,2.09-2.91,5.17-4.72,6.54l-.25,1.4c-3.76,5.69-7.39,11.48-10.89,17.37l-2.01,1.84c-.36,1.84-1.56,4.19-2.86,5.58,1.28.56.44,3.26-.94,3.18-1.85,2.98-3.46,6.13-4.82,9.45l-.42.14c-.16,1.24-.53,2.44-1.1,3.61.5.93-.19,2.16-1.36,1.96-.96,3.06-2.05,6.12-3.27,9.19-1.49,3.97-3.02,7.82-4.61,11.56-.89,4.01-2.53,8.89-4.36,12.67l.72.71c-1.55,5.13-3.8,11.29-5.84,16.27-.85,2.07-1.71,3.83-3.02,5.67-5.94,12.72-20.4,29.32-33.68,34.42-3.48,1.34-7.42.67-10.29-1.5-2.47-1.86-4.21-5.38-3.76-8.86.64-4.89,3.59-8.92,7.68-11.61,6.11-4.02,10.95-9.06,14.23-15.68,7.84-15.78,10.86-44.32,9.25-61.99l-2.72-29.94c-4.06-44.62,14.8-88.21,46.76-118.84,14.62-14.01,31.39-25.61,50.85-31.51,6.81-2.07,13.08-4.44,19.71-6.99,7.23-2.78,14.39-4.88,22.04-6.48,14.1-2.95,27.95-4.98,42.38-6l35.26-2.49c13.92-.98,27.51-1.73,41.2-4.2,6.4-1.16,9-5.09,11.66-3.44.76.47,1.82,1.64,2.02,2.93,1.02,6.42.97,12.63.95,19.24-.06,15.85-1.36,31.14-3.1,46.93-4.46,40.65-15.24,77.61-38.7,111.31-6.59,9.47-13.61,18.07-22.12,25.8-14.44,13.11-31.29,22.39-49.91,28.31-16.44,5.23-33.04,8.41-50.19,10.09l-28.18,2.77c-10.3,1.01-20,3.68-29.83,6.9-5.48,1.79-10.5,4.22-15.32,6.9Z"/>
+        <text style="font-family:Inter-Medium,Inter;font-size:104.57px;font-weight:500;fill:#f8f1eb" transform="translate(16.34 834.11)">COM PROPÓSITO</text>
+        <text style="font-family:MinionConceptRoman-Semibold,'Minion Variable Concept';font-size:620.66px;font-weight:600;fill:#f8f1eb" transform="translate(0 702.57)">RH</text>
+      </svg>
+      <div class="q-topbar-badge"><div class="q-topbar-dot"></div>Seção 3 — Colaboradores</div>
+      <button class="q-back" onclick="backToCover()">← Início</button>
+    </div>
+
+    <div class="q-hero">
+      <div class="q-eyebrow">Conversa com Colaboradores</div>
+      <h2 class="q-title">Sua percepção sobre<br>a empresa e o trabalho</h2>
+      <p class="q-sub">Suas respostas são confidenciais. Não há respostas certas ou erradas — o importante é a sua visão honesta.</p>
+    </div>
+
+    <div class="q-form">
+      <div class="q-card">
+        <div class="id-row">
+          <div class="id-field"><label>NOME (opcional)</label><input type="text" id="c-nome" placeholder="Seu nome (opcional)"></div>
+          <div class="id-field"><label>SETOR</label><input type="text" id="c-setor" placeholder="Seu setor ou área"></div>
+        </div>
+        <div style="margin-top:14px" class="id-field">
+          <label>DATA</label>
+          <input type="date" id="c-data" style="max-width:200px">
+        </div>
+      </div>
+
+      <div class="q-card">
+        <div class="q-num">Pergunta 1</div>
+        <div class="q-label">O que você mais gosta de trabalhar nesta empresa?</div>
+        <div class="q-hint">O que te motiva, satisfaz ou faz sentir orgulho.</div>
+        <textarea class="q-input" id="c1" placeholder="Escreva sua resposta aqui..."></textarea>
+      </div>
+      <div class="q-card">
+        <div class="q-num">Pergunta 2</div>
+        <div class="q-label">O que poderia melhorar?</div>
+        <div class="q-hint">Processos, comunicação, ambiente ou qualquer aspecto do trabalho.</div>
+        <textarea class="q-input" id="c2" placeholder="Escreva sua resposta aqui..."></textarea>
+      </div>
+      <div class="q-card">
+        <div class="q-num">Pergunta 3</div>
+        <div class="q-label">Você se sente ouvido pela liderança?</div>
+        <div class="q-hint">Conte como é a relação com seus líderes no dia a dia.</div>
+        <textarea class="q-input" id="c3" placeholder="Escreva sua resposta aqui..."></textarea>
+      </div>
+      <div class="q-card">
+        <div class="q-num">Pergunta 4</div>
+        <div class="q-label">Como você avalia a comunicação interna?</div>
+        <div class="q-hint">As informações chegam a você? Com clareza e no tempo certo?</div>
+        <textarea class="q-input" id="c4" placeholder="Escreva sua resposta aqui..."></textarea>
+      </div>
+      <div class="q-card">
+        <div class="q-num">Pergunta 5</div>
+        <div class="q-label">O que faz uma pessoa ter sucesso nesta empresa?</div>
+        <div class="q-hint">Comportamentos, atitudes ou habilidades que você percebe serem valorizados.</div>
+        <textarea class="q-input" id="c5" placeholder="Escreva sua resposta aqui..."></textarea>
+      </div>
+
+      <div class="q-submit-area">
+        <button class="q-submit" id="c-submit" onclick="submitColaboradores()">Enviar respostas</button>
+        <div class="q-submit-note">Suas respostas serão enviadas de forma segura e confidencial.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     THANK YOU VIEW
+════════════════════════════════════════════ -->
+<div id="view-thanks" class="view">
+  <div class="thanks-view">
+    <div class="thanks-box">
+      <div class="thanks-icon">✅</div>
+      <h2 class="thanks-title">Respostas enviadas!</h2>
+      <p class="thanks-sub">Obrigado pela sua participação. Suas respostas foram recebidas e contribuirão para o desenvolvimento da equipe.</p>
+      <button class="thanks-btn" onclick="backToCover()">← Voltar ao início</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     ADMIN VIEW — CRISTIELE
+════════════════════════════════════════════ -->
+<div id="view-admin" class="view">
+  <div class="admin-shell">
+    <div class="admin-topbar">
+      <svg style="height:32px;width:auto" viewBox="0 0 900.76 921.01" xmlns="http://www.w3.org/2000/svg">
+        <path fill="#f8f1eb" d="M403.28,261.57c-.83.35-1.09.02-.54-.67,1.02-4.13,2.26-8.24,3.71-12.35,1.49-4.52,3.22-8.83,5.2-12.93l-.65-.82c.24-1.23,1.85-5.36,3.2-5.22,1.83-4.96,4.4-10.39,7.09-15.12.05-.1.24-.12.46-.12-.19-.15-.36-.3-.42-.49-.18-.55,3.92-7.53,4.61-8.5l1.13-.11c.27-1.56,1.75-3.76,2.97-4.7,1.01-3.45,2.81-6.64,5.42-9.57,2.3-3.73,5.11-6.83,8.43-9.31l.57-1.66c5.75-7.98,12.8-15.04,19.86-21.9,1.48-.74,2.91-1.62,4.27-2.64l-.18-1.03c6.17-4.51,11.89-9.55,17.19-15.13l7.72-10.09,1.12-.53c2.33-2.92,4.78-5.46,7.33-7.64l-.37-.95,23.24-24.44,1.02.04c.38-1.42-.45-1.1-1.51-.67.16.33.35.86.14,1-8.62,5.88-18.3,12.08-27.25,17.47l-.96-.48-1.34,1.34c-7.79,6.07-15.63,12.14-23.51,18.21l-1.8.76c-1.9,2.18-4.09,4.35-6.58,6.49.54.78,0,1.35-.79.85-1,1.48-2.17,2.91-3.51,4.29l-1.11-.2c-1.5,2.32-3.83,4.58-5.98,6.15-.4,1.05-.84,2.11-1.57,2.98-3.46,4.12-6.92,8.26-10.38,12.38-.73.87-1.7,1.49-2.67,2.07-.97,2.09-2.91,5.17-4.72,6.54l-.25,1.4c-3.76,5.69-7.39,11.48-10.89,17.37l-2.01,1.84c-.36,1.84-1.56,4.19-2.86,5.58,1.28.56.44,3.26-.94,3.18-1.85,2.98-3.46,6.13-4.82,9.45l-.42.14c-.16,1.24-.53,2.44-1.1,3.61.5.93-.19,2.16-1.36,1.96-.96,3.06-2.05,6.12-3.27,9.19-1.49,3.97-3.02,7.82-4.61,11.56-.89,4.01-2.53,8.89-4.36,12.67l.72.71c-1.55,5.13-3.8,11.29-5.84,16.27-.85,2.07-1.71,3.83-3.02,5.67-5.94,12.72-20.4,29.32-33.68,34.42-3.48,1.34-7.42.67-10.29-1.5-2.47-1.86-4.21-5.38-3.76-8.86.64-4.89,3.59-8.92,7.68-11.61,6.11-4.02,10.95-9.06,14.23-15.68,7.84-15.78,10.86-44.32,9.25-61.99l-2.72-29.94c-4.06-44.62,14.8-88.21,46.76-118.84,14.62-14.01,31.39-25.61,50.85-31.51,6.81-2.07,13.08-4.44,19.71-6.99,7.23-2.78,14.39-4.88,22.04-6.48,14.1-2.95,27.95-4.98,42.38-6l35.26-2.49c13.92-.98,27.51-1.73,41.2-4.2,6.4-1.16,9-5.09,11.66-3.44.76.47,1.82,1.64,2.02,2.93,1.02,6.42.97,12.63.95,19.24-.06,15.85-1.36,31.14-3.1,46.93-4.46,40.65-15.24,77.61-38.7,111.31-6.59,9.47-13.61,18.07-22.12,25.8-14.44,13.11-31.29,22.39-49.91,28.31-16.44,5.23-33.04,8.41-50.19,10.09l-28.18,2.77c-10.3,1.01-20,3.68-29.83,6.9-5.48,1.79-10.5,4.22-15.32,6.9Z"/>
+        <text style="font-family:Inter-Medium,Inter;font-size:104.57px;font-weight:500;fill:#f8f1eb" transform="translate(16.34 834.11)">COM PROPÓSITO</text>
+        <text style="font-family:MinionConceptRoman-Semibold,'Minion Variable Concept';font-size:620.66px;font-weight:600;fill:#f8f1eb" transform="translate(0 702.57)">RH</text>
+      </svg>
+      <div class="admin-badge">Painel Admin — Cristiele</div>
+      <button class="q-back" onclick="backToCover()">← Início</button>
+    </div>
+
+    <div class="admin-hero">
+      <div class="q-eyebrow">Diagnóstico Organizacional</div>
+      <h2 class="admin-title">Painel de Análise e<br>Geração do Relatório</h2>
+      <p class="admin-sub">Preencha a avaliação de comunicação, compile as respostas coletadas por e-mail e gere o diagnóstico final com IA.</p>
+      <div id="admin-company-display" style="margin-top:16px"></div>
+    </div>
+
+    <div class="admin-body">
+      <div class="admin-tabs">
+        <button class="admin-tab active" onclick="switchTab('secao4')">📋 Seção 4 — Comunicação</button>
+        <button class="admin-tab" onclick="switchTab('compilar')">📥 Compilar Respostas</button>
+        <button class="admin-tab" onclick="switchTab('gerar')">🤖 Gerar Relatório Final</button>
+      </div>
+
+      <!-- TAB: SEÇÃO 4 -->
+      <div id="tab-secao4" class="admin-tab-panel active">
+        <div class="a-section">
+          <div class="a-section-header">
+            <div class="a-section-eyebrow">Seção 4</div>
+            <div class="a-section-title">Avaliação da Comunicação Interna</div>
+            <div class="a-section-sub">Itens para observação — preenchido por Cristiele durante o diagnóstico.</div>
+          </div>
+
+          <div class="chk-list">
+            <div class="chk-group">
+              <label class="chk-item">
+                <input type="checkbox" id="s4-1" onchange="updateCheckStatus(this)">
+                <div class="chk-box"></div>
+                <div class="chk-text">As informações chegam a todos os colaboradores?</div>
+                <div class="chk-status" id="s4-1-status">Não</div>
+              </label>
+              <textarea class="chk-obs" id="s4-1-txt" placeholder="Observações sobre este ponto..."></textarea>
+            </div>
+            <div class="chk-group">
+              <label class="chk-item">
+                <input type="checkbox" id="s4-2" onchange="updateCheckStatus(this)">
+                <div class="chk-box"></div>
+                <div class="chk-text">Existem ruídos de comunicação?</div>
+                <div class="chk-status" id="s4-2-status">Não</div>
+              </label>
+              <textarea class="chk-obs" id="s4-2-txt" placeholder="Observações sobre este ponto..."></textarea>
+            </div>
+            <div class="chk-group">
+              <label class="chk-item">
+                <input type="checkbox" id="s4-3" onchange="updateCheckStatus(this)">
+                <div class="chk-box"></div>
+                <div class="chk-text">Há alinhamento entre os setores?</div>
+                <div class="chk-status" id="s4-3-status">Não</div>
+              </label>
+              <textarea class="chk-obs" id="s4-3-txt" placeholder="Observações sobre este ponto..."></textarea>
+            </div>
+            <div class="chk-group">
+              <label class="chk-item">
+                <input type="checkbox" id="s4-4" onchange="updateCheckStatus(this)">
+                <div class="chk-box"></div>
+                <div class="chk-text">Existem reuniões periódicas?</div>
+                <div class="chk-status" id="s4-4-status">Não</div>
+              </label>
+              <textarea class="chk-obs" id="s4-4-txt" placeholder="Observações sobre este ponto..."></textarea>
+            </div>
+            <div class="chk-group">
+              <label class="chk-item">
+                <input type="checkbox" id="s4-5" onchange="updateCheckStatus(this)">
+                <div class="chk-box"></div>
+                <div class="chk-text">Os líderes comunicam de forma clara?</div>
+                <div class="chk-status" id="s4-5-status">Não</div>
+              </label>
+              <textarea class="chk-obs" id="s4-5-txt" placeholder="Observações sobre este ponto..."></textarea>
+            </div>
+          </div>
+
+          <div class="obs-field">
+            <label>OBSERVAÇÕES GERAIS</label>
+            <textarea class="compile-input" id="s4-obs" placeholder="Anote aqui observações gerais sobre a comunicação interna feitas durante o diagnóstico..." style="min-height:90px"></textarea>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB: COMPILAR -->
+      <div id="tab-compilar" class="admin-tab-panel">
+        <div class="a-section">
+          <div class="a-section-header">
+            <div class="a-section-eyebrow">Respostas Coletadas</div>
+            <div class="a-section-title">Resumo automático das respostas</div>
+            <div class="a-section-sub" id="compilar-sub">As respostas são salvas na nuvem (Supabase) e carregadas automaticamente. Clique em "Gerar Relatório" para gerar o diagnóstico completo.</div>
+          </div>
+
+          <div id="sb-status-bar" style="display:none;align-items:center;gap:8px;margin-bottom:16px;padding:10px 14px;background:rgba(74,154,114,.1);border:1px solid rgba(74,154,114,.3);border-radius:8px;font-size:12px;color:rgba(255,255,255,.7)">
+            <span style="color:#4ADE80;font-size:16px">●</span>
+            <span>Supabase conectado — respostas carregadas da nuvem para empresa <strong id="sb-company-name" style="color:var(--gold)"></strong></span>
+          </div>
+
+          <div class="resp-summary">
+            <div class="resp-row">
+              <div class="resp-row-label">🏛️ Direção — Seção 1</div>
+              <div class="resp-row-count"><span id="count-direcao">0</span> resposta(s)</div>
+            </div>
+            <div class="resp-row">
+              <div class="resp-row-label">📋 Gestores — Seção 2</div>
+              <div class="resp-row-count"><span id="count-gestores">0</span> resposta(s)</div>
+            </div>
+            <div class="resp-row">
+              <div class="resp-row-label">💬 Colaboradores — Seção 3</div>
+              <div class="resp-row-count"><span id="count-colaboradores">0</span> resposta(s)</div>
+            </div>
+          </div>
+
+          <div style="display:flex;gap:12px;justify-content:center;margin-top:8px">
+            <button class="generate-btn" onclick="switchTab('gerar')" style="padding:13px 28px;font-size:14px">Ir para Gerar Relatório →</button>
+            <button onclick="clearAllResponses()" style="padding:13px 22px;border-radius:12px;background:rgba(248,113,113,.15);border:1px solid rgba(248,113,113,.3);color:#F87171;font-weight:700;font-size:13px;cursor:pointer;letter-spacing:.3px">🗑️ Limpar sessão</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB: GERAR RELATÓRIO -->
+      <div id="tab-gerar" class="admin-tab-panel">
+        <div class="a-section">
+          <div class="a-section-header">
+            <div class="a-section-eyebrow">Seção 5 + Relatório Final</div>
+            <div class="a-section-title">Geração Automática com Inteligência Artificial</div>
+            <div class="a-section-sub">A IA irá analisar todas as respostas coletadas e gerar automaticamente a Identificação dos Desafios e o Relatório Final.</div>
+          </div>
+
+          <!-- Claude API banner inside admin -->
+          <div class="banner show" id="claude-admin-banner" style="margin-bottom:20px">
+            <div class="banner-icon">🔑</div>
+            <div style="flex:1">
+              <strong>Chave da API Claude</strong> — necessária para gerar o relatório com IA.<br>
+              Obtenha gratuitamente em <a href="https://console.anthropic.com" target="_blank">console.anthropic.com</a><br>
+              <input type="password" id="claudeKeyAdmin" placeholder="sk-ant-...">
+              <button class="banner-btn" onclick="saveClaudeKeyAdmin()">Salvar chave</button>
+              <div class="banner-ok" id="claudeAdminOk">✓ Chave configurada. Pronto para gerar!</div>
+            </div>
+          </div>
+
+          <div class="generate-area">
+            <button class="generate-btn" id="generateBtn" onclick="generateReport()">
+              <span id="generate-icon">✨</span>
+              <span id="generate-label">Gerar Diagnóstico Final com IA</span>
+            </button>
+            <div class="generate-note" id="generate-note">Certifique-se de ter compilado as respostas na aba anterior e preenchido a Seção 4.</div>
+          </div>
+
+          <!-- Output -->
+          <div class="output-box" id="outputBox">
+            <div class="output-header">
+              <div>
+                <div class="output-logo-text">RH com Propósito</div>
+                <div class="output-meta" id="output-meta"></div>
+              </div>
+              <div class="output-meta" id="output-date"></div>
+            </div>
+
+            <div class="output-section">
+              <div class="output-section-title">Seção 5 — Identificação dos Principais Desafios</div>
+              <div class="output-content" id="out-desafios"></div>
+            </div>
+
+            <div class="output-section">
+              <div class="output-section-title">Relatório Final</div>
+              <div class="output-content" id="out-relatorio"></div>
+            </div>
+
+            <div class="output-actions">
+              <button class="out-btn out-btn-copy" onclick="copyOutput()">📋 Copiar texto</button>
+              <button class="out-btn out-btn-print" onclick="printOutput()">🖨️ Imprimir / PDF</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- PASSWORD MODAL -->
+<div class="modal-overlay" id="pwdModal">
+  <div class="modal-box">
+    <div class="modal-icon" id="modal-icon">🔒</div>
+    <h3 class="modal-title" id="modal-title">Acesso Restrito</h3>
+    <p class="modal-sub" id="modal-sub">Digite a senha fornecida pela consultora para acessar este questionário.</p>
+    <input type="password" class="modal-input" id="pwdInput" placeholder="••••••••"
+           onkeydown="if(event.key==='Enter')checkPassword()">
+    <div class="modal-error" id="modal-error">Senha incorreta. Tente novamente.</div>
+    <button class="modal-btn" onclick="checkPassword()">Acessar</button>
+    <button class="modal-cancel" onclick="closeModal()">Cancelar</button>
+  </div>
+</div>
+
+<script>
+// ══════════════════════════════════════════════════
+// CONFIGURAÇÕES — altere as senhas aqui se necessário
+// ══════════════════════════════════════════════════
+const SENHAS = {
+  direcao:       'direcao',
+  gestores:      'gestores',
+  colaboradores: 'colaboradores',
+  admin:         'admin'
+};
+
+// ══════════════════════════════════════════════════
+// STORAGE HELPERS
+// ══════════════════════════════════════════════════
+function saveResponse(key, data) {
+  const existing = JSON.parse(localStorage.getItem(key) || '[]');
+  existing.push({ ...data, timestamp: new Date().toISOString() });
+  localStorage.setItem(key, JSON.stringify(existing));
+}
+
+function getResponses(key) {
+  return JSON.parse(localStorage.getItem(key) || '[]');
+}
+
+function clearAllResponses() {
+  if (!confirm('Limpar o cache local desta sessão?\n(As respostas salvas no Supabase NÃO serão apagadas.)\n\nEsta ação não pode ser desfeita.')) return;
+  ['diag_resp_direcao','diag_resp_gestores','diag_resp_colaboradores'].forEach(k => localStorage.removeItem(k));
+  updateResponseCounts();
+}
+
+function updateResponseCounts() {
+  const keys = { direcao:'diag_resp_direcao', gestores:'diag_resp_gestores', colaboradores:'diag_resp_colaboradores' };
+  Object.entries(keys).forEach(([role, key]) => {
+    const el = document.getElementById('count-' + role);
+    if (el) el.textContent = getResponses(key).length;
+  });
+}
+
+// ══════════════════════════════════════════════════
+// SUPABASE INTEGRATION
+// ══════════════════════════════════════════════════
+const SB_URL_DEFAULT = 'https://jngyyterkatblntpsjbm.supabase.co';
+const SB_KEY_DEFAULT = 'sb_publishable_30rUV3wLjGCDd4DggNYePQ_CwkdB1br';
+
+let _sbClient = null;
+
+function saveSupabaseConfig() {
+  const url = document.getElementById('sbUrlInput').value.trim();
+  const key = document.getElementById('sbKeyInput').value.trim();
+  if (!url || !key) return;
+  localStorage.setItem('sb_url', url);
+  localStorage.setItem('sb_key', key);
+  _sbClient = null;
+  document.getElementById('sbOk').style.display = 'block';
+  document.getElementById('sbUrlInput').value = '';
+  document.getElementById('sbKeyInput').value = '';
+  checkBanners();
+}
+
+function getSbClient() {
+  if (_sbClient) return _sbClient;
+  const url = localStorage.getItem('sb_url') || SB_URL_DEFAULT;
+  const key = localStorage.getItem('sb_key') || SB_KEY_DEFAULT;
+  if (!url || !key || !window.supabase) return null;
+  try {
+    _sbClient = window.supabase.createClient(url, key);
+    return _sbClient;
+  } catch { return null; }
+}
+
+async function saveToSupabase(section, company, nome, cargoSetor, dataResp, resps) {
+  const sb = getSbClient();
+  if (!sb) return false;
+  try {
+    const row = { section, company, nome, cargo_setor: cargoSetor, data_resposta: dataResp,
+      r1: resps[0]||'', r2: resps[1]||'', r3: resps[2]||'',
+      r4: resps[3]||'', r5: resps[4]||'', r6: resps[5]||'' };
+    const { error } = await sb.from('responses').insert(row);
+    return !error;
+  } catch { return false; }
+}
+
+async function getFromSupabase(section, company) {
+  const sb = getSbClient();
+  if (!sb) return null;
+  try {
+    let q = sb.from('responses').select('*').eq('section', section).order('created_at', { ascending: true });
+    if (company) q = q.eq('company', company);
+    const { data, error } = await q;
+    return error ? null : data;
+  } catch { return null; }
+}
+
+async function updateResponseCountsAsync() {
+  const company = localStorage.getItem('diag_company') || '';
+  const sb = getSbClient();
+
+  if (sb) {
+    const sbBar = document.getElementById('sb-status-bar');
+    const sbName = document.getElementById('sb-company-name');
+    if (sbBar) sbBar.style.display = 'flex';
+    if (sbName) sbName.textContent = company || '(sem nome)';
+  }
+
+  const sections = ['direcao', 'gestores', 'colaboradores'];
+  for (const role of sections) {
+    const el = document.getElementById('count-' + role);
+    if (!el) continue;
+    if (sb) {
+      const rows = await getFromSupabase(role, company);
+      el.textContent = rows ? rows.length : getResponses('diag_resp_' + role).length;
+    } else {
+      el.textContent = getResponses('diag_resp_' + role).length;
+    }
+  }
+}
+
+// ══════════════════════════════════════════════════
+// COMPILAÇÃO AUTOMÁTICA DAS RESPOSTAS
+// ══════════════════════════════════════════════════
+async function compilarRespostas() {
+  const company = localStorage.getItem('diag_company') || '';
+
+  const perguntas = {
+    direcao: [
+      '1. História da empresa',
+      '2. Principais objetivos para os próximos anos',
+      '3. Maiores desafios enfrentados',
+      '4. Comportamentos esperados dos colaboradores',
+      '5. O que precisa melhorar na equipe',
+      '6. Como gostaria que a empresa fosse reconhecida'
+    ],
+    gestores: [
+      '1. Principal desafio da equipe atualmente',
+      '2. Conflitos mais frequentes',
+      '3. Como ocorre a comunicação entre os setores',
+      '4. O que mais impacta os resultados da equipe',
+      '5. Que apoio precisa para liderar melhor'
+    ],
+    colaboradores: [
+      '1. O que mais gosta de trabalhar nesta empresa',
+      '2. O que poderia melhorar',
+      '3. Se sente ouvido pela liderança',
+      '4. Avaliação da comunicação interna',
+      '5. O que faz uma pessoa ter sucesso nesta empresa'
+    ]
+  };
+
+  function formatarLocal(arr, tipo) {
+    if (!arr.length) return null;
+    return arr.map((r, i) => {
+      const nome = r.nome || 'Anônimo';
+      const extra = r.cargo || r.setor || '';
+      const header = `=== Respondente ${i+1}: ${nome}${extra ? ' — ' + extra : ''} ===`;
+      const resps = (perguntas[tipo] || []).map((q, qi) => `${q}:\n${r['r'+(qi+1)] || '(não respondido)'}`).join('\n\n');
+      return header + '\n' + resps;
+    }).join('\n\n');
+  }
+
+  function formatarSb(rows, tipo) {
+    if (!rows || !rows.length) return null;
+    return rows.map((r, i) => {
+      const nome = r.nome || 'Anônimo';
+      const extra = r.cargo_setor || '';
+      const header = `=== Respondente ${i+1}: ${nome}${extra ? ' — ' + extra : ''} ===`;
+      const resps = (perguntas[tipo] || []).map((q, qi) => `${q}:\n${r['r'+(qi+1)] || '(não respondido)'}`).join('\n\n');
+      return header + '\n' + resps;
+    }).join('\n\n');
+  }
+
+  const sb = getSbClient();
+  let direcaoText, gestoresText, colaboradoresText;
+
+  if (sb) {
+    const [sbD, sbG, sbC] = await Promise.all([
+      getFromSupabase('direcao', company),
+      getFromSupabase('gestores', company),
+      getFromSupabase('colaboradores', company)
+    ]);
+    direcaoText       = formatarSb(sbD, 'direcao')       || formatarLocal(getResponses('diag_resp_direcao'), 'direcao')       || '(Nenhuma resposta registrada)';
+    gestoresText      = formatarSb(sbG, 'gestores')      || formatarLocal(getResponses('diag_resp_gestores'), 'gestores')      || '(Nenhuma resposta registrada)';
+    colaboradoresText = formatarSb(sbC, 'colaboradores') || formatarLocal(getResponses('diag_resp_colaboradores'), 'colaboradores') || '(Nenhuma resposta registrada)';
+  } else {
+    direcaoText       = formatarLocal(getResponses('diag_resp_direcao'), 'direcao')             || '(Nenhuma resposta registrada)';
+    gestoresText      = formatarLocal(getResponses('diag_resp_gestores'), 'gestores')           || '(Nenhuma resposta registrada)';
+    colaboradoresText = formatarLocal(getResponses('diag_resp_colaboradores'), 'colaboradores') || '(Nenhuma resposta registrada)';
+  }
+
+  return { direcaoText, gestoresText, colaboradoresText };
+}
+
+function getSecao4Text() {
+  const itens = [
+    { id:'s4-1', q:'As informações chegam a todos os colaboradores?' },
+    { id:'s4-2', q:'Existem ruídos de comunicação?' },
+    { id:'s4-3', q:'Há alinhamento entre os setores?' },
+    { id:'s4-4', q:'Existem reuniões periódicas?' },
+    { id:'s4-5', q:'Os líderes comunicam de forma clara?' },
+  ];
+  let text = itens.map(item => {
+    const sim = document.getElementById(item.id)?.checked ? 'SIM' : 'NÃO';
+    const obs = document.getElementById(item.id + '-txt')?.value?.trim();
+    return `- ${item.q} → ${sim}${obs ? '\n  Obs: ' + obs : ''}`;
+  }).join('\n');
+  const obsGeral = document.getElementById('s4-obs')?.value?.trim();
+  if (obsGeral) text += '\n\nObservações gerais: ' + obsGeral;
+  return text;
+}
+
+const LABELS = {
+  direcao:       { icon:'🏛️', title:'Direção',       sub:'Seção 1 — Reunião com a Direção' },
+  gestores:      { icon:'📋', title:'Gestores',      sub:'Seção 2 — Entrevista com Gestores' },
+  colaboradores: { icon:'💬', title:'Colaboradores', sub:'Seção 3 — Conversa com Colaboradores' },
+  admin:         { icon:'⚙️', title:'Painel Admin',  sub:'Acesso exclusivo de Cristiele Rodrigues' }
+};
+
+let currentTarget = '';
+
+// ── Web3Forms ──
+function saveW3F() {
+  const v = document.getElementById('w3fKeyInput').value.trim();
+  if (!v) return;
+  localStorage.setItem('w3f_key', v);
+  document.getElementById('w3fOk').style.display = 'block';
+  document.getElementById('w3fKeyInput').value = '';
+  checkBanners();
+}
+
+// ── Claude API ──
+function saveClaudeKey() {
+  const v = document.getElementById('claudeKeyInput').value.trim();
+  if (!v) return;
+  localStorage.setItem('claude_key', v);
+  document.getElementById('claudeOk').style.display = 'block';
+  document.getElementById('claudeKeyInput').value = '';
+  checkBanners();
+}
+function saveClaudeKeyAdmin() {
+  const v = document.getElementById('claudeKeyAdmin').value.trim();
+  if (!v) return;
+  localStorage.setItem('claude_key', v);
+  document.getElementById('claudeAdminOk').style.display = 'block';
+  document.getElementById('claudeKeyAdmin').value = '';
+  document.getElementById('claude-admin-banner').style.display = 'none';
+}
+
+function checkBanners() {
+  const hasW3F    = !!localStorage.getItem('w3f_key');
+  const hasClaude = !!localStorage.getItem('claude_key');
+  // Supabase já vem pré-configurado — banner só aparece se alguém quiser trocar
+  document.getElementById('w3f-banner').classList.toggle('show', !hasW3F);
+  document.getElementById('claude-banner').classList.toggle('show', !hasClaude);
+  document.getElementById('supabase-banner').classList.remove('show');
+  if (hasClaude) document.getElementById('claude-admin-banner').style.display = 'none';
+}
+
+// ── Navigation ──
+function showView(id) {
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  document.getElementById('view-' + id).classList.add('active');
+  window.scrollTo(0, 0);
+}
+function backToCover() { showView('cover'); }
+
+// ── Password Modal ──
+function tryAccess(role) {
+  // Require company name for questionnaire sections
+  if (role !== 'admin') {
+    const company = document.getElementById('companyName').value.trim();
+    if (!company) {
+      const input = document.getElementById('companyName');
+      input.focus();
+      input.style.borderColor = '#F87171';
+      input.placeholder = 'Preencha o nome da empresa primeiro!';
+      setTimeout(() => {
+        input.style.borderColor = '';
+        input.placeholder = 'Nome da empresa';
+      }, 2500);
+      return;
+    }
+    localStorage.setItem('diag_company', company);
+  }
+  currentTarget = role;
+  const L = LABELS[role];
+  document.getElementById('modal-icon').textContent = L.icon;
+  document.getElementById('modal-title').textContent = L.title;
+  document.getElementById('modal-sub').textContent = L.sub + '\n\nDigite a senha para acessar.';
+  document.getElementById('modal-error').style.display = 'none';
+  document.getElementById('pwdInput').value = '';
+  document.getElementById('pwdInput').classList.remove('error');
+  document.getElementById('pwdModal').classList.add('open');
+  setTimeout(() => document.getElementById('pwdInput').focus(), 100);
+}
+function closeModal() {
+  document.getElementById('pwdModal').classList.remove('open');
+  currentTarget = '';
+}
+function checkPassword() {
+  const input = document.getElementById('pwdInput').value.trim();
+  if (input === SENHAS[currentTarget]) {
+    const target = currentTarget;
+    closeModal();
+    if (target === 'admin') {
+      loadAdminView();
+      showView('admin');
+    } else {
+      showView(target);
+    }
+  } else {
+    document.getElementById('pwdInput').classList.add('error');
+    document.getElementById('modal-error').style.display = 'block';
+    document.getElementById('pwdInput').value = '';
+    setTimeout(() => document.getElementById('pwdInput').classList.remove('error'), 500);
+  }
+}
+
+// ── Admin init ──
+function loadAdminView() {
+  const company = localStorage.getItem('diag_company') || '';
+  const el = document.getElementById('admin-company-display');
+  el.innerHTML = company ? `<div class="company-display">🏢 ${company}</div>` : '';
+  if (localStorage.getItem('claude_key')) {
+    document.getElementById('claude-admin-banner').style.display = 'none';
+  }
+  updateResponseCounts();
+  updateResponseCountsAsync();
+}
+
+// ── Admin tabs ──
+function switchTab(id) {
+  const tabIndex = {secao4:0, compilar:1, gerar:2};
+  document.querySelectorAll('.admin-tab').forEach((t, i) => t.classList.toggle('active', i === tabIndex[id]));
+  document.querySelectorAll('.admin-tab-panel').forEach(p => p.classList.remove('active'));
+  document.getElementById('tab-' + id).classList.add('active');
+  if (id === 'compilar') updateResponseCountsAsync();
+}
+
+// ── Checkbox status labels ──
+function updateCheckStatus(chk) {
+  const statusEl = document.getElementById(chk.id + '-status');
+  if (statusEl) statusEl.textContent = chk.checked ? 'Sim' : 'Não';
+}
+
+// ── Email submission (Web3Forms) ──
+async function sendEmail(subject, body) {
+  const key = localStorage.getItem('w3f_key');
+  if (!key) return false;
+  try {
+    const res = await fetch('https://api.web3forms.com/submit', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json', 'Accept': 'application/json'},
+      body: JSON.stringify({
+        access_key: key,
+        subject: subject,
+        message: body,
+        from_name: 'Diagnóstico Organizacional — RH com Propósito'
+      })
+    });
+    const data = await res.json();
+    return data.success;
+  } catch { return false; }
+}
+
+function buildEmailBody(section, name, fields) {
+  const company = localStorage.getItem('diag_company') || 'Não informada';
+  let body = `DIAGNÓSTICO ORGANIZACIONAL — RH COM PROPÓSITO\n`;
+  body += `═══════════════════════════════════════\n`;
+  body += `Empresa: ${company}\n`;
+  body += `Seção: ${section}\n`;
+  body += `Respondente: ${name}\n`;
+  body += `Data: ${new Date().toLocaleDateString('pt-BR')}\n`;
+  body += `═══════════════════════════════════════\n\n`;
+  fields.forEach(f => {
+    body += `${f.label}\n`;
+    body += `${f.value || '(não respondido)'}\n\n`;
+  });
+  return body;
+}
+
+// ── Submit Direção ──
+async function submitDirecao() {
+  const btn = document.getElementById('d-submit');
+  btn.disabled = true; btn.textContent = 'Enviando...';
+  const nome  = document.getElementById('d-nome').value || 'Não informado';
+  const cargo = document.getElementById('d-cargo').value || '';
+  const r = { nome, cargo, data: document.getElementById('d-data').value,
+    r1: document.getElementById('d1').value, r2: document.getElementById('d2').value,
+    r3: document.getElementById('d3').value, r4: document.getElementById('d4').value,
+    r5: document.getElementById('d5').value, r6: document.getElementById('d6').value };
+  saveResponse('diag_resp_direcao', r);
+  saveToSupabase('direcao', localStorage.getItem('diag_company')||'', nome, cargo, r.data, [r.r1,r.r2,r.r3,r.r4,r.r5,r.r6]);
+  const fields = [
+    {label:'1. Conte brevemente a história da empresa.', value: r.r1},
+    {label:'2. Quais são os principais objetivos da empresa para os próximos anos?', value: r.r2},
+    {label:'3. Quais são os maiores desafios enfrentados atualmente?', value: r.r3},
+    {label:'4. Quais comportamentos você espera dos colaboradores?', value: r.r4},
+    {label:'5. O que você acredita que precisa melhorar na equipe?', value: r.r5},
+    {label:'6. Como você gostaria que a empresa fosse reconhecida pelos clientes?', value: r.r6},
+  ];
+  const company = localStorage.getItem('diag_company') || 'Empresa';
+  await sendEmail(`[Diagnóstico] Seção 1 — Direção | ${company}`, buildEmailBody('Seção 1 — Direção', `${nome} (${cargo})`, fields));
+  btn.disabled = false; btn.textContent = 'Enviar respostas';
+  showView('thanks');
+}
+
+// ── Submit Gestores ──
+async function submitGestores() {
+  const btn = document.getElementById('g-submit');
+  btn.disabled = true; btn.textContent = 'Enviando...';
+  const nome  = document.getElementById('g-nome').value || 'Não informado';
+  const setor = document.getElementById('g-setor').value || '';
+  const r = { nome, setor, data: document.getElementById('g-data').value,
+    r1: document.getElementById('g1').value, r2: document.getElementById('g2').value,
+    r3: document.getElementById('g3').value, r4: document.getElementById('g4').value,
+    r5: document.getElementById('g5').value };
+  saveResponse('diag_resp_gestores', r);
+  saveToSupabase('gestores', localStorage.getItem('diag_company')||'', nome, setor, r.data, [r.r1,r.r2,r.r3,r.r4,r.r5,'']);
+  const fields = [
+    {label:'1. Qual o principal desafio da sua equipe atualmente?', value: r.r1},
+    {label:'2. Quais conflitos são mais frequentes?', value: r.r2},
+    {label:'3. Como ocorre a comunicação entre os setores?', value: r.r3},
+    {label:'4. O que mais impacta os resultados da equipe?', value: r.r4},
+    {label:'5. Que apoio você precisa da empresa para liderar melhor?', value: r.r5},
+  ];
+  const company = localStorage.getItem('diag_company') || 'Empresa';
+  await sendEmail(`[Diagnóstico] Seção 2 — Gestores | ${company}`, buildEmailBody('Seção 2 — Gestores', `${nome} (${setor})`, fields));
+  btn.disabled = false; btn.textContent = 'Enviar respostas';
+  showView('thanks');
+}
+
+// ── Submit Colaboradores ──
+async function submitColaboradores() {
+  const btn = document.getElementById('c-submit');
+  btn.disabled = true; btn.textContent = 'Enviando...';
+  const nome  = document.getElementById('c-nome').value || 'Anônimo';
+  const setor = document.getElementById('c-setor').value || '';
+  const r = { nome, setor, data: document.getElementById('c-data').value,
+    r1: document.getElementById('c1').value, r2: document.getElementById('c2').value,
+    r3: document.getElementById('c3').value, r4: document.getElementById('c4').value,
+    r5: document.getElementById('c5').value };
+  saveResponse('diag_resp_colaboradores', r);
+  saveToSupabase('colaboradores', localStorage.getItem('diag_company')||'', nome, setor, r.data, [r.r1,r.r2,r.r3,r.r4,r.r5,'']);
+  const fields = [
+    {label:'1. O que você mais gosta de trabalhar nesta empresa?', value: r.r1},
+    {label:'2. O que poderia melhorar?', value: r.r2},
+    {label:'3. Você se sente ouvido pela liderança?', value: r.r3},
+    {label:'4. Como você avalia a comunicação interna?', value: r.r4},
+    {label:'5. O que faz uma pessoa ter sucesso nesta empresa?', value: r.r5},
+  ];
+  const company = localStorage.getItem('diag_company') || 'Empresa';
+  await sendEmail(`[Diagnóstico] Seção 3 — Colaboradores | ${company}`, buildEmailBody('Seção 3 — Colaboradores', `${nome} (${setor})`, fields));
+  btn.disabled = false; btn.textContent = 'Enviar respostas';
+  showView('thanks');
+}
+
+// ── Generate Report (Claude API) ──
+async function generateReport() {
+  const apiKey = localStorage.getItem('claude_key');
+  if (!apiKey) {
+    document.getElementById('claude-admin-banner').style.display = 'flex';
+    return;
+  }
+
+  const company = localStorage.getItem('diag_company') || 'Empresa';
+
+  // Compilação automática das respostas (Supabase ou localStorage)
+  const { direcaoText: direcao, gestoresText: gestores, colaboradoresText: colab } = await compilarRespostas();
+  const s4text = getSecao4Text();
+
+  if (direcao === '(Nenhuma resposta registrada)' && gestores === '(Nenhuma resposta registrada)' && colab === '(Nenhuma resposta registrada)') {
+    alert(`Nenhuma resposta encontrada para a empresa "${company}".\n\nVerifique:\n• O nome da empresa está correto na tela inicial?\n• A tabela "responses" foi criada no Supabase?\n• Os questionários foram preenchidos e enviados?`);
+    switchTab('compilar');
+    return;
+  }
+
+  const btn = document.getElementById('generateBtn');
+  const label = document.getElementById('generate-label');
+  const icon  = document.getElementById('generate-icon');
+  btn.disabled = true;
+  icon.innerHTML = '<div class="spinner"></div>';
+  label.textContent = 'Gerando diagnóstico...';
+  document.getElementById('generate-note').textContent = 'Aguarde enquanto a IA analisa as respostas...';
+
+  const prompt = `Você é Cristiele Rodrigues, consultora especialista em RH e Desenvolvimento Organizacional do RH com Propósito. Você aplicou um diagnóstico organizacional completo na empresa "${company}".
+
+Abaixo estão as informações coletadas em cada etapa:
+
+═══ SEÇÃO 1 — REUNIÃO COM A DIREÇÃO ═══
+${direcao || '(Respostas não compiladas ainda)'}
+
+═══ SEÇÃO 2 — ENTREVISTA COM GESTORES ═══
+${gestores || '(Respostas não compiladas ainda)'}
+
+═══ SEÇÃO 3 — CONVERSA COM COLABORADORES ═══
+${colab || '(Respostas não compiladas ainda)'}
+
+═══ SEÇÃO 4 — AVALIAÇÃO DA COMUNICAÇÃO INTERNA ═══
+${s4text}
+
+Com base em todas essas informações, gere o relatório completo de diagnóstico. Seja específico, profissional e orientado a soluções práticas. Use linguagem direta e humanizada, sem termos vagos. Responda EXATAMENTE neste formato:
+
+SEÇÃO 5 — IDENTIFICAÇÃO DOS PRINCIPAIS DESAFIOS
+
+Principais pontos observados:
+[Liste 4 a 6 pontos concretos observados nas respostas, com base nos padrões e convergências encontradas]
+
+Oportunidades de melhoria:
+[Liste 4 a 5 oportunidades específicas e práticas de melhoria]
+
+Recomendações iniciais:
+[Liste 4 a 6 recomendações priorizadas, com foco em impacto e viabilidade]
+
+---
+
+RELATÓRIO FINAL
+
+Pontos Fortes:
+[Liste 3 a 5 pontos fortes identificados na organização]
+
+Pontos de Atenção:
+[Liste 3 a 5 pontos críticos que merecem atenção prioritária]
+
+Plano de Ação Inicial:
+[Descreva 4 a 6 ações concretas, com responsável sugerido e prazo — formato: Ação | Responsável | Prazo]`;
+
+  try {
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'x-api-key': apiKey,
+        'anthropic-version': '2023-06-01',
+        'content-type': 'application/json',
+        'anthropic-dangerous-direct-browser-access': 'true'
+      },
+      body: JSON.stringify({
+        model: 'claude-opus-4-8',
+        max_tokens: 2500,
+        messages: [{ role: 'user', content: prompt }]
+      })
+    });
+
+    if (!res.ok) {
+      const err = await res.json();
+      throw new Error(err.error?.message || `Erro ${res.status}`);
+    }
+
+    const data = await res.json();
+    const text = data.content[0].text;
+
+    // Parse output
+    const parts = text.split('---');
+    const sec5    = (parts[0] || text).replace('SEÇÃO 5 — IDENTIFICAÇÃO DOS PRINCIPAIS DESAFIOS','').trim();
+    const relFinal = parts[1] ? parts[1].replace('RELATÓRIO FINAL','').trim() : '';
+
+    document.getElementById('out-desafios').textContent  = sec5;
+    document.getElementById('out-relatorio').textContent = relFinal || sec5;
+    document.getElementById('output-meta').textContent   = company;
+    document.getElementById('output-date').textContent   = new Date().toLocaleDateString('pt-BR', {day:'2-digit',month:'long',year:'numeric'});
+    document.getElementById('outputBox').classList.add('show');
+    document.getElementById('outputBox').scrollIntoView({behavior:'smooth', block:'start'});
+
+  } catch(e) {
+    alert('Erro ao gerar relatório: ' + e.message + '\n\nVerifique sua chave da API Claude.');
+  } finally {
+    btn.disabled = false;
+    icon.textContent = '✨';
+    label.textContent = 'Gerar Diagnóstico Final com IA';
+    document.getElementById('generate-note').textContent = 'Clique novamente para regenerar com as mesmas respostas.';
+  }
+}
+
+function copyOutput() {
+  const s5  = document.getElementById('out-desafios').textContent;
+  const rel = document.getElementById('out-relatorio').textContent;
+  const company = localStorage.getItem('diag_company') || '';
+  const full = `DIAGNÓSTICO ORGANIZACIONAL — RH COM PROPÓSITO\n${company ? 'Empresa: ' + company + '\n' : ''}Data: ${new Date().toLocaleDateString('pt-BR')}\n\nSEÇÃO 5 — IDENTIFICAÇÃO DOS PRINCIPAIS DESAFIOS\n\n${s5}\n\n---\n\nRELATÓRIO FINAL\n\n${rel}`;
+  navigator.clipboard.writeText(full).then(() => alert('Texto copiado!')).catch(() => alert('Não foi possível copiar. Selecione o texto manualmente.'));
+}
+
+function printOutput() {
+  // Temporarily show only output
+  const box = document.getElementById('outputBox');
+  const orig = document.body.innerHTML;
+  const print = box.cloneNode(true);
+  print.querySelector('.output-actions').style.display = 'none';
+  const win = window.open('', '_blank');
+  win.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Diagnóstico Organizacional</title><style>
+    body{font-family:Arial,sans-serif;padding:40px;color:#111;background:white;max-width:800px;margin:0 auto}
+    .output-header{display:flex;justify-content:space-between;padding-bottom:16px;border-bottom:2px solid #1A5C45;margin-bottom:24px}
+    .output-logo-text{font-size:18px;font-weight:700;color:#1A5C45}
+    .output-meta,.output-date{font-size:12px;color:#888}
+    .output-section{margin-bottom:28px}
+    .output-section-title{font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#1A5C45;margin-bottom:8px;padding-bottom:6px;border-bottom:1px solid #E0EDE7}
+    .output-content{font-size:13px;color:#333;line-height:1.8;white-space:pre-wrap}
+  </style></head><body>${print.innerHTML}</body></html>`);
+  win.document.close();
+  win.focus();
+  setTimeout(() => { win.print(); win.close(); }, 500);
+}
+
+// ── Init ──
+document.addEventListener('DOMContentLoaded', () => {
+  checkBanners();
+
+  // Auto-fill company name from URL param ?empresa=NomeDaEmpresa
+  const urlParams = new URLSearchParams(window.location.search);
+  const empresaParam = urlParams.get('empresa');
+  if (empresaParam) {
+    localStorage.setItem('diag_company', empresaParam);
+  }
+
+  const saved = localStorage.getItem('diag_company');
+  if (saved) document.getElementById('companyName').value = saved;
+
+  // Set today's date on all date fields
+  const today = new Date().toISOString().split('T')[0];
+  ['d-data','g-data','c-data'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.value = today;
+  });
+  // Close modal on overlay click
+  document.getElementById('pwdModal').addEventListener('click', function(e){
+    if (e.target === this) closeModal();
+  });
+});
+</script>
+</body>
+</html>
