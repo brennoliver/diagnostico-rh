@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Diagnóstico Organizacional — RH com Propósito</title>
+<title>Programa Construindo Juntos — RH com Propósito</title>
 <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700;900&family=Playfair+Display:ital,wght@0,600;0,700;1,500;1,600&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <style>
@@ -539,8 +539,8 @@ body{font-family:'Lato',sans-serif;background:var(--dark);color:var(--white);min
         <text style="font-family:MinionConceptRoman-Semibold,'Minion Variable Concept';font-size:620.66px;font-weight:600;fill:#f8f1eb" transform="translate(0 702.57)">RH</text>
       </svg>
 
-      <div class="cover-eyebrow">Ferramenta de Diagnóstico</div>
-      <h1 class="cover-title">Diagnóstico <span>Organizacional</span></h1>
+      <div class="cover-eyebrow">RH com Propósito</div>
+      <h1 class="cover-title">Programa <span>Construindo Juntos</span></h1>
       <p class="cover-sub">Cada grupo acessa o questionário específico do seu papel. As respostas são sigilosas e utilizadas exclusivamente para o desenvolvimento da sua equipe.</p>
 
       <div class="company-row">
@@ -897,7 +897,7 @@ CREATE POLICY "select" ON responses FOR SELECT USING (true);</pre>
     </div>
 
     <div class="admin-hero">
-      <div class="q-eyebrow">Diagnóstico Organizacional</div>
+      <div class="q-eyebrow">Programa Construindo Juntos</div>
       <h2 class="admin-title">Painel de Análise e<br>Geração do Relatório</h2>
       <p class="admin-sub">Preencha a avaliação de comunicação, compile as respostas coletadas por e-mail e gere o diagnóstico final com IA.</p>
       <div id="admin-company-display" style="margin-top:16px"></div>
@@ -1428,7 +1428,7 @@ async function sendEmail(subject, body) {
         access_key: key,
         subject: subject,
         message: body,
-        from_name: 'Diagnóstico Organizacional — RH com Propósito'
+        from_name: 'Programa Construindo Juntos — RH com Propósito'
       })
     });
     const data = await res.json();
@@ -1473,7 +1473,7 @@ async function submitDirecao() {
     {label:'6. Como você gostaria que a empresa fosse reconhecida pelos clientes?', value: r.r6},
   ];
   const company = localStorage.getItem('diag_company') || 'Empresa';
-  await sendEmail(`[Diagnóstico] Seção 1 — Direção | ${company}`, buildEmailBody('Seção 1 — Direção', `${nome} (${cargo})`, fields));
+  await sendEmail(`[Construindo Juntos] Seção 1 — Direção | ${company}`, buildEmailBody('Seção 1 — Direção', `${nome} (${cargo})`, fields));
   btn.disabled = false; btn.textContent = 'Enviar respostas';
   showView('thanks');
 }
@@ -1498,7 +1498,7 @@ async function submitGestores() {
     {label:'5. Que apoio você precisa da empresa para liderar melhor?', value: r.r5},
   ];
   const company = localStorage.getItem('diag_company') || 'Empresa';
-  await sendEmail(`[Diagnóstico] Seção 2 — Gestores | ${company}`, buildEmailBody('Seção 2 — Gestores', `${nome} (${setor})`, fields));
+  await sendEmail(`[Construindo Juntos] Seção 2 — Gestores | ${company}`, buildEmailBody('Seção 2 — Gestores', `${nome} (${setor})`, fields));
   btn.disabled = false; btn.textContent = 'Enviar respostas';
   showView('thanks');
 }
@@ -1523,7 +1523,7 @@ async function submitColaboradores() {
     {label:'5. O que faz uma pessoa ter sucesso nesta empresa?', value: r.r5},
   ];
   const company = localStorage.getItem('diag_company') || 'Empresa';
-  await sendEmail(`[Diagnóstico] Seção 3 — Colaboradores | ${company}`, buildEmailBody('Seção 3 — Colaboradores', `${nome} (${setor})`, fields));
+  await sendEmail(`[Construindo Juntos] Seção 3 — Colaboradores | ${company}`, buildEmailBody('Seção 3 — Colaboradores', `${nome} (${setor})`, fields));
   btn.disabled = false; btn.textContent = 'Enviar respostas';
   showView('thanks');
 }
@@ -1599,7 +1599,7 @@ function printOutput() {
   const print = box.cloneNode(true);
   print.querySelector('.output-actions').style.display = 'none';
   const win = window.open('', '_blank');
-  win.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Diagnóstico Organizacional</title><style>
+  win.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Programa Construindo Juntos — RH com Propósito</title><style>
     body{font-family:Arial,sans-serif;padding:40px;color:#111;background:white;max-width:800px;margin:0 auto}
     .output-header{display:flex;justify-content:space-between;padding-bottom:16px;border-bottom:2px solid #1A5C45;margin-bottom:24px}
     .output-logo-text{font-size:18px;font-weight:700;color:#1A5C45}
