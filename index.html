@@ -85,16 +85,19 @@ body{
   transition:all .28s ease;
   position:relative;overflow:hidden;
   display:flex;flex-direction:column;
+  text-decoration:none;color:white;
 }
 .card::before{
-  content:'';position:absolute;inset:0;
+  content:'';position:absolute;inset:0;pointer-events:none;
   background:linear-gradient(135deg,rgba(200,155,60,.09) 0%,transparent 60%);
+  border-radius:20px;
   opacity:0;transition:opacity .28s;
 }
 .card:hover{
   border-color:rgba(200,155,60,.45);
   transform:translateY(-4px);
   box-shadow:0 16px 48px rgba(0,0,0,.35);
+  text-decoration:none;
 }
 .card:hover::before{opacity:1}
 
@@ -181,7 +184,7 @@ footer strong{color:rgba(255,255,255,.5)}
     <div class="grid">
 
       <!-- Diagnóstico Organizacional — featured -->
-      <div class="card featured">
+      <a class="card featured" href="diagnostico.html">
         <div class="card-icon icon-gold">📊</div>
         <div class="card-label">Ferramenta Principal</div>
         <div class="card-title">Diagnóstico Organizacional</div>
@@ -191,44 +194,44 @@ footer strong{color:rgba(255,255,255,.5)}
           <span class="badge green">☁️ Supabase</span>
           <span class="badge">🔒 Multi-setor</span>
         </div>
-        <a class="card-btn" href="diagnostico.html">Acessar →</a>
-      </div>
+        <span class="card-btn">Acessar →</span>
+      </a>
 
       <!-- PDI -->
-      <div class="card">
+      <a class="card" href="pdi.html">
         <div class="card-icon icon-green">🎯</div>
         <div class="card-label">Desenvolvimento</div>
         <div class="card-title">PDI — Plano de Desenvolvimento Individual</div>
         <div class="card-desc">Ferramenta para criação e acompanhamento do Plano de Desenvolvimento Individual dos colaboradores.</div>
-        <a class="card-btn" href="pdi.html">Acessar →</a>
-      </div>
+        <span class="card-btn">Acessar →</span>
+      </a>
 
       <!-- Questionário -->
-      <div class="card">
+      <a class="card" href="questionario.html">
         <div class="card-icon icon-blue">📝</div>
         <div class="card-label">Diagnóstico</div>
         <div class="card-title">Questionário de Diagnóstico</div>
         <div class="card-desc">Questionário estruturado para levantamento inicial de diagnóstico organizacional e clima interno.</div>
-        <a class="card-btn" href="questionario.html">Acessar →</a>
-      </div>
+        <span class="card-btn">Acessar →</span>
+      </a>
 
       <!-- Apostila -->
-      <div class="card">
+      <a class="card" href="apostila.html">
         <div class="card-icon icon-purple">📚</div>
         <div class="card-label">Capacitação</div>
         <div class="card-title">Apostila — Liderança com Propósito</div>
         <div class="card-desc">Material digital interativo do workshop de liderança — conteúdo, atividades práticas e dinâmicas.</div>
-        <a class="card-btn" href="apostila.html">Acessar →</a>
-      </div>
+        <span class="card-btn">Acessar →</span>
+      </a>
 
       <!-- Site -->
-      <div class="card">
+      <a class="card" href="site.html">
         <div class="card-icon icon-teal">🌐</div>
         <div class="card-label">Institucional</div>
         <div class="card-title">Site RH com Propósito</div>
         <div class="card-desc">Apresentação da consultoria, serviços oferecidos, sobre Cristiele Rodrigues e formas de contato.</div>
-        <a class="card-btn" href="site.html">Acessar →</a>
-      </div>
+        <span class="card-btn">Acessar →</span>
+      </a>
 
     </div>
   </div>
