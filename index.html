@@ -121,8 +121,9 @@ body{
 .icon-teal  {background:rgba(20,184,166,.15);border:1px solid rgba(20,184,166,.3)}
 .icon-admin {background:rgba(200,155,60,.22);border:1px solid rgba(200,155,60,.5)}
 .card.admin-card{background:linear-gradient(135deg,rgba(200,155,60,.1),rgba(10,28,18,.6));border-color:rgba(200,155,60,.3);grid-column:span 3}
-@media(max-width:900px){.card.admin-card{grid-column:span 2}}
-@media(max-width:580px){.card.admin-card{grid-column:span 1}}
+.card-full{grid-column:span 3}
+@media(max-width:900px){.card.admin-card{grid-column:span 2}.card-full{grid-column:span 2}}
+@media(max-width:580px){.card.admin-card{grid-column:span 1}.card-full{grid-column:span 1}}
 
 .card-label{
   font-size:10px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;
@@ -188,7 +189,7 @@ footer strong{color:rgba(255,255,255,.5)}
     <div class="grid">
 
       <!-- Pré-Palestra Executivo -->
-      <a class="card" style="grid-column:span 3;background:linear-gradient(135deg,rgba(26,92,69,.12),rgba(255,255,255,.04));border-color:rgba(26,92,69,.3)" href="pre-palestra-executivo.html">
+      <a class="card card-full" style="background:linear-gradient(135deg,rgba(26,92,69,.12),rgba(255,255,255,.04));border-color:rgba(26,92,69,.3)" href="pre-palestra-executivo.html">
         <div style="display:flex;align-items:center;gap:20px;flex-wrap:wrap">
           <div class="card-icon icon-green" style="margin-bottom:0;flex-shrink:0;font-size:28px">🎤</div>
           <div style="flex:1;min-width:180px">
@@ -201,7 +202,7 @@ footer strong{color:rgba(255,255,255,.5)}
       </a>
 
       <!-- Pesquisa de Experiência -->
-      <a class="card" style="grid-column:span 3;background:linear-gradient(135deg,rgba(26,92,69,.08),rgba(255,255,255,.04));border-color:rgba(26,92,69,.25)" href="pesquisa-experiencia.html">
+      <a class="card card-full" style="background:linear-gradient(135deg,rgba(26,92,69,.08),rgba(255,255,255,.04));border-color:rgba(26,92,69,.25)" href="pesquisa-experiencia.html">
         <div style="display:flex;align-items:center;gap:20px;flex-wrap:wrap">
           <div class="card-icon icon-green" style="margin-bottom:0;flex-shrink:0;font-size:28px">📋</div>
           <div style="flex:1;min-width:180px">
@@ -214,7 +215,7 @@ footer strong{color:rgba(255,255,255,.5)}
       </a>
 
       <!-- Confirmação de Presença — Evento -->
-      <a class="card" style="grid-column:span 3;background:linear-gradient(135deg,rgba(200,155,60,.12),rgba(255,255,255,.04));border-color:rgba(200,155,60,.35)" href="confirmacao.html">
+      <a class="card card-full" style="background:linear-gradient(135deg,rgba(200,155,60,.12),rgba(255,255,255,.04));border-color:rgba(200,155,60,.35)" href="confirmacao.html">
         <div style="display:flex;align-items:center;gap:20px;flex-wrap:wrap">
           <div class="card-icon icon-gold" style="margin-bottom:0;flex-shrink:0;font-size:28px">🎉</div>
           <div style="flex:1;min-width:180px">
