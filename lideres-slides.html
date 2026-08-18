@@ -1,0 +1,868 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Líderes que Inspiram — Apresentação</title>
+<link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700;900&family=Playfair+Display:ital,wght@0,600;0,700;1,500;1,600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --green:#1A5C45;--green-mid:#2E7D58;--green-light:#4A9A72;
+  --green-pale:#F0F9F4;--green-xpale:#F8FDFB;
+  --gold:#C89B3C;--gold-light:#E8C96A;--gold-pale:#FDF6E7;
+  --dark:#0A1C12;--gray:#5A6A62;
+}
+html,body{height:100%;overflow:hidden;font-family:'Lato',sans-serif}
+body{background:var(--dark);color:white;user-select:none}
+
+/* ── PROGRESS ── */
+#progress-bar{
+  position:fixed;top:0;left:0;right:0;height:3px;z-index:200;
+  background:rgba(255,255,255,.08);
+}
+#progress-fill{
+  height:100%;background:linear-gradient(90deg,var(--green-mid),var(--gold));
+  transition:width .4s ease;width:0%;
+}
+
+/* ── TOP NAV ── */
+#topnav{
+  position:fixed;top:3px;left:0;right:0;height:50px;z-index:100;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 24px;
+  background:rgba(10,28,18,.9);backdrop-filter:blur(10px);
+  border-bottom:1px solid rgba(200,155,60,.12);
+}
+.nav-brand{display:flex;align-items:center;gap:10px}
+.nav-logo{height:32px;width:auto}
+.nav-div{width:1px;height:20px;background:rgba(200,155,60,.25)}
+.nav-title{font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,.4);font-weight:300}
+.nav-right{display:flex;align-items:center;gap:10px}
+.nav-back{
+  display:inline-flex;align-items:center;gap:5px;padding:6px 12px;
+  border-radius:7px;border:1px solid rgba(255,255,255,.12);
+  background:rgba(255,255,255,.05);color:rgba(255,255,255,.5);
+  font-size:11px;font-weight:700;cursor:pointer;text-decoration:none;
+  transition:all .2s;letter-spacing:.5px;
+}
+.nav-back:hover{background:rgba(255,255,255,.1);color:white}
+#slide-counter{font-size:11px;color:rgba(255,255,255,.35);letter-spacing:.5px;font-weight:700}
+
+/* ── SLIDES WRAPPER ── */
+#slides-wrap{position:fixed;top:53px;left:0;right:0;bottom:0;overflow:hidden}
+
+/* ── SLIDE BASE ── */
+.slide{
+  position:absolute;inset:0;
+  display:none;align-items:center;justify-content:center;
+  padding:32px 24px;overflow:hidden;
+  animation:fadeSlide .35s ease both;
+}
+.slide.active{display:flex}
+@keyframes fadeSlide{
+  from{opacity:0;transform:translateY(18px)}
+  to{opacity:1;transform:translateY(0)}
+}
+
+/* ── THEMES ── */
+.s-dark{background:linear-gradient(145deg,#050E08 0%,#0D2417 55%,#081A10 100%)}
+.s-green{background:linear-gradient(145deg,#0D2417 0%,var(--green) 60%,#0A1E12 100%)}
+.s-green-deep{background:linear-gradient(145deg,#07140C 0%,#14472F 55%,#091710 100%)}
+.s-white{background:#F7FAF8;color:#1A2A22}
+.s-gold{background:linear-gradient(145deg,#1C100A,#2E1F08,#1A120A)}
+.s-mod1{background:linear-gradient(145deg,#081A0F,#0F3325,#091C10)}
+.s-mod2{background:linear-gradient(145deg,#0A0E1A,#152440,#080C16)}
+.s-mod3{background:linear-gradient(145deg,#1A0A0A,#3D1818,#1A0808)}
+.s-mod4{background:linear-gradient(145deg,#0A120A,#1A3520,#0A1510)}
+.s-close{background:radial-gradient(ellipse 80% 80% at 50% 50%,#1A3525,#071010)}
+
+/* ── INNER LAYOUTS ── */
+.slide-inner{width:100%;max-width:860px;margin:0 auto}
+.slide-inner.center{text-align:center}
+
+/* ── COMMON ELEMENTS ── */
+.eyebrow{font-size:10px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--gold);margin-bottom:12px}
+.eyebrow.mod1{color:#7ECFA4}
+.eyebrow.mod2{color:#7EB4CF}
+.eyebrow.mod3{color:#CF7E7E}
+.eyebrow.mod4{color:#8FCF7E}
+.eyebrow.white{color:rgba(255,255,255,.45)}
+
+.slide-title{
+  font-family:'Playfair Display',serif;
+  font-size:clamp(26px,4.5vw,46px);font-weight:700;
+  line-height:1.15;margin-bottom:8px;
+}
+.slide-title em{color:var(--gold);font-style:italic}
+.slide-title.dark{color:#1A2A22}
+
+.slide-sub{font-size:14px;color:rgba(255,255,255,.5);line-height:1.7;max-width:600px}
+.slide-sub.dark{color:#5A6A62}
+
+.big-emoji{font-size:clamp(60px,10vw,100px);line-height:1;margin-bottom:20px;filter:drop-shadow(0 4px 24px rgba(0,0,0,.4))}
+.big-emoji.small{font-size:clamp(44px,7vw,72px)}
+
+/* ── COVER SPECIFIC ── */
+.cover-kicker{font-size:11px;letter-spacing:4px;text-transform:uppercase;color:var(--gold);font-weight:700;margin-bottom:20px}
+.cover-title{
+  font-family:'Playfair Display',serif;
+  font-size:clamp(34px,6vw,70px);font-weight:700;color:white;
+  line-height:1.1;margin-bottom:18px;
+}
+.cover-title em{color:var(--gold-light);font-style:italic}
+.cover-desc{font-size:15px;color:rgba(255,255,255,.45);line-height:1.7;max-width:520px;margin:0 auto 36px}
+.module-pills{display:flex;justify-content:center;gap:8px;flex-wrap:wrap}
+.pill{
+  padding:6px 16px;border-radius:20px;
+  background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);
+  font-size:11px;font-weight:700;letter-spacing:.5px;color:rgba(255,255,255,.45);
+}
+.pill.gold{background:rgba(200,155,60,.12);border-color:rgba(200,155,60,.3);color:var(--gold-light)}
+
+/* ── AGENDA CARDS ── */
+.agenda-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin-top:28px}
+.agenda-card{
+  padding:22px 20px;border-radius:14px;
+  background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);
+  display:flex;gap:14px;align-items:flex-start;
+  transition:border-color .2s;
+}
+.agenda-num{
+  width:36px;height:36px;border-radius:10px;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Playfair Display',serif;font-size:18px;font-weight:700;color:var(--gold);
+  background:rgba(200,155,60,.12);border:1px solid rgba(200,155,60,.25);
+}
+.agenda-text .label{font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,.35);margin-bottom:4px}
+.agenda-text .title{font-size:14px;font-weight:700;color:white;line-height:1.3}
+
+/* ── CONTENT CARDS ── */
+.content-cards{display:flex;flex-direction:column;gap:10px;margin-top:24px}
+.c-card{
+  padding:18px 22px;border-radius:12px;
+  background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.07);
+  display:flex;gap:14px;align-items:flex-start;
+}
+.c-card.white-bg{background:white;border-color:white}
+.c-icon{font-size:22px;flex-shrink:0;line-height:1;margin-top:2px}
+.c-body .c-title{font-size:13px;font-weight:900;color:white;margin-bottom:5px;letter-spacing:.2px}
+.c-body.dark .c-title{color:var(--green)}
+.c-body .c-text{font-size:13px;color:rgba(255,255,255,.55);line-height:1.65}
+.c-body.dark .c-text{color:#4A5A52}
+
+/* ── REFLECTION SLIDE ── */
+.reflection-box{
+  background:rgba(200,155,60,.08);border:1.5px solid rgba(200,155,60,.25);
+  border-radius:16px;padding:36px 40px;text-align:center;max-width:640px;margin:24px auto 0;
+}
+.refl-label{font-size:10px;font-weight:900;letter-spacing:2.5px;text-transform:uppercase;color:var(--gold);margin-bottom:16px}
+.refl-text{
+  font-family:'Playfair Display',serif;font-size:clamp(17px,3vw,24px);
+  color:white;line-height:1.6;font-style:italic;
+}
+
+/* ── MODULE TITLE SLIDE ── */
+.mod-title-wrap{text-align:center}
+.mod-number-badge{
+  width:80px;height:80px;border-radius:20px;margin:0 auto 28px;
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Playfair Display',serif;font-size:36px;font-weight:700;
+  color:var(--gold);background:rgba(200,155,60,.1);
+  border:2px solid rgba(200,155,60,.3);
+}
+.mod-number-badge.mod1{color:#7ECFA4;background:rgba(126,207,164,.1);border-color:rgba(126,207,164,.3)}
+.mod-number-badge.mod2{color:#7EB4CF;background:rgba(126,180,207,.1);border-color:rgba(126,180,207,.3)}
+.mod-number-badge.mod3{color:#CF7E7E;background:rgba(207,126,126,.1);border-color:rgba(207,126,126,.3)}
+.mod-number-badge.mod4{color:#8FCF7E;background:rgba(143,207,126,.1);border-color:rgba(143,207,126,.3)}
+.mod-big-title{
+  font-family:'Playfair Display',serif;
+  font-size:clamp(28px,5vw,52px);font-weight:700;color:white;
+  line-height:1.15;margin-bottom:14px;
+}
+
+/* ── STEPS ── */
+.steps-grid{display:flex;flex-direction:column;gap:8px;margin-top:22px}
+.step-row{
+  display:flex;align-items:center;gap:14px;
+  padding:14px 18px;border-radius:10px;
+  background:rgba(255,255,255,.04);border-left:3px solid rgba(200,155,60,.4);
+}
+.step-badge{
+  width:28px;height:28px;border-radius:50%;flex-shrink:0;
+  background:var(--gold);color:#0A0A0A;font-size:12px;font-weight:900;
+  display:flex;align-items:center;justify-content:center;
+}
+.step-text{font-size:13px;color:rgba(255,255,255,.75);line-height:1.5;font-weight:600}
+
+/* ── TWO COLUMN ── */
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:22px}
+.col-card{
+  padding:20px 18px;border-radius:12px;
+  background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);
+}
+.col-label{font-size:10px;font-weight:900;letter-spacing:2px;text-transform:uppercase;margin-bottom:10px}
+.col-label.green{color:var(--gold-light)}
+.col-label.mod1{color:#7ECFA4}
+.col-label.mod2{color:#7EB4CF}
+.col-label.mod3{color:#CF7E7E}
+.col-label.mod4{color:#8FCF7E}
+.col-item{font-size:13px;color:rgba(255,255,255,.65);line-height:1.6;display:flex;align-items:flex-start;gap:8px;margin-bottom:7px}
+.col-item:last-child{margin-bottom:0}
+.col-dot{flex-shrink:0;width:6px;height:6px;border-radius:50%;background:var(--gold);margin-top:6px}
+
+/* ── CLOSING SLIDE ── */
+.closing-decoration{font-size:clamp(48px,8vw,80px);margin-bottom:28px;opacity:.7}
+.closing-quote-text{
+  font-family:'Playfair Display',serif;
+  font-size:clamp(18px,3.2vw,28px);color:white;
+  line-height:1.6;font-style:italic;max-width:680px;margin:0 auto;
+}
+.closing-quote-text strong{color:var(--gold-light);font-style:normal}
+
+/* ── ACTIVITY FINAL ── */
+.activity-items{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:28px}
+.act-item{
+  padding:22px 18px;border-radius:14px;
+  background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);
+  text-align:center;
+}
+.act-num{
+  width:36px;height:36px;border-radius:50%;margin:0 auto 14px;
+  background:rgba(200,155,60,.12);border:1.5px solid rgba(200,155,60,.3);
+  display:flex;align-items:center;justify-content:center;
+  font-weight:900;color:var(--gold);font-size:14px;
+}
+.act-q{font-size:13px;color:rgba(255,255,255,.7);line-height:1.6;font-style:italic}
+
+/* ── NAV BUTTONS ── */
+.nav-btn{
+  position:fixed;top:50%;transform:translateY(-50%);
+  width:46px;height:46px;border-radius:50%;
+  background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.1);
+  color:rgba(255,255,255,.5);font-size:20px;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  transition:all .2s;z-index:50;
+}
+.nav-btn:hover{background:rgba(255,255,255,.15);color:white}
+.nav-btn:disabled{opacity:.2;cursor:default}
+#btn-prev{left:14px}
+#btn-next{right:14px}
+
+/* ── DOTS ── */
+#dots-wrap{
+  position:fixed;bottom:16px;left:50%;transform:translateX(-50%);
+  display:flex;gap:5px;z-index:100;
+  background:rgba(10,28,18,.7);backdrop-filter:blur(8px);
+  padding:6px 12px;border-radius:20px;border:1px solid rgba(255,255,255,.07);
+}
+.dot{
+  width:6px;height:6px;border-radius:50%;
+  background:rgba(255,255,255,.2);cursor:pointer;transition:all .2s;
+}
+.dot.active{background:var(--gold);width:18px;border-radius:4px}
+
+/* ── HINT ── */
+#hint{
+  position:fixed;bottom:50px;right:20px;
+  font-size:10px;color:rgba(255,255,255,.2);letter-spacing:.5px;
+  display:flex;align-items:center;gap:6px;
+}
+
+/* ── RESPONSIVE ── */
+@media(max-width:640px){
+  .agenda-grid{grid-template-columns:1fr}
+  .two-col{grid-template-columns:1fr}
+  .activity-items{grid-template-columns:1fr;gap:10px}
+  .reflection-box{padding:24px 20px}
+  #btn-prev{left:6px}
+  #btn-next{right:6px}
+  .slide{padding:24px 12px}
+}
+</style>
+</head>
+<body>
+
+<!-- PROGRESS -->
+<div id="progress-bar"><div id="progress-fill"></div></div>
+
+<!-- TOP NAV -->
+<div id="topnav">
+  <div class="nav-brand">
+    <svg class="nav-logo" viewBox="0 0 900.76 921.01" xmlns="http://www.w3.org/2000/svg">
+      <path fill="#f8f1eb" d="M403.28,261.57c-.83.35-1.09.02-.54-.67,1.02-4.13,2.26-8.24,3.71-12.35,1.49-4.52,3.22-8.83,5.2-12.93l-.65-.82c.24-1.23,1.85-5.36,3.2-5.22,1.83-4.96,4.4-10.39,7.09-15.12.05-.1.24-.12.46-.12-.19-.15-.36-.3-.42-.49-.18-.55,3.92-7.53,4.61-8.5l1.13-.11c.27-1.56,1.75-3.76,2.97-4.7,1.01-3.45,2.81-6.64,5.42-9.57,2.3-3.73,5.11-6.83,8.43-9.31l.57-1.66c5.75-7.98,12.8-15.04,19.86-21.9,1.48-.74,2.91-1.62,4.27-2.64l-.18-1.03c6.17-4.51,11.89-9.55,17.19-15.13l7.72-10.09,1.12-.53c2.33-2.92,4.78-5.46,7.33-7.64l-.37-.95,23.24-24.44,1.02.04c.38-1.42-.45-1.1-1.51-.67.16.33.35.86.14,1-8.62,5.88-18.3,12.08-27.25,17.47l-.96-.48-1.34,1.34c-7.79,6.07-15.63,12.14-23.51,18.21l-1.8.76c-1.9,2.18-4.09,4.35-6.58,6.49.54.78,0,1.35-.79.85-1,1.48-2.17,2.91-3.51,4.29l-1.11-.2c-1.5,2.32-3.83,4.58-5.98,6.15-.4,1.05-.84,2.11-1.57,2.98-3.46,4.12-6.92,8.26-10.38,12.38-.73.87-1.7,1.49-2.67,2.07-.97,2.09-2.91,5.17-4.72,6.54l-.25,1.4c-3.76,5.69-7.39,11.48-10.89,17.37l-2.01,1.84c-.36,1.84-1.56,4.19-2.86,5.58,1.28.56.44,3.26-.94,3.18-1.85,2.98-3.46,6.13-4.82,9.45l-.42.14c-.16,1.24-.53,2.44-1.1,3.61.5.93-.19,2.16-1.36,1.96-.96,3.06-2.05,6.12-3.27,9.19-1.49,3.97-3.02,7.82-4.61,11.56-.89,4.01-2.53,8.89-4.36,12.67l.72.71c-1.55,5.13-3.8,11.29-5.84,16.27-.85,2.07-1.71,3.83-3.02,5.67-5.94,12.72-20.4,29.32-33.68,34.42-3.48,1.34-7.42.67-10.29-1.5-2.47-1.86-4.21-5.38-3.76-8.86.64-4.89,3.59-8.92,7.68-11.61,6.11-4.02,10.95-9.06,14.23-15.68,7.84-15.78,10.86-44.32,9.25-61.99l-2.72-29.94c-4.06-44.62,14.8-88.21,46.76-118.84,14.62-14.01,31.39-25.61,50.85-31.51,6.81-2.07,13.08-4.44,19.71-6.99,7.23-2.78,14.39-4.88,22.04-6.48,14.1-2.95,27.95-4.98,42.38-6l35.26-2.49c13.92-.98,27.51-1.73,41.2-4.2,6.4-1.16,9-5.09,11.66-3.44.76.47,1.82,1.64,2.02,2.93,1.02,6.42.97,12.63.95,19.24-.06,15.85-1.36,31.14-3.1,46.93-4.46,40.65-15.24,77.61-38.7,111.31-6.59,9.47-13.61,18.07-22.12,25.8-14.44,13.11-31.29,22.39-49.91,28.31-16.44,5.23-33.04,8.41-50.19,10.09l-28.18,2.77c-10.3,1.01-20,3.68-29.83,6.9-5.48,1.79-10.5,4.22-15.32,6.9Z"/>
+      <text style="font-family:Inter-Medium,Inter;font-size:104.57px;font-weight:500;fill:#f8f1eb" transform="translate(16.34 834.11)">COM PROPÓSITO</text>
+      <text style="font-family:MinionConceptRoman-Semibold,'Minion Variable Concept';font-size:620.66px;font-weight:600;fill:#f8f1eb" transform="translate(0 702.57)">RH</text>
+    </svg>
+    <div class="nav-div"></div>
+    <div class="nav-title">Líderes que Inspiram</div>
+  </div>
+  <div class="nav-right">
+    <span id="slide-counter">1 / 22</span>
+    <a class="nav-back" href="lideres.html">← Conteúdo</a>
+    <a class="nav-back" href="index.html">Portal</a>
+  </div>
+</div>
+
+<!-- SLIDES WRAPPER -->
+<div id="slides-wrap">
+
+  <!-- ═══════════════ SLIDE 1 — CAPA ═══════════════ -->
+  <div class="slide s-dark active" id="s1">
+    <div class="slide-inner center">
+      <div class="big-emoji">🌟</div>
+      <div class="cover-kicker">Treinamento de Liderança</div>
+      <div class="cover-title">Líderes que <em>Inspiram</em></div>
+      <div class="cover-desc">4 módulos de desenvolvimento para líderes que querem transformar equipes e gerar resultados com propósito.</div>
+      <div class="module-pills">
+        <span class="pill">1. Liderança pelo Exemplo</span>
+        <span class="pill">2. Comunicação Assertiva</span>
+        <span class="pill">3. Conflitos e Delegação</span>
+        <span class="pill">4. Desenvolvimento de Equipes</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════ SLIDE 2 — AGENDA ═══════════════ -->
+  <div class="slide s-green-deep" id="s2">
+    <div class="slide-inner">
+      <div class="eyebrow white" style="text-align:center">Visão Geral</div>
+      <div class="slide-title" style="text-align:center;margin-bottom:4px">O que vamos <em>ver hoje</em></div>
+      <div class="agenda-grid">
+        <div class="agenda-card">
+          <div class="agenda-num" style="color:#7ECFA4;background:rgba(126,207,164,.1);border-color:rgba(126,207,164,.25)">1</div>
+          <div class="agenda-text">
+            <div class="label" style="color:#7ECFA4">Módulo 1</div>
+            <div class="title">Liderança pelo Exemplo</div>
+          </div>
+        </div>
+        <div class="agenda-card">
+          <div class="agenda-num" style="color:#7EB4CF;background:rgba(126,180,207,.1);border-color:rgba(126,180,207,.25)">2</div>
+          <div class="agenda-text">
+            <div class="label" style="color:#7EB4CF">Módulo 2</div>
+            <div class="title">Comunicação Assertiva e Feedback</div>
+          </div>
+        </div>
+        <div class="agenda-card">
+          <div class="agenda-num" style="color:#CF7E7E;background:rgba(207,126,126,.1);border-color:rgba(207,126,126,.25)">3</div>
+          <div class="agenda-text">
+            <div class="label" style="color:#CF7E7E">Módulo 3</div>
+            <div class="title">Gestão de Conflitos e Delegação</div>
+          </div>
+        </div>
+        <div class="agenda-card">
+          <div class="agenda-num" style="color:#8FCF7E;background:rgba(143,207,126,.1);border-color:rgba(143,207,126,.25)">4</div>
+          <div class="agenda-text">
+            <div class="label" style="color:#8FCF7E">Módulo 4</div>
+            <div class="title">Desenvolvimento e Retenção de Equipes</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════ SLIDE 3 — MÓDULO 1 TÍTULO ═══════════════ -->
+  <div class="slide s-mod1" id="s3">
+    <div class="slide-inner center mod-title-wrap">
+      <div class="big-emoji">🪞</div>
+      <div class="eyebrow mod1">Módulo 1</div>
+      <div class="mod-big-title">Liderança pelo <em style="color:#7ECFA4">Exemplo</em></div>
+      <div class="slide-sub" style="text-align:center;margin:0 auto;color:rgba(255,255,255,.45);max-width:520px">Como o comportamento do líder molda o comportamento de toda a equipe.</div>
+    </div>
+  </div>
+
+  <!-- ═══════════════ SLIDE 4 — MÓDULO 1: ESPELHO ═══════════════ -->
+  <div class="slide s-mod1" id="s4">
+    <div class="slide-inner">
+      <div class="eyebrow mod1">Módulo 1 · Liderança pelo Exemplo</div>
+      <div class="slide-title" style="margin-bottom:22px">O líder é o <em style="color:#7ECFA4">espelho</em> da equipe</div>
+      <div class="content-cards">
+        <div class="c-card">
+          <div class="c-icon">👁️</div>
+          <div class="c-body">
+            <div class="c-title" style="color:#7ECFA4">A equipe observa tudo</div>
+            <div class="c-text">Pontualidade, comprometimento, respeito, postura e comportamento — tudo é observado e replicado.</div>
+          </div>
+        </div>
+        <div class="c-card">
+          <div class="c-icon">🎯</div>
+          <div class="c-body">
+            <div class="c-title" style="color:#7ECFA4">Atitudes falam mais alto que palavras</div>
+            <div class="c-text">O líder influencia mais por suas atitudes do que pelo que diz. O exemplo diário é o principal instrumento de liderança.</div>
+          </div>
+        </div>
+        <div class="c-card">
+          <div class="c-icon">⚠️</div>
+          <div class="c-body">
+            <div class="c-title" style="color:#CF7E7E">O perigo da incoerência</div>
+            <div class="c-text">Quando o líder não pratica aquilo que cobra, perde credibilidade e enfraquece a cultura da empresa.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════ SLIDE 5 — MÓDULO 1: CREDIBILIDADE ═══════════════ -->
+  <div class="slide s-mod1" id="s5">
+    <div class="slide-inner">
+      <div class="eyebrow mod1">Módulo 1 · Liderança pelo Exemplo</div>
+      <div class="slide-title" style="margin-bottom:22px">O que gera <em style="color:#7ECFA4">credibilidade</em>?</div>
+      <div class="two-col">
+        <div class="col-card" style="border-color:rgba(126,207,164,.2)">
+          <div class="col-label mod1">Gera credibilidade ✓</div>
+          <div class="col-item"><div class="col-dot" style="background:#7ECFA4"></div><span>Fazer o que fala</span></div>
+          <div class="col-item"><div class="col-dot" style="background:#7ECFA4"></div><span>Cumprir combinados</span></div>
+          <div class="col-item"><div class="col-dot" style="background:#7ECFA4"></div><span>Admitir erros</span></div>
+          <div class="col-item"><div class="col-dot" style="background:#7ECFA4"></div><span>Agir com justiça</span></div>
+          <div class="col-item"><div class="col-dot" style="background:#7ECFA4"></div><span>Ser consistente</span></div>
+        </div>
+        <div class="col-card" style="border-color:rgba(207,126,126,.2)">
+          <div class="col-label mod3">Destrói credibilidade ✗</div>
+          <div class="col-item"><div class="col-dot" style="background:#CF7E7E"></div><span>Cobrar o que não pratica</span></div>
+          <div class="col-item"><div class="col-dot" style="background:#CF7E7E"></div><span>Tratar pessoas com favoritismo</span></div>
+          <div class="col-item"><div class="col-dot" style="background:#CF7E7E"></div><span>Ignorar erros próprios</span></div>
+          <div class="col-item"><div class="col-dot" style="background:#CF7E7E"></div><span>Prometer e não cumprir</span></div>
+          <div class="col-item"><div class="col-dot" style="background:#CF7E7E"></div><span>Ser imprevisível</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════ SLIDE 6 — MÓDULO 1: REFLEXÃO ═══════════════ -->
+  <div class="slide s-mod1" id="s6">
+    <div class="slide-inner center">
+      <div class="big-emoji small">💡</div>
+      <div class="eyebrow mod1">Reflexão · Módulo 1</div>
+      <div class="reflection-box" style="border-color:rgba(126,207,164,.3);background:rgba(126,207,164,.06)">
+        <div class="refl-label" style="color:#7ECFA4">Para refletir</div>
+        <div class="refl-text">Qual comportamento da minha equipe pode estar sendo <strong style="color:#7ECFA4;font-style:normal">reflexo da minha liderança</strong>?</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════ SLIDE 7 — MÓDULO 2 TÍTULO ═══════════════ -->
+  <div class="slide s-mod2" id="s7">
+    <div class="slide-inner center mod-title-wrap">
+      <div class="big-emoji">🗣️</div>
+      <div class="eyebrow mod2">Módulo 2</div>
+      <div class="mod-big-title">Comunicação <em style="color:#7EB4CF">Assertiva</em></div>
+      <div class="slide-sub" style="text-align:center;margin:0 auto;color:rgba(255,255,255,.45);max-width:520px">Como transmitir mensagens com clareza, ouvir de verdade e dar feedback que transforma.</div>
+    </div>
+  </div>
+
+  <!-- ═══════════════ SLIDE 8 — MÓDULO 2: RESPONSABILIDADE ═══════════════ -->
+  <div class="slide s-mod2" id="s8">
+    <div class="slide-inner">
+      <div class="eyebrow mod2">Módulo 2 · Comunicação Assertiva</div>
+      <div class="slide-title" style="margin-bottom:22px">A comunicação é <em style="color:#7EB4CF">responsabilidade de quem transmite</em></div>
+      <div class="content-cards">
+        <div class="c-card">
+          <div class="c-icon">📨</div>
+          <div class="c-body">
+            <div class="c-title" style="color:#7EB4CF">Não basta falar</div>
+            <div class="c-text">É necessário garantir que a mensagem foi compreendida. A confirmação do entendimento é parte da comunicação.</div>
+          </div>
+        </div>
+        <div class="c-card">
+          <div class="c-icon">🚧</div>
+          <div class="c-body">
+            <div class="c-title" style="color:#CF7E7E">Barreiras da comunicação</div>
+            <div class="c-text">Pressa, julgamentos, falta de escuta e excesso de suposições são os principais obstáculos.</div>
+          </div>
+        </div>
+        <div class="c-card">
+          <div class="c-icon">👂</div>
+          <div class="c-body">
+            <div class="c-title" style="color:#7EB4CF">Escuta ativa</div>
+            <div class="c-text">Ouvir para compreender, e não apenas para responder. Presença total na conversa.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════ SLIDE 9 — MÓDULO 2: ASSERTIVIDADE ═══════════════ -->
+  <div class="slide s-mod2" id="s9">
+    <div class="slide-inner">
+      <div class="eyebrow mod2">Módulo 2 · Comunicação Assertiva</div>
+      <div class="slide-title" style="margin-bottom:22px">O equilíbrio da <em style="color:#7EB4CF">assertividade</em></div>
+      <div class="c-card" style="margin-bottom:14px;background:rgba(126,180,207,.07);border-color:rgba(126,180,207,.2)">
+        <div class="c-icon">⚖️</div>
+        <div class="c-body">
+          <div class="c-title" style="color:#7EB4CF">Comunicação assertiva</div>
+          <div class="c-text">Encontrar equilíbrio entre passividade (calar quando deveria falar) e agressividade (falar de forma a ferir). Clareza com respeito.</div>
+        </div>
+      </div>
+      <div class="two-col">
+        <div class="col-card" style="border-color:rgba(207,126,126,.2)">
+          <div class="col-label mod3">Passivo</div>
+          <div class="col-item"><div class="col-dot" style="background:#CF7E7E"></div><span>Evita conflitos a qualquer custo</span></div>
+          <div class="col-item"><div class="col-dot" style="background:#CF7E7E"></div><span>Não expressa necessidades</span></div>
+          <div class="col-item"><div class="col-dot" style="background:#CF7E7E"></div><span>Gera ressentimento</span></div>
+        </div>
+        <div class="col-card" style="border-color:rgba(207,126,126,.2)">
+          <div class="col-label mod3">Agressivo</div>
+          <div class="col-item"><div class="col-dot" style="background:#CF7E7E"></div><span>Impõe sem ouvir</span></div>
+          <div class="col-item"><div class="col-dot" style="background:#CF7E7E"></div><span>Descarta opiniões alheias</span></div>
+          <div class="col-item"><div class="col-dot" style="background:#CF7E7E"></div><span>Gera medo e distância</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════ SLIDE 10 — MÓDULO 2: FEEDBACK ═══════════════ -->
+  <div class="slide s-mod2" id="s10">
+    <div class="slide-inner">
+      <div class="eyebrow mod2">Módulo 2 · Comunicação Assertiva</div>
+      <div class="slide-title" style="margin-bottom:22px">Feedback de <em style="color:#7EB4CF">qualidade</em></div>
+      <div class="content-cards">
+        <div class="c-card">
+          <div class="c-icon">🎯</div>
+          <div class="c-body">
+            <div class="c-title" style="color:#7EB4CF">Seja específico, não genérico</div>
+            <div class="c-text">Evitar generalizações como "você sempre faz isso". Falar sobre comportamentos concretos e situações específicas.</div>
+          </div>
+        </div>
+        <div class="c-card">
+          <div class="c-icon">🤝</div>
+          <div class="c-body">
+            <div class="c-title" style="color:#7EB4CF">Corrigir com respeito</div>
+            <div class="c-text">O feedback corretivo deve ser feito em particular, com foco na melhoria — não na punição ou constrangimento.</div>
+          </div>
+        </div>
+        <div class="c-card">
+          <div class="c-icon">⭐</div>
+          <div class="c-body">
+            <div class="c-title" style="color:#7EB4CF">Reconhecer bons comportamentos</div>
+            <div class="c-text">Valorizar pessoas fortalece o engajamento e o sentimento de pertencimento. Reconhecimento é combustível para a equipe.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════ SLIDE 11 — MÓDULO 2: REFLEXÃO ═══════════════ -->
+  <div class="slide s-mod2" id="s11">
+    <div class="slide-inner center">
+      <div class="big-emoji small">💡</div>
+      <div class="eyebrow mod2">Reflexão · Módulo 2</div>
+      <div class="reflection-box" style="border-color:rgba(126,180,207,.3);background:rgba(126,180,207,.06)">
+        <div class="refl-label" style="color:#7EB4CF">Para refletir</div>
+        <div class="refl-text">Minha equipe tem <strong style="color:#CF7E7E;font-style:normal">medo</strong> de conversar comigo ou <strong style="color:#7EB4CF;font-style:normal">confiança</strong> para conversar comigo?</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════ SLIDE 12 — MÓDULO 3 TÍTULO ═══════════════ -->
+  <div class="slide s-mod3" id="s12">
+    <div class="slide-inner center mod-title-wrap">
+      <div class="big-emoji">⚡</div>
+      <div class="eyebrow mod3">Módulo 3</div>
+      <div class="mod-big-title">Gestão de <em style="color:#CF7E7E">Conflitos</em> e Delegação</div>
+      <div class="slide-sub" style="text-align:center;margin:0 auto;color:rgba(255,255,255,.45);max-width:520px">Como transformar conflitos em oportunidades e delegar para desenvolver pessoas.</div>
+    </div>
+  </div>
+
+  <!-- ═══════════════ SLIDE 13 — MÓDULO 3: CONFLITOS ═══════════════ -->
+  <div class="slide s-mod3" id="s13">
+    <div class="slide-inner">
+      <div class="eyebrow mod3">Módulo 3 · Conflitos e Delegação</div>
+      <div class="slide-title" style="margin-bottom:22px">Conflitos <em style="color:#CF7E7E">fazem parte</em> das equipes</div>
+      <div class="content-cards">
+        <div class="c-card">
+          <div class="c-icon">💬</div>
+          <div class="c-body">
+            <div class="c-title" style="color:#CF7E7E">Nem todo conflito é negativo</div>
+            <div class="c-text">Muitas melhorias surgem de opiniões diferentes. O conflito bem gerenciado gera crescimento e inovação.</div>
+          </div>
+        </div>
+        <div class="c-card">
+          <div class="c-icon">🔍</div>
+          <div class="c-body">
+            <div class="c-title" style="color:#CF7E7E">Principais causas</div>
+            <div class="c-text">Falta de comunicação, falta de clareza, falta de alinhamento e falta de respeito.</div>
+          </div>
+        </div>
+        <div class="c-card">
+          <div class="c-icon">🧭</div>
+          <div class="c-body">
+            <div class="c-title" style="color:#CF7E7E">Como agir diante dos conflitos</div>
+            <div class="c-text">Ouvir os envolvidos, separar fatos de emoções e focar na solução — não em culpados.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════ SLIDE 14 — MÓDULO 3: DELEGAÇÃO ═══════════════ -->
+  <div class="slide s-mod3" id="s14">
+    <div class="slide-inner">
+      <div class="eyebrow mod3">Módulo 3 · Conflitos e Delegação</div>
+      <div class="slide-title" style="margin-bottom:8px">Os <em style="color:#CF7E7E">5 passos</em> da delegação eficiente</div>
+      <div style="font-size:13px;color:rgba(255,255,255,.45);margin-bottom:16px">Delegar é desenvolver pessoas e evitar sobrecarga.</div>
+      <div class="steps-grid">
+        <div class="step-row">
+          <div class="step-badge">1</div>
+          <div class="step-text">📢 <strong>Explicar</strong> — comunique claramente a tarefa e o resultado esperado</div>
+        </div>
+        <div class="step-row">
+          <div class="step-badge">2</div>
+          <div class="step-text">✅ <strong>Confirmar entendimento</strong> — garanta que a pessoa compreendeu corretamente</div>
+        </div>
+        <div class="step-row">
+          <div class="step-badge">3</div>
+          <div class="step-text">🛠️ <strong>Fornecer recursos</strong> — ofereça as ferramentas e informações necessárias</div>
+        </div>
+        <div class="step-row">
+          <div class="step-badge">4</div>
+          <div class="step-text">📊 <strong>Acompanhar</strong> — monitore o progresso sem microgerenciar</div>
+        </div>
+        <div class="step-row">
+          <div class="step-badge">5</div>
+          <div class="step-text">🚀 <strong>Dar autonomia</strong> — confie e deixe a pessoa crescer</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════ SLIDE 15 — MÓDULO 3: REFLEXÃO ═══════════════ -->
+  <div class="slide s-mod3" id="s15">
+    <div class="slide-inner center">
+      <div class="big-emoji small">💡</div>
+      <div class="eyebrow mod3">Reflexão · Módulo 3</div>
+      <div class="reflection-box" style="border-color:rgba(207,126,126,.3);background:rgba(207,126,126,.06)">
+        <div class="refl-label" style="color:#CF7E7E">Para refletir</div>
+        <div class="refl-text">Estou <strong style="color:#CF7E7E;font-style:normal">formando pessoas capazes</strong> ou criando <strong style="color:#CF7E7E;font-style:normal">dependência</strong> da minha presença?</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════ SLIDE 16 — MÓDULO 4 TÍTULO ═══════════════ -->
+  <div class="slide s-mod4" id="s16">
+    <div class="slide-inner center mod-title-wrap">
+      <div class="big-emoji">🌱</div>
+      <div class="eyebrow mod4">Módulo 4</div>
+      <div class="mod-big-title">Desenvolvimento e <em style="color:#8FCF7E">Retenção</em> de Equipes</div>
+      <div class="slide-sub" style="text-align:center;margin:0 auto;color:rgba(255,255,255,.45);max-width:520px">Como criar um ambiente onde as pessoas crescem, se sentem valorizadas e querem ficar.</div>
+    </div>
+  </div>
+
+  <!-- ═══════════════ SLIDE 17 — MÓDULO 4: PERMANÊNCIA ═══════════════ -->
+  <div class="slide s-mod4" id="s17">
+    <div class="slide-inner">
+      <div class="eyebrow mod4">Módulo 4 · Desenvolvimento de Equipes</div>
+      <div class="slide-title" style="margin-bottom:22px">Pessoas permanecem onde se sentem <em style="color:#8FCF7E">valorizadas</em></div>
+      <div class="content-cards">
+        <div class="c-card">
+          <div class="c-icon">💛</div>
+          <div class="c-body">
+            <div class="c-title" style="color:#8FCF7E">Reconhecimento e respeito retêm talentos</div>
+            <div class="c-text">Mais do que salário: as pessoas ficam onde são vistas, ouvidas e respeitadas. O clima importa.</div>
+          </div>
+        </div>
+        <div class="c-card">
+          <div class="c-icon">🎓</div>
+          <div class="c-body">
+            <div class="c-title" style="color:#8FCF7E">O papel do líder no desenvolvimento</div>
+            <div class="c-text">Ensinar, orientar, corrigir e incentivar continuamente. Cada interação é uma oportunidade de desenvolvimento.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════ SLIDE 18 — MÓDULO 4: POTENCIAL ═══════════════ -->
+  <div class="slide s-mod4" id="s18">
+    <div class="slide-inner">
+      <div class="eyebrow mod4">Módulo 4 · Desenvolvimento de Equipes</div>
+      <div class="slide-title" style="margin-bottom:22px">Identificando <em style="color:#8FCF7E">potencial</em> e formando sucessores</div>
+      <div class="two-col">
+        <div class="col-card" style="border-color:rgba(143,207,126,.2)">
+          <div class="col-label mod4">Sinais de potencial</div>
+          <div class="col-item"><div class="col-dot" style="background:#8FCF7E"></div><span>Iniciativa própria</span></div>
+          <div class="col-item"><div class="col-dot" style="background:#8FCF7E"></div><span>Comprometimento genuíno</span></div>
+          <div class="col-item"><div class="col-dot" style="background:#8FCF7E"></div><span>Interesse em aprender</span></div>
+          <div class="col-item"><div class="col-dot" style="background:#8FCF7E"></div><span>Resolve problemas</span></div>
+          <div class="col-item"><div class="col-dot" style="background:#8FCF7E"></div><span>Boa relação com o time</span></div>
+        </div>
+        <div class="col-card" style="border-color:rgba(143,207,126,.2)">
+          <div class="col-label mod4">Formação de sucessores</div>
+          <div class="col-item"><div class="col-dot" style="background:#8FCF7E"></div><span>Expor a novos desafios</span></div>
+          <div class="col-item"><div class="col-dot" style="background:#8FCF7E"></div><span>Dar responsabilidades graduais</span></div>
+          <div class="col-item"><div class="col-dot" style="background:#8FCF7E"></div><span>Acompanhar com mentoria</span></div>
+          <div class="col-item"><div class="col-dot" style="background:#8FCF7E"></div><span>Preparar para assumir mais</span></div>
+          <div class="col-item"><div class="col-dot" style="background:#8FCF7E"></div><span>Celebrar as conquistas</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════ SLIDE 19 — MÓDULO 4: RECONHECIMENTO ═══════════════ -->
+  <div class="slide s-mod4" id="s19">
+    <div class="slide-inner">
+      <div class="eyebrow mod4">Módulo 4 · Desenvolvimento de Equipes</div>
+      <div class="slide-title" style="margin-bottom:22px">O impacto do <em style="color:#8FCF7E">reconhecimento</em></div>
+      <div class="content-cards">
+        <div class="c-card">
+          <div class="c-icon">🏆</div>
+          <div class="c-body">
+            <div class="c-title" style="color:#8FCF7E">Nem todo reconhecimento é financeiro</div>
+            <div class="c-text">Muitas vezes uma palavra sincera de valorização gera um impacto maior do que um bônus. O reconhecimento certo, no momento certo, transforma.</div>
+          </div>
+        </div>
+        <div class="c-card">
+          <div class="c-icon">🔥</div>
+          <div class="c-body">
+            <div class="c-title" style="color:#8FCF7E">Reconhecimento gera engajamento</div>
+            <div class="c-text">Pessoas reconhecidas se dedicam mais, comprometem mais e inspiram outros ao redor. É um efeito multiplicador.</div>
+          </div>
+        </div>
+        <div class="c-card">
+          <div class="c-icon">🤗</div>
+          <div class="c-body">
+            <div class="c-title" style="color:#8FCF7E">Formas de reconhecer</div>
+            <div class="c-text">Elogiar publicamente, agradecer individualmente, dar desafios maiores, incluir nas decisões, confiar responsabilidades.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════ SLIDE 20 — MÓDULO 4: REFLEXÃO ═══════════════ -->
+  <div class="slide s-mod4" id="s20">
+    <div class="slide-inner center">
+      <div class="big-emoji small">💡</div>
+      <div class="eyebrow mod4">Reflexão · Módulo 4</div>
+      <div class="reflection-box" style="border-color:rgba(143,207,126,.3);background:rgba(143,207,126,.06)">
+        <div class="refl-label" style="color:#8FCF7E">Para refletir</div>
+        <div class="refl-text">Se um colaborador sair hoje da empresa, ele dirá que <strong style="color:#8FCF7E;font-style:normal">cresceu trabalhando comigo</strong>?</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════ SLIDE 21 — ENCERRAMENTO ═══════════════ -->
+  <div class="slide s-close" id="s21">
+    <div class="slide-inner center">
+      <div class="closing-decoration">🌟</div>
+      <div class="eyebrow" style="text-align:center;color:rgba(200,155,60,.7)">Encerramento</div>
+      <div class="closing-quote-text">
+        Liderança não é um cargo. É uma <strong>influência</strong>.<br><br>
+        As pessoas podem até esquecer o que você disse,<br>
+        mas dificilmente esquecerão <strong>como você as fez sentir</strong>.
+      </div>
+      <div style="margin-top:36px;font-size:12px;color:rgba(255,255,255,.25);letter-spacing:1px">— RH com Propósito</div>
+    </div>
+  </div>
+
+  <!-- ═══════════════ SLIDE 22 — ATIVIDADE FINAL ═══════════════ -->
+  <div class="slide s-dark" id="s22">
+    <div class="slide-inner">
+      <div class="eyebrow" style="text-align:center">Para encerrar</div>
+      <div class="slide-title" style="text-align:center;margin-bottom:8px">Atividade <em>Final</em></div>
+      <div style="text-align:center;font-size:13px;color:rgba(255,255,255,.4);margin-bottom:28px">Responda com honestidade — isso é para você.</div>
+      <div class="activity-items">
+        <div class="act-item">
+          <div class="act-num">1</div>
+          <div class="act-q">Qual é meu maior desafio como líder?</div>
+        </div>
+        <div class="act-item">
+          <div class="act-num">2</div>
+          <div class="act-q">O que preciso melhorar imediatamente?</div>
+        </div>
+        <div class="act-item">
+          <div class="act-num">3</div>
+          <div class="act-q">Que atitude vou colocar em prática a partir de amanhã?</div>
+        </div>
+      </div>
+      <div style="text-align:center;margin-top:28px">
+        <a href="lideres.html" style="
+          display:inline-flex;align-items:center;gap:8px;
+          padding:13px 28px;border-radius:10px;
+          background:var(--gold);color:#0A0A0A;
+          font-size:13px;font-weight:900;text-decoration:none;
+          letter-spacing:.5px;transition:all .2s;
+        " onmouseover="this.style.background='#E8C96A'" onmouseout="this.style.background='var(--gold)'">
+          ✏️ Responder no Conteúdo →
+        </a>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /slides-wrap -->
+
+<!-- NAV BUTTONS -->
+<button class="nav-btn" id="btn-prev" onclick="navigate(-1)" title="Anterior">‹</button>
+<button class="nav-btn" id="btn-next" onclick="navigate(1)" title="Próximo">›</button>
+
+<!-- DOTS -->
+<div id="dots-wrap"></div>
+
+<!-- HINT -->
+<div id="hint">← → espaço</div>
+
+<script>
+const TOTAL = 22;
+let current = 1;
+
+function goTo(n) {
+  n = Math.max(1, Math.min(TOTAL, n));
+  if (n === current) return;
+  document.getElementById('s' + current).classList.remove('active');
+  current = n;
+  document.getElementById('s' + current).classList.add('active');
+  updateUI();
+}
+
+function navigate(dir) { goTo(current + dir); }
+
+function updateUI() {
+  document.getElementById('slide-counter').textContent = current + ' / ' + TOTAL;
+  document.getElementById('progress-fill').style.width = ((current / TOTAL) * 100) + '%';
+  document.getElementById('btn-prev').disabled = current === 1;
+  document.getElementById('btn-next').disabled = current === TOTAL;
+  document.querySelectorAll('.dot').forEach((d, i) => {
+    d.classList.toggle('active', i + 1 === current);
+  });
+}
+
+// Build dots
+const dotsWrap = document.getElementById('dots-wrap');
+for (let i = 1; i <= TOTAL; i++) {
+  const d = document.createElement('div');
+  d.className = 'dot' + (i === 1 ? ' active' : '');
+  d.onclick = () => goTo(i);
+  d.title = 'Slide ' + i;
+  dotsWrap.appendChild(d);
+}
+
+// Keyboard
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight' || e.key === 'ArrowDown' || e.key === ' ') { e.preventDefault(); navigate(1); }
+  if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') { e.preventDefault(); navigate(-1); }
+  if (e.key === 'Home') goTo(1);
+  if (e.key === 'End') goTo(TOTAL);
+});
+
+// Touch / swipe
+let tx = 0;
+const wrap = document.getElementById('slides-wrap');
+wrap.addEventListener('touchstart', e => { tx = e.touches[0].clientX; }, { passive: true });
+wrap.addEventListener('touchend', e => {
+  const dx = e.changedTouches[0].clientX - tx;
+  if (Math.abs(dx) > 40) navigate(dx < 0 ? 1 : -1);
+}, { passive: true });
+
+// Hide hint after first nav
+let hintShown = true;
+function hideHint() {
+  if (hintShown) { document.getElementById('hint').style.opacity = '0'; hintShown = false; }
+}
+document.addEventListener('keydown', hideHint, { once: true });
+wrap.addEventListener('touchend', hideHint, { once: true });
+document.getElementById('btn-next').addEventListener('click', hideHint, { once: true });
+
+// Init
+updateUI();
+</script>
+</body>
+</html>

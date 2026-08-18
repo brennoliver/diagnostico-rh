@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pré-Diagnóstico Organizacional | RH com Propósito</title>
+  <meta name="description" content="Questionário enviado antes da nossa primeira conversa para que o encontro seja mais produtivo e direcionado às reais necessidades do seu negócio.">
+  <meta property="og:title" content="Pré-Diagnóstico Organizacional — RH com Propósito">
+  <meta property="og:description" content="Preencha antes da nossa primeira conversa. Leva cerca de 10 minutos.">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="RH com Propósito">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Lato:wght@400;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    :root{--gold:#C89B3C;--gold-l:#D4A84A;--green:#1A5C45;--dark:#070F09}
+    body{min-height:100vh;background:linear-gradient(145deg,var(--dark) 0%,var(--green) 55%,#0F3D2A 100%);font-family:'Lato',sans-serif;color:white;padding-bottom:80px}
+
+    /* Topbar */
+    .topbar{display:flex;align-items:center;justify-content:space-between;padding:16px 28px;background:rgba(0,0,0,.2);backdrop-filter:blur(12px);border-bottom:1px solid rgba(255,255,255,.06);position:sticky;top:0;z-index:100}
+    .topbar-brand{font-size:13px;font-weight:700;letter-spacing:1px;color:rgba(255,255,255,.8)}
+    .topbar-brand span{color:var(--gold)}
+    .topbar-step{font-size:12px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,.35)}
+    .topbar-step b{color:var(--gold)}
+
+    /* Progress */
+    .prog-wrap{height:3px;background:rgba(255,255,255,.08)}
+    .prog-bar{height:3px;background:linear-gradient(90deg,var(--gold),var(--gold-l));transition:width .4s ease}
+
+    /* Dots */
+    .dots{display:flex;justify-content:center;gap:6px;padding:20px 0 4px}
+    .dot{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.15);transition:all .3s;cursor:pointer}
+    .dot.active{background:var(--gold);width:20px;border-radius:3px}
+    .dot.done{background:rgba(200,155,60,.35)}
+
+    /* Step */
+    .step{display:none;max-width:680px;margin:0 auto;padding:32px 24px 24px}
+    .step.active{display:block}
+
+    /* Section header */
+    .s-eyebrow{font-size:11px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--gold);margin-bottom:10px}
+    .s-title{font-family:'Playfair Display',serif;font-size:clamp(22px,4vw,30px);font-weight:700;color:white;margin-bottom:6px;line-height:1.2}
+    .s-sub{font-size:14px;color:rgba(255,255,255,.4);line-height:1.6;margin-bottom:28px}
+
+    /* Intro box */
+    .intro-box{background:rgba(200,155,60,.06);border:1px solid rgba(200,155,60,.18);border-radius:14px;padding:22px 24px;margin-bottom:28px}
+    .intro-text{font-size:14px;color:rgba(255,255,255,.65);line-height:1.8}
+    .intro-assin{margin-top:14px;font-size:13px;color:rgba(255,255,255,.3);font-style:italic}
+    .intro-assin strong{color:var(--gold);font-style:normal}
+
+    /* Card */
+    .q-card{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:16px;padding:26px 22px;margin-bottom:14px}
+
+    /* Field */
+    .q-field{margin-bottom:22px}
+    .q-field:last-child{margin-bottom:0}
+    .q-sublabel{font-size:14px;font-weight:700;color:rgba(255,255,255,.8);margin-bottom:12px;line-height:1.5}
+    .q-label{font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,.35);margin-bottom:8px;display:block}
+
+    input[type=text],select,textarea{
+      width:100%;padding:12px 16px;border-radius:10px;
+      border:1.5px solid rgba(255,255,255,.1);
+      background:rgba(255,255,255,.05);color:white;
+      font-size:14px;font-family:'Lato',sans-serif;
+      transition:border-color .2s;
+    }
+    input[type=text]:focus,select:focus,textarea:focus{outline:none;border-color:var(--gold)}
+    input::placeholder,textarea::placeholder{color:rgba(255,255,255,.22)}
+    textarea{resize:vertical;min-height:88px;line-height:1.65}
+    select{cursor:pointer;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='rgba(255,255,255,0.35)' stroke-width='2'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center;padding-right:40px}
+    select option{background:#0F2B1E;color:white}
+
+    /* Radio pills */
+    .q-radios{display:flex;flex-wrap:wrap;gap:8px}
+    .q-radio{cursor:pointer}
+    .q-radio input{display:none}
+    .q-radio span{display:inline-block;padding:9px 18px;border-radius:20px;border:1.5px solid rgba(255,255,255,.12);font-size:13px;color:rgba(255,255,255,.55);cursor:pointer;transition:all .2s;white-space:nowrap}
+    .q-radio input:checked + span{background:var(--gold);color:#0A1C12;border-color:var(--gold);font-weight:700}
+    .q-radio:hover span{border-color:rgba(200,155,60,.45);color:white}
+
+    /* Checkbox pills */
+    .q-checks{display:flex;flex-wrap:wrap;gap:8px}
+    .q-check input{display:none}
+    .q-check span{display:inline-block;padding:9px 18px;border-radius:20px;border:1.5px solid rgba(255,255,255,.12);font-size:13px;color:rgba(255,255,255,.55);cursor:pointer;transition:all .2s}
+    .q-check input:checked + span{background:rgba(200,155,60,.18);border-color:var(--gold);color:white;font-weight:700}
+    .q-check:hover span{border-color:rgba(200,155,60,.45);color:white}
+
+    /* Auth checkbox */
+    .auth-row{display:flex;align-items:flex-start;gap:14px;cursor:pointer;padding:4px 0}
+    .auth-box{width:22px;height:22px;border-radius:6px;border:2px solid rgba(200,155,60,.4);flex-shrink:0;margin-top:2px;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;color:#0A1C12;transition:all .2s}
+    .auth-box.on{background:var(--gold);border-color:var(--gold)}
+    .auth-text{font-size:14px;color:rgba(255,255,255,.65);line-height:1.6}
+
+    /* 2-col grid */
+    .row2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+    @media(max-width:500px){.row2{grid-template-columns:1fr}}
+
+    /* Nav */
+    .nav-bar{display:flex;justify-content:space-between;align-items:center;max-width:680px;margin:20px auto 0;padding:0 24px}
+    .btn-prev{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.1);color:rgba(255,255,255,.55);padding:12px 24px;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;transition:all .2s;font-family:'Lato',sans-serif}
+    .btn-prev:hover{background:rgba(255,255,255,.12);color:white}
+    .btn-next{background:var(--gold);color:#0A1C12;padding:12px 32px;border-radius:10px;font-size:14px;font-weight:700;border:none;cursor:pointer;transition:all .2s;font-family:'Lato',sans-serif}
+    .btn-next:hover{background:var(--gold-l);transform:translateY(-1px)}
+
+    /* Submit */
+    .submit-area{margin-top:24px;display:flex;flex-direction:column;gap:12px}
+    .btn-submit{width:100%;padding:15px;border-radius:10px;background:var(--gold);color:#0A1C12;font-weight:700;font-size:15px;letter-spacing:.5px;border:none;cursor:pointer;transition:all .2s;font-family:'Lato',sans-serif}
+    .btn-submit:hover{background:var(--gold-l);transform:translateY(-1px)}
+    .btn-submit:disabled{opacity:.45;cursor:not-allowed;transform:none}
+    .btn-print{width:100%;padding:13px;border-radius:10px;background:rgba(255,255,255,.06);color:rgba(255,255,255,.65);font-weight:700;font-size:14px;border:1px solid rgba(255,255,255,.1);cursor:pointer;transition:all .2s;font-family:'Lato',sans-serif}
+    .btn-print:hover{background:rgba(255,255,255,.1);color:white}
+    .success-msg{display:none;text-align:center;padding:20px;background:rgba(74,154,114,.12);border:1px solid rgba(74,154,114,.3);border-radius:12px;font-size:14px;color:rgba(255,255,255,.7);line-height:1.7}
+
+    /* Toast */
+    .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(20px);padding:13px 22px;border-radius:12px;font-size:14px;font-weight:700;opacity:0;transition:all .3s;z-index:999;white-space:nowrap;pointer-events:none}
+    .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+    .toast-s{background:#166534;border:1px solid #4ADE80;color:#4ADE80}
+    .toast-e{background:#7F1D1D;border:1px solid #F87171;color:#F87171}
+
+    /* Print */
+    .print-hd{display:none}
+    @media print{
+      body{background:white;color:#111;padding:0}
+      .topbar,.prog-wrap,.dots,.nav-bar,.submit-area,.toast{display:none!important}
+      .step{display:block!important;max-width:100%;padding:16px 0;page-break-inside:avoid}
+      .q-card{border:1px solid #ddd;background:#fafafa;padding:18px;margin-bottom:10px;page-break-inside:avoid}
+      .s-title,.q-sublabel{color:#111}
+      .s-eyebrow,.q-label{color:#777}
+      .s-sub,.intro-text,.auth-text{color:#555}
+      input[type=text],select,textarea{border:1px solid #ccc;background:#f9f9f9;color:#111}
+      .q-radio span,.q-check span{border:1px solid #ccc;color:#555}
+      .q-radio input:checked+span,.q-check input:checked+span{background:#C89B3C!important;color:white!important;border-color:#C89B3C!important}
+      .intro-box{border:1px solid #e5d5a0;background:#fef9ef}
+      .print-hd{display:block;padding-bottom:16px;border-bottom:2px solid #C89B3C;margin-bottom:20px;text-align:center}
+    }
+  </style>
+</head>
+<body>
+
+<div class="print-hd">
+  <div style="font-family:'Playfair Display',serif;font-size:22px;font-weight:700;color:#0F2B1E">RH com Propósito</div>
+  <div style="font-size:13px;color:#666;margin-top:4px">Pré-Diagnóstico Organizacional</div>
+</div>
+
+<div class="topbar">
+  <div class="topbar-brand">RH <span>com Propósito</span></div>
+  <div class="topbar-step">Seção <b id="lbl-step">1</b> de 9</div>
+  <div style="font-size:12px;color:rgba(255,255,255,.25)">Pré-Diagnóstico</div>
+</div>
+<div class="prog-wrap"><div class="prog-bar" id="prog-bar" style="width:11.1%"></div></div>
+<div class="dots" id="dots"></div>
+
+<!-- ── STEP 1: INFORMAÇÕES ── -->
+<div id="step-1" class="step active">
+  <div class="s-eyebrow">Pré-Diagnóstico Organizacional</div>
+  <div class="s-title">Olá! Que bom ter você aqui.</div>
+  <div class="intro-box">
+    <div class="intro-text">Antes da nossa primeira conversa, gostaria de conhecer um pouco mais sobre sua empresa. Este questionário foi elaborado para que nosso encontro seja mais produtivo, direcionado às reais necessidades do seu negócio.<br><br>O preenchimento leva cerca de 10 minutos. Desde já, obrigada pela confiança.</div>
+    <div class="intro-assin"><strong>Cristiele Rodrigues</strong> · RH com Propósito<br>Porque todo resultado começa com pessoas.</div>
+  </div>
+  <div class="s-eyebrow">1 — Informações da empresa</div>
+  <div class="q-card">
+    <div class="row2">
+      <div class="q-field"><label class="q-label">Nome da empresa</label><input type="text" id="f-empresa" placeholder="Nome da empresa"></div>
+      <div class="q-field"><label class="q-label">Segmento</label><input type="text" id="f-segmento" placeholder="Ex: Varejo, Saúde, Educação..."></div>
+    </div>
+    <div class="row2" style="margin-top:16px">
+      <div class="q-field"><label class="q-label">Nome do responsável</label><input type="text" id="f-responsavel" placeholder="Seu nome completo"></div>
+      <div class="q-field"><label class="q-label">Cargo</label><input type="text" id="f-cargo" placeholder="Seu cargo ou função"></div>
+    </div>
+    <div class="row2" style="margin-top:16px">
+      <div class="q-field"><label class="q-label">Cidade</label><input type="text" id="f-cidade" placeholder="Cidade"></div>
+      <div class="q-field"><label class="q-label">Há quantos anos a empresa existe?</label>
+        <select id="f-anos">
+          <option value="">Selecione</option>
+          <option>Menos de 1 ano</option><option>1 a 3 anos</option><option>4 a 10 anos</option><option>Mais de 10 anos</option>
+        </select>
+      </div>
+    </div>
+    <div class="q-field" style="margin-top:16px">
+      <div class="q-sublabel">Quantos colaboradores possui atualmente?</div>
+      <div class="q-radios">
+        <label class="q-radio"><input type="radio" name="r-colab" value="1 a 10"><span>1 a 10</span></label>
+        <label class="q-radio"><input type="radio" name="r-colab" value="11 a 30"><span>11 a 30</span></label>
+        <label class="q-radio"><input type="radio" name="r-colab" value="31 a 50"><span>31 a 50</span></label>
+        <label class="q-radio"><input type="radio" name="r-colab" value="51 a 100"><span>51 a 100</span></label>
+        <label class="q-radio"><input type="radio" name="r-colab" value="Mais de 100"><span>Mais de 100</span></label>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── STEP 2: EQUIPE ── -->
+<div id="step-2" class="step">
+  <div class="s-eyebrow">2 — Sobre a equipe</div>
+  <div class="s-title">Como está sua equipe hoje?</div>
+  <div class="s-sub">Conte um pouco sobre as pessoas que formam a empresa.</div>
+  <div class="q-card">
+    <div class="q-field"><div class="q-sublabel">Como você descreveria sua equipe hoje?</div><textarea id="f-desc-equipe" placeholder="Descreva em suas palavras..."></textarea></div>
+    <div class="q-field"><div class="q-sublabel">Quais são os três maiores desafios relacionados às pessoas dentro da empresa?</div><textarea id="f-desafios" placeholder="Liste os três principais..."></textarea></div>
+    <div class="q-field"><div class="q-sublabel">O que mais preocupa você atualmente?</div><textarea id="f-preocupacao" placeholder="Compartilhe o que mais te preocupa..."></textarea></div>
+    <div class="q-field">
+      <div class="q-sublabel">Existe dificuldade para contratar pessoas?</div>
+      <div class="q-radios">
+        <label class="q-radio"><input type="radio" name="r-contratar" value="Sim"><span>Sim</span></label>
+        <label class="q-radio"><input type="radio" name="r-contratar" value="Não"><span>Não</span></label>
+        <label class="q-radio"><input type="radio" name="r-contratar" value="Às vezes"><span>Às vezes</span></label>
+      </div>
+    </div>
+    <div class="q-field">
+      <div class="q-sublabel">Existe dificuldade para manter bons colaboradores?</div>
+      <div class="q-radios">
+        <label class="q-radio"><input type="radio" name="r-manter" value="Sim"><span>Sim</span></label>
+        <label class="q-radio"><input type="radio" name="r-manter" value="Não"><span>Não</span></label>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── STEP 3: LIDERANÇA ── -->
+<div id="step-3" class="step">
+  <div class="s-eyebrow">3 — Liderança</div>
+  <div class="s-title">Como funciona a liderança?</div>
+  <div class="s-sub">Entender a estrutura de gestão é fundamental para o diagnóstico.</div>
+  <div class="q-card">
+    <div class="q-field">
+      <div class="q-sublabel">Sua empresa possui líderes ou gestores?</div>
+      <div class="q-radios">
+        <label class="q-radio"><input type="radio" name="r-tem-lideres" value="Sim"><span>Sim</span></label>
+        <label class="q-radio"><input type="radio" name="r-tem-lideres" value="Não"><span>Não</span></label>
+      </div>
+    </div>
+    <div class="q-field">
+      <div class="q-sublabel">Como você avalia a preparação desses líderes?</div>
+      <div class="q-radios">
+        <label class="q-radio"><input type="radio" name="r-prep-lideres" value="Excelente"><span>Excelente</span></label>
+        <label class="q-radio"><input type="radio" name="r-prep-lideres" value="Boa"><span>Boa</span></label>
+        <label class="q-radio"><input type="radio" name="r-prep-lideres" value="Regular"><span>Regular</span></label>
+        <label class="q-radio"><input type="radio" name="r-prep-lideres" value="Precisa melhorar"><span>Precisa melhorar</span></label>
+      </div>
+    </div>
+    <div class="q-field"><div class="q-sublabel">Qual é o maior desafio da liderança hoje?</div><textarea id="f-desafio-lider" placeholder="Descreva o principal desafio..."></textarea></div>
+  </div>
+</div>
+
+<!-- ── STEP 4: COMUNICAÇÃO ── -->
+<div id="step-4" class="step">
+  <div class="s-eyebrow">4 — Comunicação</div>
+  <div class="s-title">Como fluem as informações?</div>
+  <div class="s-sub">A comunicação interna revela muito sobre a cultura da empresa.</div>
+  <div class="q-card">
+    <div class="q-field">
+      <div class="q-sublabel">Como você avalia a comunicação entre gestores e colaboradores?</div>
+      <div class="q-radios">
+        <label class="q-radio"><input type="radio" name="r-comunicacao" value="Excelente"><span>Excelente</span></label>
+        <label class="q-radio"><input type="radio" name="r-comunicacao" value="Boa"><span>Boa</span></label>
+        <label class="q-radio"><input type="radio" name="r-comunicacao" value="Regular"><span>Regular</span></label>
+        <label class="q-radio"><input type="radio" name="r-comunicacao" value="Ruim"><span>Ruim</span></label>
+      </div>
+    </div>
+    <div class="q-field">
+      <div class="q-sublabel">Os colaboradores recebem feedback com frequência?</div>
+      <div class="q-radios">
+        <label class="q-radio"><input type="radio" name="r-feedback" value="Sempre"><span>Sempre</span></label>
+        <label class="q-radio"><input type="radio" name="r-feedback" value="Às vezes"><span>Às vezes</span></label>
+        <label class="q-radio"><input type="radio" name="r-feedback" value="Raramente"><span>Raramente</span></label>
+        <label class="q-radio"><input type="radio" name="r-feedback" value="Nunca"><span>Nunca</span></label>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── STEP 5: CULTURA ── -->
+<div id="step-5" class="step">
+  <div class="s-eyebrow">5 — Cultura da empresa</div>
+  <div class="s-title">Qual é a identidade da empresa?</div>
+  <div class="s-sub">Missão, Visão e Valores formam a base da cultura organizacional.</div>
+  <div class="q-card">
+    <div class="q-field">
+      <div class="q-sublabel">A empresa possui Missão, Visão e Valores definidos?</div>
+      <div class="q-radios">
+        <label class="q-radio"><input type="radio" name="r-mvv" value="Sim"><span>Sim</span></label>
+        <label class="q-radio"><input type="radio" name="r-mvv" value="Parcialmente"><span>Parcialmente</span></label>
+        <label class="q-radio"><input type="radio" name="r-mvv" value="Não"><span>Não</span></label>
+      </div>
+    </div>
+    <div class="q-field">
+      <div class="q-sublabel">Os colaboradores conhecem esses valores?</div>
+      <div class="q-radios">
+        <label class="q-radio"><input type="radio" name="r-colab-mvv" value="Sim"><span>Sim</span></label>
+        <label class="q-radio"><input type="radio" name="r-colab-mvv" value="Parcialmente"><span>Parcialmente</span></label>
+        <label class="q-radio"><input type="radio" name="r-colab-mvv" value="Não"><span>Não</span></label>
+      </div>
+    </div>
+    <div class="q-field"><div class="q-sublabel">Como você definiria a cultura da sua empresa em uma frase?</div><textarea id="f-frase-cultura" placeholder="Em uma frase..." style="min-height:68px"></textarea></div>
+  </div>
+</div>
+
+<!-- ── STEP 6: CLIMA ── -->
+<div id="step-6" class="step">
+  <div class="s-eyebrow">6 — Clima organizacional</div>
+  <div class="s-title">Como está o ambiente de trabalho?</div>
+  <div class="s-sub">O clima organizacional reflete o bem-estar e a motivação da equipe.</div>
+  <div class="q-card">
+    <div class="q-field">
+      <div class="q-sublabel">Como você acredita que os colaboradores chegam para trabalhar?</div>
+      <div class="q-radios">
+        <label class="q-radio"><input type="radio" name="r-clima" value="Motivados"><span>Motivados</span></label>
+        <label class="q-radio"><input type="radio" name="r-clima" value="Comprometidos"><span>Comprometidos</span></label>
+        <label class="q-radio"><input type="radio" name="r-clima" value="Indiferentes"><span>Indiferentes</span></label>
+        <label class="q-radio"><input type="radio" name="r-clima" value="Desmotivados"><span>Desmotivados</span></label>
+      </div>
+    </div>
+    <div class="q-field">
+      <div class="q-sublabel">O ambiente de trabalho possui conflitos frequentes?</div>
+      <div class="q-radios">
+        <label class="q-radio"><input type="radio" name="r-conflitos" value="Sim"><span>Sim</span></label>
+        <label class="q-radio"><input type="radio" name="r-conflitos" value="Às vezes"><span>Às vezes</span></label>
+        <label class="q-radio"><input type="radio" name="r-conflitos" value="Não"><span>Não</span></label>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── STEP 7: DESENVOLVIMENTO ── -->
+<div id="step-7" class="step">
+  <div class="s-eyebrow">7 — Desenvolvimento</div>
+  <div class="s-title">Como a empresa investe em pessoas?</div>
+  <div class="s-sub">Treinamentos e capacitações revelam a maturidade da gestão de pessoas.</div>
+  <div class="q-card">
+    <div class="q-field">
+      <div class="q-sublabel">Sua empresa realiza treinamentos?</div>
+      <div class="q-radios">
+        <label class="q-radio"><input type="radio" name="r-treina" value="Frequentemente"><span>Frequentemente</span></label>
+        <label class="q-radio"><input type="radio" name="r-treina" value="Algumas vezes ao ano"><span>Algumas vezes ao ano</span></label>
+        <label class="q-radio"><input type="radio" name="r-treina" value="Raramente"><span>Raramente</span></label>
+        <label class="q-radio"><input type="radio" name="r-treina" value="Nunca"><span>Nunca</span></label>
+      </div>
+    </div>
+    <div class="q-field">
+      <div class="q-sublabel">Quais temas você considera mais importantes hoje? <span style="font-weight:400;opacity:.5">(pode marcar mais de um)</span></div>
+      <div class="q-checks">
+        <label class="q-check"><input type="checkbox" name="c-temas" value="Liderança"><span>Liderança</span></label>
+        <label class="q-check"><input type="checkbox" name="c-temas" value="Comunicação"><span>Comunicação</span></label>
+        <label class="q-check"><input type="checkbox" name="c-temas" value="Atendimento"><span>Atendimento</span></label>
+        <label class="q-check"><input type="checkbox" name="c-temas" value="Trabalho em equipe"><span>Trabalho em equipe</span></label>
+        <label class="q-check"><input type="checkbox" name="c-temas" value="Inteligência emocional"><span>Inteligência emocional</span></label>
+        <label class="q-check"><input type="checkbox" name="c-temas" value="Cultura organizacional"><span>Cultura organizacional</span></label>
+        <label class="q-check"><input type="checkbox" name="c-temas" value="Feedback"><span>Feedback</span></label>
+        <label class="q-check"><input type="checkbox" name="c-temas" value="Outro" onchange="document.getElementById('f-temas-outro').style.display=this.checked?'block':'none'"><span>Outro</span></label>
+      </div>
+      <input type="text" id="f-temas-outro" placeholder="Qual tema?" style="margin-top:10px;display:none">
+    </div>
+  </div>
+</div>
+
+<!-- ── STEP 8: OBJETIVOS ── -->
+<div id="step-8" class="step">
+  <div class="s-eyebrow">8 — Objetivos</div>
+  <div class="s-title">O que você espera alcançar?</div>
+  <div class="s-sub">Entender seus objetivos nos ajuda a construir um programa realmente transformador.</div>
+  <div class="q-card">
+    <div class="q-field"><div class="q-sublabel">O que motivou você a procurar o RH com Propósito?</div><textarea id="f-motivacao" placeholder="Conte o que te trouxe até aqui..."></textarea></div>
+    <div class="q-field"><div class="q-sublabel">O que você espera alcançar nos próximos seis meses?</div><textarea id="f-expectativa" placeholder="Descreva seus objetivos..."></textarea></div>
+    <div class="q-field"><div class="q-sublabel">Se pudesse resolver apenas um problema relacionado à gestão de pessoas, qual seria?</div><textarea id="f-prioridade" placeholder="Qual seria a prioridade número 1?"></textarea></div>
+    <div class="q-field"><div class="q-sublabel">Se ao final do nosso trabalho você pudesse dizer que valeu cada investimento, o que precisaria ter acontecido?</div><textarea id="f-sucesso" placeholder="O que significaria sucesso para você..."></textarea></div>
+  </div>
+</div>
+
+<!-- ── STEP 9: ENCERRAMENTO ── -->
+<div id="step-9" class="step">
+  <div class="s-eyebrow">9 — Encerramento</div>
+  <div class="s-title">Quase lá!</div>
+  <div class="s-sub">Essas últimas informações complementam o pré-diagnóstico.</div>
+  <div class="q-card">
+    <div class="q-field"><div class="q-sublabel">Existe alguma informação importante que você gostaria de compartilhar antes da nossa conversa?</div><textarea id="f-adicional" placeholder="Qualquer informação que considere relevante..."></textarea></div>
+    <div class="q-field">
+      <div class="q-sublabel">Como conheceu o RH com Propósito?</div>
+      <div class="q-radios">
+        <label class="q-radio"><input type="radio" name="r-conheceu" value="Instagram"><span>Instagram</span></label>
+        <label class="q-radio"><input type="radio" name="r-conheceu" value="Indicação"><span>Indicação</span></label>
+        <label class="q-radio"><input type="radio" name="r-conheceu" value="Evento ou Palestra"><span>Evento ou Palestra</span></label>
+        <label class="q-radio"><input type="radio" name="r-conheceu" value="Google"><span>Google</span></label>
+        <label class="q-radio"><input type="radio" name="r-conheceu" value="Outro" onchange="document.getElementById('f-conheceu-outro').style.display=this.checked?'block':'none'"><span>Outro</span></label>
+      </div>
+      <input type="text" id="f-conheceu-outro" placeholder="Como conheceu?" style="margin-top:10px;display:none">
+    </div>
+    <div class="q-field">
+      <div class="auth-row" onclick="toggleAuth()">
+        <div class="auth-box" id="auth-box"></div>
+        <div class="auth-text">Autorizo que essas informações sejam utilizadas exclusivamente para elaboração do diagnóstico inicial da empresa.</div>
+      </div>
+    </div>
+  </div>
+  <div class="submit-area" id="submit-area">
+    <button class="btn-submit" id="btn-submit" onclick="submitForm()">✅ &nbsp;Enviar Pré-Diagnóstico</button>
+    <button class="btn-print" onclick="window.print()">🖨️ &nbsp;Imprimir / Salvar PDF</button>
+    <div class="success-msg" id="success-msg">
+      ✅ &nbsp;Suas respostas foram enviadas com sucesso!<br>
+      Obrigada pela confiança. Até nossa próxima conversa. 🌿
+    </div>
+  </div>
+</div>
+
+<!-- Nav bar -->
+<div class="nav-bar" id="nav-bar">
+  <button class="btn-prev" id="btn-prev" onclick="prevStep()" style="visibility:hidden">← Anterior</button>
+  <button class="btn-next" id="btn-next" onclick="nextStep()">Próximo →</button>
+</div>
+
+<div class="toast toast-s" id="t-ok"></div>
+<div class="toast toast-e" id="t-err"></div>
+
+<script>
+const SB_URL = 'https://jngyyterkatblntpsjbm.supabase.co';
+const SB_KEY = 'sb_publishable_30rUV3wLjGCDd4DggNYePQ_CwkdB1br';
+let _sb = null;
+function getSb() {
+  if (_sb) return _sb;
+  if (!window.supabase) return null;
+  try { _sb = window.supabase.createClient(SB_URL, SB_KEY); return _sb; } catch { return null; }
+}
+const TOTAL  = 9;
+
+let cur = 1;
+let authOn = false;
+
+/* ── DOTS ── */
+const dotsEl = document.getElementById('dots');
+for (let i = 1; i <= TOTAL; i++) {
+  const d = document.createElement('div');
+  d.className = 'dot' + (i === 1 ? ' active' : '');
+  d.id = 'dot-' + i;
+  d.onclick = () => { if (i < cur || i === cur) return; save(); goTo(i); };
+  dotsEl.appendChild(d);
+}
+
+/* ── NAVIGATION ── */
+function goTo(n) {
+  document.getElementById('step-' + cur).classList.remove('active');
+  const oldDot = document.getElementById('dot-' + cur);
+  oldDot.classList.remove('active');
+  oldDot.classList.add('done');
+  cur = n;
+  document.getElementById('step-' + cur).classList.add('active');
+  const newDot = document.getElementById('dot-' + cur);
+  newDot.classList.remove('done');
+  newDot.classList.add('active');
+  updateUI();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+function nextStep() { if (cur < TOTAL) { save(); goTo(cur + 1); } }
+function prevStep() { if (cur > 1) goTo(cur - 1); }
+
+function updateUI() {
+  document.getElementById('lbl-step').textContent = cur;
+  document.getElementById('prog-bar').style.width = (cur / TOTAL * 100) + '%';
+  document.getElementById('btn-prev').style.visibility = cur > 1 ? 'visible' : 'hidden';
+  document.getElementById('nav-bar').style.display = cur === TOTAL ? 'none' : 'flex';
+}
+
+/* ── FIELD HELPERS ── */
+const g  = id => { const el = document.getElementById(id); return el ? el.value.trim() : ''; };
+const gr = name => { const el = document.querySelector(`input[name="${name}"]:checked`); return el ? el.value : ''; };
+const gc = name => Array.from(document.querySelectorAll(`input[name="${name}"]:checked`)).map(c => c.value);
+
+function collect() {
+  const temas = gc('c-temas');
+  const tiOut = g('f-temas-outro');
+  if (temas.includes('Outro') && tiOut) temas.splice(temas.indexOf('Outro'), 1, 'Outro: ' + tiOut);
+  const conh = gr('r-conheceu');
+  return {
+    empresa: g('f-empresa'), responsavel: g('f-responsavel'), cargo: g('f-cargo'),
+    segmento: g('f-segmento'), cidade: g('f-cidade'), anos_empresa: g('f-anos'),
+    num_colaboradores: gr('r-colab'),
+    desc_equipe: g('f-desc-equipe'), maiores_desafios: g('f-desafios'),
+    maior_preocupacao: g('f-preocupacao'),
+    dific_contratar: gr('r-contratar'), dific_manter: gr('r-manter'),
+    tem_lideres: gr('r-tem-lideres'), avaliacao_lideres: gr('r-prep-lideres'),
+    desafio_lideranca: g('f-desafio-lider'),
+    avaliacao_comunicacao: gr('r-comunicacao'), feedback_frequencia: gr('r-feedback'),
+    tem_mvv: gr('r-mvv'), colab_conhecem_mvv: gr('r-colab-mvv'),
+    frase_cultura: g('f-frase-cultura'),
+    clima: gr('r-clima'), conflitos: gr('r-conflitos'),
+    realiza_treinamentos: gr('r-treina'), temas_importantes: temas,
+    motivacao: g('f-motivacao'), expectativa: g('f-expectativa'),
+    prioridade: g('f-prioridade'), sucesso: g('f-sucesso'),
+    adicional: g('f-adicional'),
+    como_conheceu: conh === 'Outro' ? 'Outro: ' + g('f-conheceu-outro') : conh,
+    autorizado: authOn
+  };
+}
+
+/* ── LOCAL SAVE ── */
+function save() { localStorage.setItem('prediag', JSON.stringify(collect())); }
+document.addEventListener('input', save);
+document.addEventListener('change', save);
+
+function restore() {
+  const raw = localStorage.getItem('prediag');
+  if (!raw) return;
+  try {
+    const d = JSON.parse(raw);
+    const st = (id, v) => { const el = document.getElementById(id); if (el && v !== undefined) el.value = v; };
+    const sr = (name, v) => { const el = document.querySelector(`input[name="${name}"][value="${v}"]`); if (el) el.checked = true; };
+    st('f-empresa', d.empresa); st('f-responsavel', d.responsavel); st('f-cargo', d.cargo);
+    st('f-segmento', d.segmento); st('f-cidade', d.cidade); st('f-anos', d.anos_empresa);
+    sr('r-colab', d.num_colaboradores);
+    st('f-desc-equipe', d.desc_equipe); st('f-desafios', d.maiores_desafios);
+    st('f-preocupacao', d.maior_preocupacao);
+    sr('r-contratar', d.dific_contratar); sr('r-manter', d.dific_manter);
+    sr('r-tem-lideres', d.tem_lideres); sr('r-prep-lideres', d.avaliacao_lideres);
+    st('f-desafio-lider', d.desafio_lideranca);
+    sr('r-comunicacao', d.avaliacao_comunicacao); sr('r-feedback', d.feedback_frequencia);
+    sr('r-mvv', d.tem_mvv); sr('r-colab-mvv', d.colab_conhecem_mvv);
+    st('f-frase-cultura', d.frase_cultura);
+    sr('r-clima', d.clima); sr('r-conflitos', d.conflitos);
+    sr('r-treina', d.realiza_treinamentos);
+    if (Array.isArray(d.temas_importantes)) {
+      d.temas_importantes.forEach(t => {
+        const base = t.startsWith('Outro:') ? 'Outro' : t;
+        const el = document.querySelector(`input[name="c-temas"][value="${base}"]`);
+        if (el) { el.checked = true; if (base === 'Outro') { const ot = document.getElementById('f-temas-outro'); ot.style.display='block'; ot.value=t.replace('Outro: ',''); } }
+      });
+    }
+    st('f-motivacao', d.motivacao); st('f-expectativa', d.expectativa);
+    st('f-prioridade', d.prioridade); st('f-sucesso', d.sucesso);
+    st('f-adicional', d.adicional);
+    if (d.como_conheceu) {
+      const base = d.como_conheceu.startsWith('Outro:') ? 'Outro' : d.como_conheceu;
+      sr('r-conheceu', base);
+      if (base === 'Outro') { const ot = document.getElementById('f-conheceu-outro'); ot.style.display='block'; ot.value=d.como_conheceu.replace('Outro: ',''); }
+    }
+    if (d.autorizado) { authOn = true; document.getElementById('auth-box').classList.add('on'); document.getElementById('auth-box').textContent = '✓'; }
+  } catch(e) {}
+}
+
+/* ── AUTH ── */
+function toggleAuth() {
+  authOn = !authOn;
+  const box = document.getElementById('auth-box');
+  box.classList.toggle('on', authOn);
+  box.textContent = authOn ? '✓' : '';
+}
+
+/* ── SUBMIT ── */
+async function submitForm() {
+  if (!authOn) { toast('e', '⚠️ Autorize o uso das informações para continuar.'); return; }
+  const d = collect();
+  if (!d.empresa) { toast('e', '⚠️ Informe o nome da empresa (Seção 1).'); return; }
+
+  const btn = document.getElementById('btn-submit');
+  btn.disabled = true; btn.textContent = '⏳  Enviando...';
+
+  const sb = getSb();
+  if (!sb) {
+    btn.disabled = false; btn.textContent = '✅  Enviar Pré-Diagnóstico';
+    toast('e', '❌ Não foi possível conectar. Use a opção de imprimir.');
+    return;
+  }
+
+  try {
+    const { error } = await sb.from('responses').insert({
+      section: 'pre_diagnostico',
+      company: d.empresa,
+      nome: d.responsavel || '',
+      cargo_setor: d.cargo || '',
+      data_resposta: new Date().toISOString().split('T')[0],
+      r1: JSON.stringify(d)
+    });
+    if (error) throw error;
+    localStorage.removeItem('prediag');
+    btn.textContent = '✅  Enviado!';
+    document.getElementById('success-msg').style.display = 'block';
+    toast('ok', '✅ Pré-diagnóstico enviado com sucesso!');
+    const w3f = localStorage.getItem('w3f_key');
+    if (w3f) sendEmail(w3f, d);
+  } catch(err) {
+    btn.disabled = false; btn.textContent = '✅  Enviar Pré-Diagnóstico';
+    toast('e', '❌ Falha ao enviar. Use a opção de imprimir como alternativa.');
+  }
+}
+
+async function sendEmail(key, d) {
+  const body = [
+    `Empresa: ${d.empresa} | Segmento: ${d.segmento} | Cidade: ${d.cidade}`,
+    `Responsável: ${d.responsavel} — ${d.cargo}`,
+    `Anos de empresa: ${d.anos_empresa} | Colaboradores: ${d.num_colaboradores}`,
+    '', '--- EQUIPE ---',
+    `Descrição: ${d.desc_equipe}`,
+    `Desafios: ${d.maiores_desafios}`,
+    `Preocupação: ${d.maior_preocupacao}`,
+    `Dif. contratar: ${d.dific_contratar} | Dif. manter: ${d.dific_manter}`,
+    '', '--- LIDERANÇA ---',
+    `Tem líderes: ${d.tem_lideres} | Avaliação: ${d.avaliacao_lideres}`,
+    `Desafio: ${d.desafio_lideranca}`,
+    '', '--- COMUNICAÇÃO ---',
+    `Avaliação: ${d.avaliacao_comunicacao} | Feedback: ${d.feedback_frequencia}`,
+    '', '--- CULTURA ---',
+    `MVV: ${d.tem_mvv} | Colaboradores conhecem: ${d.colab_conhecem_mvv}`,
+    `Frase: ${d.frase_cultura}`,
+    '', '--- CLIMA ---',
+    `Clima: ${d.clima} | Conflitos: ${d.conflitos}`,
+    '', '--- DESENVOLVIMENTO ---',
+    `Treinamentos: ${d.realiza_treinamentos}`,
+    `Temas: ${(d.temas_importantes||[]).join(', ')}`,
+    '', '--- OBJETIVOS ---',
+    `Motivação: ${d.motivacao}`,
+    `Expectativa 6 meses: ${d.expectativa}`,
+    `Problema prioritário: ${d.prioridade}`,
+    `Definição de sucesso: ${d.sucesso}`,
+    '', '--- ENCERRAMENTO ---',
+    `Info adicional: ${d.adicional}`,
+    `Como conheceu: ${d.como_conheceu}`,
+  ].join('\n');
+  try {
+    await fetch('https://api.web3forms.com/submit', {
+      method:'POST', headers:{'Content-Type':'application/json',Accept:'application/json'},
+      body: JSON.stringify({ access_key:key, subject:`[RH com Propósito] Pré-Diagnóstico — ${d.empresa}`, message:body, from_name:'Pré-Diagnóstico RH com Propósito' })
+    });
+  } catch(e) {}
+}
+
+/* ── TOAST ── */
+function toast(type, msg) {
+  const id = type === 'ok' ? 't-ok' : 't-err';
+  const el = document.getElementById(id);
+  el.textContent = msg;
+  el.classList.add('show');
+  setTimeout(() => el.classList.remove('show'), 5000);
+}
+
+restore();
+updateUI();
+</script>
+</body>
+</html>

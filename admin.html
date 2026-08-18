@@ -1,0 +1,1941 @@
+﻿<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Painel Admin — RH com Propósito</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    :root{--gold:#C89B3C;--green:#1A5C45;--green2:#2E7D58;--dark:#070F09}
+    body{min-height:100vh;background:linear-gradient(145deg,var(--dark) 0%,#0F3D2A 60%,#0a2a1c 100%);font-family:'Lato',sans-serif;color:white}
+
+    /* ── PASSWORD SCREEN ── */
+    #pw-screen{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;z-index:999;background:linear-gradient(145deg,var(--dark) 0%,#0F3D2A 60%)}
+    .pw-box{width:100%;max-width:360px;text-align:center;padding:40px 32px;background:rgba(255,255,255,.04);border:1px solid rgba(200,155,60,.15);border-radius:16px}
+    .pw-brand{font-size:10px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:rgba(255,255,255,.3);margin-bottom:24px}
+    .pw-brand span{color:var(--gold)}
+    .pw-icon{font-size:36px;margin-bottom:16px}
+    .pw-title{font-family:'Playfair Display',serif;font-size:24px;color:white;margin-bottom:6px}
+    .pw-sub{font-size:13px;color:rgba(255,255,255,.35);margin-bottom:28px}
+    .pw-input{width:100%;padding:13px 16px;border-radius:10px;border:1.5px solid rgba(200,155,60,.25);background:rgba(255,255,255,.05);color:white;font-size:15px;font-family:'Lato',sans-serif;text-align:center;letter-spacing:4px;outline:none;transition:border-color .2s}
+    .pw-input:focus{border-color:var(--gold)}
+    .pw-btn{width:100%;margin-top:14px;padding:13px;border-radius:10px;background:var(--gold);color:#0A1C12;font-weight:700;font-size:14px;border:none;cursor:pointer;transition:all .2s}
+    .pw-btn:hover{background:#D4A84A}
+    .pw-err{font-size:12px;color:#F87171;margin-top:10px;min-height:18px}
+
+    /* ── TOPBAR ── */
+    #app{display:none}
+    .topbar{width:100%;background:rgba(10,28,18,.95);backdrop-filter:blur(12px);border-bottom:1px solid rgba(200,155,60,.15);padding:14px 28px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
+    .topbar-brand{font-size:10px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:rgba(255,255,255,.3)}
+    .topbar-brand span{color:var(--gold)}
+    .topbar-badge{background:rgba(200,155,60,.15);border:1px solid rgba(200,155,60,.3);color:var(--gold);font-size:11px;font-weight:700;letter-spacing:1px;padding:4px 12px;border-radius:20px}
+    .topbar-link{font-size:12px;color:rgba(255,255,255,.35);text-decoration:none;transition:color .2s}
+    .topbar-link:hover{color:var(--gold)}
+
+    /* ── MAIN TABS ── */
+    .main-nav{background:rgba(0,0,0,.25);border-bottom:1px solid rgba(255,255,255,.06);padding:0 28px;position:sticky;top:53px;z-index:90}
+    .main-nav-inner{display:flex;max-width:900px;margin:0 auto}
+    .main-tab{padding:13px 18px;background:none;border:none;color:rgba(255,255,255,.4);font-size:13px;font-weight:700;cursor:pointer;border-bottom:2px solid transparent;transition:all .2s;letter-spacing:.3px;font-family:'Lato',sans-serif}
+    .main-tab.active{color:var(--gold);border-bottom-color:var(--gold)}
+    .main-tab:hover:not(.active){color:rgba(255,255,255,.7)}
+    .main-panel{display:none}
+    .main-panel.active{display:block}
+
+    /* ── RESPOSTAS PANEL ── */
+    .hero{padding:48px 28px 32px;max-width:900px;margin:0 auto}
+    .hero h1{font-family:'Playfair Display',serif;font-size:clamp(26px,4vw,38px);color:white;margin-bottom:8px}
+    .hero p{font-size:14px;color:rgba(255,255,255,.4);line-height:1.7}
+    .section-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:16px;max-width:900px;margin:0 auto 40px;padding:0 28px}
+    .sec-card{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:20px;cursor:pointer;transition:all .2s;position:relative;overflow:hidden}
+    .sec-card::before{content:'';position:absolute;inset:0;background:rgba(200,155,60,.06);opacity:0;transition:opacity .2s}
+    .sec-card:hover::before,.sec-card:hover{border-color:rgba(200,155,60,.3)}
+    .sec-card:hover{transform:translateY(-2px)}
+    .sec-card-icon{font-size:28px;margin-bottom:12px}
+    .sec-card-label{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.3);margin-bottom:6px}
+    .sec-card-title{font-size:15px;font-weight:700;color:white;margin-bottom:12px;line-height:1.3}
+    .sec-card-count{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:700;color:var(--gold);background:rgba(200,155,60,.12);border-radius:20px;padding:3px 10px}
+    .sec-card-count.loading{color:rgba(255,255,255,.3);background:rgba(255,255,255,.05)}
+    .sec-card-btn{display:block;margin-top:14px;font-size:11px;font-weight:700;color:rgba(255,255,255,.4);letter-spacing:.5px;transition:color .2s}
+    .sec-card:hover .sec-card-btn{color:var(--gold)}
+    .report-banner{max-width:900px;margin:0 auto 40px;padding:0 28px}
+    .report-box{background:rgba(200,155,60,.08);border:1px solid rgba(200,155,60,.2);border-radius:14px;padding:20px 24px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}
+    .report-box-text{font-size:14px;color:rgba(255,255,255,.6);line-height:1.5}
+    .report-box-text strong{color:white}
+    .report-box-btn{flex-shrink:0;padding:10px 20px;border-radius:10px;background:var(--gold);color:#0A1C12;font-weight:700;font-size:13px;text-decoration:none;transition:all .2s}
+    .report-box-btn:hover{background:#D4A84A}
+    .viewer-wrap{max-width:900px;margin:0 auto 60px;padding:0 28px}
+    #resp-viewer{display:none;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:16px;overflow:hidden}
+    .rv-topbar{display:flex;align-items:center;justify-content:space-between;padding:16px 20px;border-bottom:1px solid rgba(255,255,255,.08);flex-wrap:wrap;gap:12px}
+    .rv-title{font-size:14px;font-weight:700;color:white}
+    .rv-nav{display:flex;align-items:center;gap:10px}
+    .rv-count{font-size:13px;color:rgba(255,255,255,.4);min-width:80px;text-align:center}
+    .rv-btn{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);color:white;padding:6px 14px;border-radius:8px;cursor:pointer;font-size:13px;transition:all .2s}
+    .rv-btn:hover:not(:disabled){background:rgba(200,155,60,.2);border-color:rgba(200,155,60,.3)}
+    .rv-pdf-btn{background:rgba(200,155,60,.12);border-color:rgba(200,155,60,.3);color:var(--gold)}
+    .rv-pdf-btn:hover{background:rgba(200,155,60,.25) !important;border-color:rgba(200,155,60,.5) !important}
+    .rv-btn:disabled{opacity:.3;cursor:default}
+    .rv-close{background:none;border:none;color:rgba(255,255,255,.4);font-size:20px;cursor:pointer;padding:0;line-height:1;transition:color .2s}
+    .rv-close:hover{color:white}
+    .company-filter{display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:12px 20px;border-bottom:1px solid rgba(255,255,255,.06)}
+    .cf-label{font-size:11px;font-weight:700;letter-spacing:1px;color:rgba(255,255,255,.3);text-transform:uppercase;flex-shrink:0}
+    .cf-chips{display:flex;flex-wrap:wrap;gap:6px}
+    .cf-btn{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);color:rgba(255,255,255,.5);padding:4px 12px;border-radius:20px;font-size:12px;cursor:pointer;transition:all .2s}
+    .cf-btn:hover,.cf-btn.active{background:rgba(200,155,60,.18);border-color:rgba(200,155,60,.4);color:var(--gold)}
+    .rv-body{padding:20px}
+    .rv-respondent{display:flex;flex-wrap:wrap;gap:16px;background:rgba(255,255,255,.04);border-radius:10px;padding:14px 16px;margin-bottom:20px}
+    .rv-nome{font-size:15px;font-weight:700;color:white;flex:1;min-width:140px}
+    .rv-meta{font-size:12px;color:rgba(255,255,255,.35)}
+    .rv-q{margin-bottom:18px}
+    .rv-q-label{font-size:11px;font-weight:700;letter-spacing:.5px;color:var(--gold);margin-bottom:6px}
+    .rv-q-ans{font-size:14px;color:rgba(255,255,255,.75);line-height:1.7;background:rgba(255,255,255,.04);border-radius:8px;padding:12px 14px}
+    .rv-section-sep{font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.2);margin:24px 0 14px;padding-bottom:6px;border-bottom:1px solid rgba(255,255,255,.06)}
+
+    /* ── MAPA PANEL ── */
+    .mapa-wrap{max-width:900px;margin:0 auto;padding:40px 28px 80px}
+    .mapa-header{margin-bottom:44px;border-bottom:1px solid rgba(255,255,255,.06);padding-bottom:32px}
+    .mapa-header-badge{font-size:10px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:rgba(255,255,255,.25);margin-bottom:14px}
+    .mapa-header h2{font-family:'Playfair Display',serif;font-size:clamp(24px,4vw,36px);color:white;margin-bottom:10px;line-height:1.2}
+    .mapa-header p{font-size:14px;color:rgba(255,255,255,.4);line-height:1.75;max-width:600px}
+    .mapa-block{margin-bottom:52px}
+    .mapa-block-title{font-size:11px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--gold);margin-bottom:22px;display:flex;align-items:center;gap:12px}
+    .mapa-block-title::after{content:'';flex:1;height:1px;background:rgba(200,155,60,.2)}
+
+    /* Etapas */
+    .etapa-card{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);border-radius:14px;margin-bottom:10px;overflow:hidden;transition:border-color .2s}
+    .etapa-card.open{border-color:rgba(200,155,60,.22);background:rgba(255,255,255,.05)}
+    .etapa-header{display:flex;align-items:center;gap:14px;padding:16px 18px;cursor:pointer;user-select:none}
+    .etapa-num{width:34px;height:34px;border-radius:50%;background:rgba(200,155,60,.12);border:1px solid rgba(200,155,60,.25);color:var(--gold);font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+    .etapa-title-group{flex:1}
+    .etapa-label{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.25);margin-bottom:3px}
+    .etapa-name{font-size:14px;font-weight:700;color:white;line-height:1.3}
+    .etapa-chevron{color:rgba(255,255,255,.25);transition:transform .25s;font-size:11px}
+    .etapa-card.open .etapa-chevron{transform:rotate(90deg);color:var(--gold)}
+    .etapa-body{display:none;padding:0 18px 18px;margin-top:4px}
+    .etapa-card.open .etapa-body{display:block}
+    .etapa-objetivo{font-size:13px;color:rgba(255,255,255,.5);margin-bottom:14px;font-style:italic;padding:10px 14px;background:rgba(255,255,255,.04);border-radius:8px}
+    .etapa-steps{list-style:none;counter-reset:step;margin-bottom:12px}
+    .etapa-steps li{counter-increment:step;display:flex;gap:10px;margin-bottom:7px;font-size:13px;color:rgba(255,255,255,.65);line-height:1.5}
+    .etapa-steps li::before{content:counter(step);min-width:22px;height:22px;border-radius:50%;background:rgba(200,155,60,.1);color:var(--gold);font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
+    .etapa-entrega{padding:10px 14px;background:rgba(200,155,60,.07);border-radius:8px;font-size:12px;color:rgba(255,255,255,.5);border-left:2px solid var(--gold);margin-top:12px}
+    .etapa-entrega strong{color:var(--gold)}
+
+    /* Module tabs */
+    .mod-tabs{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:22px}
+    .mod-tab{padding:7px 13px;border-radius:20px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);color:rgba(255,255,255,.4);font-size:11px;font-weight:700;cursor:pointer;transition:all .2s;letter-spacing:.3px;font-family:'Lato',sans-serif}
+    .mod-tab.active{background:rgba(200,155,60,.18);border-color:rgba(200,155,60,.4);color:var(--gold)}
+    .mod-tab:hover:not(.active){color:rgba(255,255,255,.7);background:rgba(255,255,255,.1)}
+    .mod-panel{display:none;animation:fadeIn .25s ease}
+    .mod-panel.active{display:block}
+    @keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+
+    /* Module content */
+    .mod-heading{font-family:'Playfair Display',serif;font-size:20px;color:white;margin-bottom:5px}
+    .mod-objective{font-size:13px;color:rgba(255,255,255,.45);margin-bottom:24px;line-height:1.6;font-style:italic}
+    .mod-section{margin-bottom:22px}
+    .mod-section-title{font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--gold);margin-bottom:10px;padding-bottom:5px;border-bottom:1px solid rgba(200,155,60,.14)}
+    .mod-sub-heading{font-size:13px;font-weight:700;color:rgba(255,255,255,.7);margin:12px 0 7px}
+    .mod-list{list-style:none;padding:0}
+    .mod-list li{display:flex;gap:8px;margin-bottom:6px;font-size:13px;color:rgba(255,255,255,.63);line-height:1.5}
+    .mod-list li::before{content:'→';color:var(--gold);flex-shrink:0;font-size:11px;margin-top:2px}
+    .mod-cols{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+    @media(max-width:580px){.mod-cols{grid-template-columns:1fr}}
+
+    /* Dica da Fundadora */
+    .dica-box{background:linear-gradient(135deg,rgba(200,155,60,.1),rgba(200,155,60,.04));border:1px solid rgba(200,155,60,.22);border-radius:12px;padding:16px 18px;margin:18px 0}
+    .dica-label{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--gold);margin-bottom:8px}
+    .dica-text{font-size:13px;color:rgba(255,255,255,.6);line-height:1.75;font-style:italic}
+
+    /* Sugestão de fala */
+    .fala-box{background:rgba(255,255,255,.04);border-left:3px solid var(--gold);border-radius:0 8px 8px 0;padding:13px 16px;margin:10px 0;font-size:13px;color:rgba(255,255,255,.58);line-height:1.75;font-style:italic}
+
+    /* Interactive checklist */
+    .mapa-checklist{display:flex;flex-direction:column;gap:7px;padding:14px 0}
+    .check-item{display:flex;align-items:flex-start;gap:10px;cursor:pointer;padding:4px 0}
+    .check-item input[type=checkbox]{width:15px;height:15px;accent-color:var(--gold);cursor:pointer;flex-shrink:0;margin-top:2px}
+    .check-item span{font-size:13px;color:rgba(255,255,255,.65);line-height:1.5;transition:color .2s}
+    .check-item:has(input:checked) span{color:rgba(255,255,255,.28);text-decoration:line-through}
+    .cl-reset{margin-top:6px;padding:5px 12px;border-radius:8px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);color:rgba(255,255,255,.35);font-size:11px;cursor:pointer;transition:all .2s;font-family:'Lato',sans-serif}
+    .cl-reset:hover{background:rgba(255,255,255,.09);color:rgba(255,255,255,.55)}
+    .checklist-box{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);border-radius:12px;padding:16px 18px;margin-top:4px}
+    .checklist-box-title{font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,.3);margin-bottom:2px}
+
+    /* ── TOAST ── */
+    .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);background:#1A5C45;color:white;font-size:13px;font-weight:700;padding:10px 20px;border-radius:10px;opacity:0;transition:all .4s;z-index:999;pointer-events:none}
+    .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+    @media(max-width:600px){
+      .section-grid{grid-template-columns:1fr 1fr}
+      .topbar,.main-nav{padding-left:16px;padding-right:16px}
+      .hero,.viewer-wrap,.report-banner,.mapa-wrap{padding-left:16px;padding-right:16px}
+    }
+    @media(max-width:380px){.section-grid{grid-template-columns:1fr}}
+  </style>
+</head>
+<body>
+
+<!-- PASSWORD SCREEN -->
+<div id="pw-screen">
+  <div class="pw-box">
+    <div class="pw-brand">RH <span>com Propósito</span></div>
+    <div class="pw-icon">🔐</div>
+    <h2 class="pw-title">Painel Admin</h2>
+    <p class="pw-sub">Acesso restrito a Cristiele Rodrigues</p>
+    <input type="password" class="pw-input" id="pwInput" placeholder="••••••••" autocomplete="current-password">
+    <button class="pw-btn" onclick="checkPw()">Entrar</button>
+    <div class="pw-err" id="pwErr"></div>
+  </div>
+</div>
+
+<!-- MAIN APP -->
+<div id="app">
+  <div class="topbar">
+    <div class="topbar-brand">RH <span>com Propósito</span></div>
+    <div class="topbar-badge">Painel Admin</div>
+    <a class="topbar-link" href="index.html">← Hub</a>
+  </div>
+
+  <!-- MAIN TAB NAV -->
+  <div class="main-nav">
+    <div class="main-nav-inner">
+      <button class="main-tab active" id="mtab-respostas" onclick="switchMain('respostas')">📊 Respostas</button>
+      <button class="main-tab" id="mtab-mapa" onclick="switchMain('mapa')">🗺️ Mapa de Condução</button>
+      <button class="main-tab" id="mtab-manual" onclick="switchMain('manual')">📚 Manual</button>
+      <button class="main-tab" id="mtab-questionarios" onclick="switchMain('questionarios')">📋 Questionários RHCP</button>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════════
+       PAINEL: RESPOSTAS
+  ═══════════════════════════════════════════════════════════ -->
+  <div id="panel-respostas" class="main-panel active">
+    <div class="hero">
+      <h1>Painel de Respostas</h1>
+      <p>Todas as respostas de todos os formulários, organizadas por tipo. Clique em qualquer seção para visualizar as respostas individualmente.</p>
+    </div>
+
+    <div class="section-grid" id="section-grid">
+      <div class="sec-card" onclick="openViewer('pre_diagnostico')">
+        <div class="sec-card-icon">📋</div>
+        <div class="sec-card-label">Antes das entrevistas</div>
+        <div class="sec-card-title">Pré-Diagnóstico Organizacional</div>
+        <span class="sec-card-count loading" id="count-pre_diagnostico">carregando…</span>
+        <span class="sec-card-btn">Ver respostas →</span>
+      </div>
+      <div class="sec-card" onclick="openViewer('direcao')">
+        <div class="sec-card-icon">🏛️</div>
+        <div class="sec-card-label">Construindo Juntos — Seção 1</div>
+        <div class="sec-card-title">Diagnóstico — Direção</div>
+        <span class="sec-card-count loading" id="count-direcao">carregando…</span>
+        <span class="sec-card-btn">Ver respostas →</span>
+      </div>
+      <div class="sec-card" onclick="openViewer('gestores')">
+        <div class="sec-card-icon">👥</div>
+        <div class="sec-card-label">Construindo Juntos — Seção 2</div>
+        <div class="sec-card-title">Diagnóstico — Gestores</div>
+        <span class="sec-card-count loading" id="count-gestores">carregando…</span>
+        <span class="sec-card-btn">Ver respostas →</span>
+      </div>
+      <div class="sec-card" onclick="openViewer('colaboradores')">
+        <div class="sec-card-icon">💬</div>
+        <div class="sec-card-label">Construindo Juntos — Seção 3</div>
+        <div class="sec-card-title">Diagnóstico — Colaboradores</div>
+        <span class="sec-card-count loading" id="count-colaboradores">carregando…</span>
+        <span class="sec-card-btn">Ver respostas →</span>
+      </div>
+      <div class="sec-card" onclick="openViewer('questionario')">
+        <div class="sec-card-icon">📝</div>
+        <div class="sec-card-label">Palestra / Evento</div>
+        <div class="sec-card-title">Questionário de Diagnóstico</div>
+        <span class="sec-card-count loading" id="count-questionario">carregando…</span>
+        <span class="sec-card-btn">Ver respostas →</span>
+      </div>
+      <div class="sec-card" onclick="openViewer('rs_m1')">
+        <div class="sec-card-icon">🔍</div>
+        <div class="sec-card-label">R&amp;S — Módulo 1</div>
+        <div class="sec-card-title">Briefing Inicial da Vaga</div>
+        <span class="sec-card-count loading" id="count-rs_m1">carregando…</span>
+        <span class="sec-card-btn">Ver respostas →</span>
+      </div>
+      <div class="sec-card" onclick="openViewer('rs_m2')">
+        <div class="sec-card-icon">🔍</div>
+        <div class="sec-card-label">R&amp;S — Módulo 2</div>
+        <div class="sec-card-title">Reunião com o Gestor</div>
+        <span class="sec-card-count loading" id="count-rs_m2">carregando…</span>
+        <span class="sec-card-btn">Ver respostas →</span>
+      </div>
+      <div class="sec-card" onclick="openViewer('rs_m3')">
+        <div class="sec-card-icon">🔍</div>
+        <div class="sec-card-label">R&amp;S — Módulo 3</div>
+        <div class="sec-card-title">Perfil do Cargo / Persona</div>
+        <span class="sec-card-count loading" id="count-rs_m3">carregando…</span>
+        <span class="sec-card-btn">Ver respostas →</span>
+      </div>
+      <div class="sec-card" onclick="openViewer('rs_m4')">
+        <div class="sec-card-icon">🔍</div>
+        <div class="sec-card-label">R&amp;S — Módulo 4</div>
+        <div class="sec-card-title">Proposta Comercial</div>
+        <span class="sec-card-count loading" id="count-rs_m4">carregando…</span>
+        <span class="sec-card-btn">Ver respostas →</span>
+      </div>
+      <div class="sec-card" onclick="openViewer('rs_m5')">
+        <div class="sec-card-icon">🔍</div>
+        <div class="sec-card-label">R&amp;S — Módulo 5</div>
+        <div class="sec-card-title">Planejamento da Divulgação</div>
+        <span class="sec-card-count loading" id="count-rs_m5">carregando…</span>
+        <span class="sec-card-btn">Ver respostas →</span>
+      </div>
+      <div class="sec-card" onclick="openViewer('rs_m6')">
+        <div class="sec-card-icon">🔍</div>
+        <div class="sec-card-label">R&amp;S — Módulo 6</div>
+        <div class="sec-card-title">Triagem de Currículos</div>
+        <span class="sec-card-count loading" id="count-rs_m6">carregando…</span>
+        <span class="sec-card-btn">Ver respostas →</span>
+      </div>
+      <div class="sec-card" onclick="openViewer('rs_m7')">
+        <div class="sec-card-icon">🔍</div>
+        <div class="sec-card-label">R&amp;S — Módulo 7</div>
+        <div class="sec-card-title">Pré-Entrevista</div>
+        <span class="sec-card-count loading" id="count-rs_m7">carregando…</span>
+        <span class="sec-card-btn">Ver respostas →</span>
+      </div>
+      <div class="sec-card" onclick="openViewer('rs_m8')">
+        <div class="sec-card-icon">🔍</div>
+        <div class="sec-card-label">R&amp;S — Módulo 8</div>
+        <div class="sec-card-title">Entrevista por Competências</div>
+        <span class="sec-card-count loading" id="count-rs_m8">carregando…</span>
+        <span class="sec-card-btn">Ver respostas →</span>
+      </div>
+      <div class="sec-card" onclick="openViewer('rs_m10')">
+        <div class="sec-card-icon">🔍</div>
+        <div class="sec-card-label">R&amp;S — Módulo 10</div>
+        <div class="sec-card-title">Relatório do Candidato</div>
+        <span class="sec-card-count loading" id="count-rs_m10">carregando…</span>
+        <span class="sec-card-btn">Ver respostas →</span>
+      </div>
+      <div class="sec-card" onclick="openViewer('rs_m11')">
+        <div class="sec-card-icon">🔍</div>
+        <div class="sec-card-label">R&amp;S — Módulo 11</div>
+        <div class="sec-card-title">Apresentação dos Finalistas</div>
+        <span class="sec-card-count loading" id="count-rs_m11">carregando…</span>
+        <span class="sec-card-btn">Ver respostas →</span>
+      </div>
+      <div class="sec-card" onclick="openViewer('rs_m12')">
+        <div class="sec-card-icon">🔍</div>
+        <div class="sec-card-label">R&amp;S — Módulo 12</div>
+        <div class="sec-card-title">Contratação e Formalização</div>
+        <span class="sec-card-count loading" id="count-rs_m12">carregando…</span>
+        <span class="sec-card-btn">Ver respostas →</span>
+      </div>
+      <div class="sec-card" onclick="openViewer('rs_m13')">
+        <div class="sec-card-icon">🔍</div>
+        <div class="sec-card-label">R&amp;S — Módulo 13</div>
+        <div class="sec-card-title">Integração e Onboarding</div>
+        <span class="sec-card-count loading" id="count-rs_m13">carregando…</span>
+        <span class="sec-card-btn">Ver respostas →</span>
+      </div>
+      <div class="sec-card" onclick="openViewer('confirmacao_evento')">
+        <div class="sec-card-icon">🎉</div>
+        <div class="sec-card-label">Evento</div>
+        <div class="sec-card-title">Confirmações de Presença</div>
+        <span class="sec-card-count loading" id="count-confirmacao_evento">carregando…</span>
+        <span class="sec-card-btn">Ver respostas →</span>
+      </div>
+      <div class="sec-card" onclick="openViewer('pre_palestra_executivo')">
+        <div class="sec-card-icon">🎤</div>
+        <div class="sec-card-label">Pré-Palestra</div>
+        <div class="sec-card-title">Pré-Palestra Executivo</div>
+        <span class="sec-card-count loading" id="count-pre_palestra_executivo">carregando…</span>
+        <span class="sec-card-btn">Ver respostas →</span>
+      </div>
+      <div class="sec-card" onclick="openViewer('pesquisa_experiencia')">
+        <div class="sec-card-icon">📋</div>
+        <div class="sec-card-label">Avaliação Pós-Encontro</div>
+        <div class="sec-card-title">Pesquisa de Experiência</div>
+        <span class="sec-card-count loading" id="count-pesquisa_experiencia">carregando…</span>
+        <span class="sec-card-btn">Ver respostas →</span>
+      </div>
+    </div>
+
+    <div class="report-banner">
+      <div class="report-box">
+        <div class="report-box-text"><strong>Gerar Relatório com IA</strong><br>Para compilar as respostas e gerar o relatório final do Programa Construindo Juntos, acesse o painel completo.</div>
+        <a class="report-box-btn" href="diagnostico.html">Abrir painel completo →</a>
+      </div>
+    </div>
+
+    <div class="viewer-wrap">
+      <div id="resp-viewer">
+        <div class="rv-topbar">
+          <div class="rv-title" id="rv-title">Respostas</div>
+          <div class="rv-nav">
+            <button class="rv-btn" id="rv-prev" onclick="showResp(viewerIdx-1)">← Anterior</button>
+            <span class="rv-count" id="rv-count">— de —</span>
+            <button class="rv-btn" id="rv-next" onclick="showResp(viewerIdx+1)">Próxima →</button>
+            <button class="rv-btn rv-pdf-btn" onclick="gerarPDF()" title="Gerar PDF desta resposta">📄 PDF</button>
+            <button class="rv-close" onclick="closeViewer()" title="Fechar">✕</button>
+          </div>
+        </div>
+        <div class="company-filter" id="company-filter" style="display:none">
+          <span class="cf-label">Empresa</span>
+          <div class="cf-chips" id="cf-chips"></div>
+        </div>
+        <div class="rv-body" id="rv-body"></div>
+      </div>
+    </div>
+  </div><!-- /panel-respostas -->
+
+  <!-- ═══════════════════════════════════════════════════════════
+       PAINEL: MAPA DE CONDUÇÃO
+  ═══════════════════════════════════════════════════════════ -->
+  <div id="panel-mapa" class="main-panel">
+    <div class="mapa-wrap">
+
+      <!-- HEADER -->
+      <div class="mapa-header">
+        <div class="mapa-header-badge">Método RH com Propósito®</div>
+        <h2>Mapa de Condução</h2>
+        <p>Guia completo do Programa Construindo Juntos — todas as etapas, roteiros de entrevista, módulos do consultor e checklists de acompanhamento reunidos em um só lugar.</p>
+      </div>
+
+      <!-- ─── BLOCO 1: PLANO DE EXECUÇÃO — 6 ETAPAS ─── -->
+      <div class="mapa-block">
+        <div class="mapa-block-title">Plano de Execução — 6 Etapas</div>
+
+        <!-- Etapa 1 -->
+        <div class="etapa-card" id="etapa-1">
+          <div class="etapa-header" onclick="toggleEtapa(1)">
+            <div class="etapa-num">1</div>
+            <div class="etapa-title-group">
+              <div class="etapa-label">Etapa 1</div>
+              <div class="etapa-name">Diagnóstico Organizacional</div>
+            </div>
+            <span class="etapa-chevron">▶</span>
+          </div>
+          <div class="etapa-body">
+            <div class="etapa-objetivo">Entender a realidade da empresa antes de propor qualquer ação.</div>
+            <ol class="etapa-steps">
+              <li>Reunião inicial com a diretoria</li>
+              <li>Alinhamento das expectativas do projeto</li>
+              <li>Identificação das principais dores da empresa</li>
+              <li>Entrevistas individuais com gestores</li>
+              <li>Observação da rotina e dos processos</li>
+              <li>Análise da comunicação, liderança, clima e processos</li>
+              <li>Levantamento de pontos fortes e oportunidades de melhoria</li>
+              <li>Organização das informações coletadas</li>
+              <li>Elaboração do relatório diagnóstico</li>
+              <li>Apresentação da devolutiva para a diretoria</li>
+            </ol>
+            <div class="etapa-entrega"><strong>Entrega:</strong> Relatório de Diagnóstico Organizacional com plano inicial de ação</div>
+          </div>
+        </div>
+
+        <!-- Etapa 2 -->
+        <div class="etapa-card" id="etapa-2">
+          <div class="etapa-header" onclick="toggleEtapa(2)">
+            <div class="etapa-num">2</div>
+            <div class="etapa-title-group">
+              <div class="etapa-label">Etapa 2</div>
+              <div class="etapa-name">Estruturação da Gestão de Pessoas</div>
+            </div>
+            <span class="etapa-chevron">▶</span>
+          </div>
+          <div class="etapa-body">
+            <div class="etapa-objetivo">Organizar os principais processos de RH.</div>
+            <ol class="etapa-steps">
+              <li>Definição dos processos prioritários</li>
+              <li>Estruturação do fluxo de admissão</li>
+              <li>Revisão do processo de integração</li>
+              <li>Organização do acompanhamento dos colaboradores</li>
+              <li>Criação de formulários de controle</li>
+              <li>Construção do calendário anual de RH</li>
+              <li>Definição das responsabilidades dos gestores</li>
+              <li>Estruturação de orientações para feedback e comunicação</li>
+              <li>Validação dos materiais com a diretoria</li>
+              <li>Ajustes finais</li>
+            </ol>
+            <div class="etapa-entrega"><strong>Entrega:</strong> Manual de processos, calendário anual e modelos de acompanhamento</div>
+          </div>
+        </div>
+
+        <!-- Etapa 3 -->
+        <div class="etapa-card" id="etapa-3">
+          <div class="etapa-header" onclick="toggleEtapa(3)">
+            <div class="etapa-num">3</div>
+            <div class="etapa-title-group">
+              <div class="etapa-label">Etapa 3</div>
+              <div class="etapa-name">Fortalecimento da Cultura Organizacional</div>
+            </div>
+            <span class="etapa-chevron">▶</span>
+          </div>
+          <div class="etapa-body">
+            <div class="etapa-objetivo">Consolidar a identidade e os comportamentos esperados.</div>
+            <ol class="etapa-steps">
+              <li>Análise da missão, visão e valores existentes</li>
+              <li>Revisão ou construção da missão, visão e valores</li>
+              <li>Definição dos comportamentos esperados</li>
+              <li>Construção dos princípios da cultura</li>
+              <li>Elaboração de mensagens de comunicação interna</li>
+              <li>Preparação do material da cultura</li>
+              <li>Validação com a diretoria</li>
+              <li>Planejamento da apresentação para a equipe</li>
+              <li>Definição das ações de implantação</li>
+              <li>Organização dos materiais finais</li>
+            </ol>
+            <div class="etapa-entrega"><strong>Entrega:</strong> Documento da Cultura Organizacional e guia de comportamentos</div>
+          </div>
+        </div>
+
+        <!-- Etapa 4 -->
+        <div class="etapa-card" id="etapa-4">
+          <div class="etapa-header" onclick="toggleEtapa(4)">
+            <div class="etapa-num">4</div>
+            <div class="etapa-title-group">
+              <div class="etapa-label">Etapa 4</div>
+              <div class="etapa-name">Desenvolvimento da Liderança</div>
+            </div>
+            <span class="etapa-chevron">▶</span>
+          </div>
+          <div class="etapa-body">
+            <div class="etapa-objetivo">Capacitar gestores para liderarem pessoas com eficiência.</div>
+            <ol class="etapa-steps">
+              <li>Levantamento das necessidades dos líderes</li>
+              <li>Definição do conteúdo do treinamento</li>
+              <li>Preparação do material</li>
+              <li>Aplicação do treinamento</li>
+              <li>Comunicação assertiva</li>
+              <li>Feedback e gestão de conflitos</li>
+              <li>Dinâmicas práticas</li>
+              <li>Discussão de casos reais</li>
+              <li>Construção do plano de ação dos líderes</li>
+              <li>Registro dos pontos de desenvolvimento</li>
+            </ol>
+            <div class="etapa-entrega"><strong>Entrega:</strong> Treinamento, material de apoio, certificados e plano de ação</div>
+          </div>
+        </div>
+
+        <!-- Etapa 5 -->
+        <div class="etapa-card" id="etapa-5">
+          <div class="etapa-header" onclick="toggleEtapa(5)">
+            <div class="etapa-num">5</div>
+            <div class="etapa-title-group">
+              <div class="etapa-label">Etapa 5</div>
+              <div class="etapa-name">Desenvolvimento da Equipe</div>
+            </div>
+            <span class="etapa-chevron">▶</span>
+          </div>
+          <div class="etapa-body">
+            <div class="etapa-objetivo">Engajar os colaboradores e fortalecer a cultura.</div>
+            <ol class="etapa-steps">
+              <li>Definição do tema do encontro</li>
+              <li>Preparação da palestra ou oficina</li>
+              <li>Apresentação da cultura organizacional</li>
+              <li>Trabalho sobre comportamento e responsabilidade</li>
+              <li>Dinâmicas práticas</li>
+              <li>Reflexão sobre atitudes</li>
+              <li>Fortalecimento do trabalho em equipe</li>
+              <li>Construção do compromisso coletivo</li>
+              <li>Avaliação do encontro</li>
+              <li>Registro das percepções</li>
+            </ol>
+            <div class="etapa-entrega"><strong>Entrega:</strong> Treinamento da equipe, certificados e plano de compromisso</div>
+          </div>
+        </div>
+
+        <!-- Etapa 6 -->
+        <div class="etapa-card" id="etapa-6">
+          <div class="etapa-header" onclick="toggleEtapa(6)">
+            <div class="etapa-num">6</div>
+            <div class="etapa-title-group">
+              <div class="etapa-label">Etapa 6</div>
+              <div class="etapa-name">Acompanhamento e Consolidação</div>
+            </div>
+            <span class="etapa-chevron">▶</span>
+          </div>
+          <div class="etapa-body">
+            <div class="etapa-objetivo">Avaliar resultados e orientar a continuidade.</div>
+            <ol class="etapa-steps">
+              <li>Reunião de encerramento com a diretoria</li>
+              <li>Avaliação das ações implementadas</li>
+              <li>Análise dos avanços</li>
+              <li>Identificação de oportunidades futuras</li>
+              <li>Apresentação do relatório final</li>
+              <li>Entrega do plano de continuidade</li>
+              <li>Recomendações estratégicas</li>
+              <li>Orientações para manutenção das ações</li>
+              <li>Esclarecimento de dúvidas</li>
+              <li>Encerramento oficial do projeto</li>
+            </ol>
+            <div class="etapa-entrega"><strong>Entrega:</strong> Relatório Final e Plano de Continuidade</div>
+          </div>
+        </div>
+      </div><!-- /etapas -->
+
+      <!-- ─── BLOCO 2: GUIA DE CAMPO ─── -->
+      <div class="mapa-block">
+        <div class="mapa-block-title">Guia de Campo do Consultor — 8 Módulos</div>
+
+        <div class="mod-tabs">
+          <button class="mod-tab active" onclick="switchMod(1)">Módulo 1</button>
+          <button class="mod-tab" onclick="switchMod(2)">Módulo 2</button>
+          <button class="mod-tab" onclick="switchMod(3)">Módulo 3</button>
+          <button class="mod-tab" onclick="switchMod(4)">Módulo 4</button>
+          <button class="mod-tab" onclick="switchMod(5)">Módulo 5</button>
+          <button class="mod-tab" onclick="switchMod(6)">Módulo 6</button>
+          <button class="mod-tab" onclick="switchMod(7)">Módulo 7</button>
+          <button class="mod-tab" onclick="switchMod(8)">Módulo 8</button>
+        </div>
+
+        <!-- MOD 1 -->
+        <div class="mod-panel active" id="mod-1">
+          <div class="mod-heading">Módulo 1 — Diagnóstico Organizacional</div>
+          <div class="mod-objective">O Diagnóstico Organizacional é a etapa mais importante do Método RH com Propósito®. Antes de propor qualquer solução, o consultor deve compreender a história da empresa, sua cultura, seus processos, sua liderança e as relações existentes entre as pessoas.</div>
+
+          <div class="mod-cols">
+            <div>
+              <div class="mod-section">
+                <div class="mod-section-title">Objetivos do Diagnóstico</div>
+                <ul class="mod-list">
+                  <li>Conhecer a empresa de forma sistêmica</li>
+                  <li>Identificar oportunidades de melhoria</li>
+                  <li>Mapear riscos e potencialidades</li>
+                  <li>Compreender a percepção da diretoria, gestores e colaboradores</li>
+                  <li>Gerar informações para o plano de ação</li>
+                </ul>
+              </div>
+              <div class="mod-section">
+                <div class="mod-section-title">Perfil Esperado do Consultor</div>
+                <ul class="mod-list">
+                  <li>Escuta ativa</li>
+                  <li>Postura ética e imparcial</li>
+                  <li>Boa comunicação</li>
+                  <li>Organização</li>
+                  <li>Capacidade analítica</li>
+                  <li>Empatia</li>
+                  <li>Discrição e confidencialidade</li>
+                </ul>
+              </div>
+            </div>
+            <div>
+              <div class="mod-section">
+                <div class="mod-section-title">Antes da Primeira Visita</div>
+                <ul class="mod-list">
+                  <li>Estudar o segmento de atuação</li>
+                  <li>Revisar a proposta comercial e o contrato</li>
+                  <li>Ler documentos enviados previamente</li>
+                  <li>Preparar cronograma da visita</li>
+                  <li>Separar formulários e materiais</li>
+                  <li>Confirmar data, horário e participantes</li>
+                </ul>
+              </div>
+              <div class="mod-section">
+                <div class="mod-section-title">O Que Observar Durante a Visita</div>
+                <ul class="mod-list">
+                  <li>Ambiente físico e organização</li>
+                  <li>Relacionamento entre os colaboradores</li>
+                  <li>Postura das lideranças</li>
+                  <li>Comunicação entre os setores</li>
+                  <li>Clima organizacional</li>
+                  <li>Fluxo dos processos</li>
+                  <li>Pontos que demonstram a cultura da empresa</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <div class="mod-section">
+            <div class="mod-section-title">Erros que Devem ser Evitados</div>
+            <ul class="mod-list">
+              <li>Apresentar soluções antes de concluir o diagnóstico</li>
+              <li>Comparar a empresa com outros clientes</li>
+              <li>Interromper constantemente os entrevistados</li>
+              <li>Emitir opiniões precipitadas</li>
+              <li>Desconsiderar a história e a cultura da organização</li>
+            </ul>
+          </div>
+
+          <div class="mod-section">
+            <div class="mod-section-title">Sugestão de Fala — Abertura da Reunião</div>
+            <div class="fala-box">"Gostaria de agradecer pela confiança depositada no RH com Propósito. Hoje iniciaremos uma etapa muito importante, que tem como objetivo compreender a realidade da empresa. Nossa intenção é ouvir, observar e conhecer a organização para construir soluções que façam sentido para a equipe e para a liderança."</div>
+          </div>
+
+          <div class="dica-box">
+            <div class="dica-label">Dica da Fundadora</div>
+            <div class="dica-text">O primeiro problema apresentado pela empresa nem sempre é o problema principal. Escute com atenção, observe os comportamentos e procure compreender o contexto antes de formular qualquer conclusão. O diagnóstico de qualidade nasce da escuta, da observação e da confiança construída com o cliente.</div>
+          </div>
+
+          <div class="checklist-box">
+            <div class="checklist-box-title">Checklist do Consultor</div>
+            <div class="mapa-checklist" id="cl-mod1">
+              <label class="check-item"><input type="checkbox" onchange="saveCl('mod1',this)"><span>Notebook carregado</span></label>
+              <label class="check-item"><input type="checkbox" onchange="saveCl('mod1',this)"><span>Carregador</span></label>
+              <label class="check-item"><input type="checkbox" onchange="saveCl('mod1',this)"><span>Bloco de anotações e canetas</span></label>
+              <label class="check-item"><input type="checkbox" onchange="saveCl('mod1',this)"><span>Questionários impressos</span></label>
+              <label class="check-item"><input type="checkbox" onchange="saveCl('mod1',this)"><span>Cronograma da visita</span></label>
+              <label class="check-item"><input type="checkbox" onchange="saveCl('mod1',this)"><span>Cartão de visitas</span></label>
+              <label class="check-item"><input type="checkbox" onchange="saveCl('mod1',this)"><span>Pasta do cliente</span></label>
+              <label class="check-item"><input type="checkbox" onchange="saveCl('mod1',this)"><span>Celular carregado</span></label>
+            </div>
+            <button class="cl-reset" onclick="resetCl('mod1')">Limpar checklist</button>
+          </div>
+        </div><!-- /mod-1 -->
+
+        <!-- MOD 2 -->
+        <div class="mod-panel" id="mod-2">
+          <div class="mod-heading">Módulo 2 — Condução da Reunião de Abertura</div>
+          <div class="mod-objective">Padronizar a condução da primeira reunião da consultoria, criando um ambiente de confiança, alinhando expectativas e apresentando a metodologia do RH com Propósito.</div>
+
+          <div class="mod-cols">
+            <div>
+              <div class="mod-section">
+                <div class="mod-section-title">Antes da Reunião</div>
+                <ul class="mod-list">
+                  <li>Chegue com antecedência mínima de 20 minutos</li>
+                  <li>Conheça o nome e a função dos participantes</li>
+                  <li>Organize os materiais e teste os equipamentos</li>
+                  <li>Observe discretamente o ambiente antes do início</li>
+                </ul>
+              </div>
+              <div class="mod-section">
+                <div class="mod-section-title">Postura do Consultor</div>
+                <ul class="mod-list">
+                  <li>Escute sem interromper</li>
+                  <li>Faça perguntas abertas</li>
+                  <li>Evite julgamentos</li>
+                  <li>Anote frases importantes</li>
+                  <li>Não prometa soluções imediatas</li>
+                </ul>
+              </div>
+            </div>
+            <div>
+              <div class="mod-section">
+                <div class="mod-section-title">Roteiro da Reunião</div>
+                <ul class="mod-list">
+                  <li><strong>1. Acolhimento</strong> — Cumprimente cada participante pelo nome</li>
+                  <li><strong>2. Apresentação</strong> — Conte sua trajetória e a proposta do RH com Propósito</li>
+                  <li><strong>3. Metodologia</strong> — Explique etapas, responsabilidades e cronograma</li>
+                </ul>
+              </div>
+              <div class="mod-section">
+                <div class="mod-section-title">O Que Observar</div>
+                <ul class="mod-list">
+                  <li>Quem fala mais durante a reunião</li>
+                  <li>Como as decisões são tomadas</li>
+                  <li>Nível de abertura entre os participantes</li>
+                  <li>Convergências e divergências nas respostas</li>
+                  <li>Comportamentos que revelam a cultura da empresa</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <div class="mod-section">
+            <div class="mod-section-title">Perguntas para Iniciar a Conversa</div>
+            <ul class="mod-list">
+              <li>Como surgiu a empresa?</li>
+              <li>O que motivou a contratação da consultoria?</li>
+              <li>Quais são os maiores desafios hoje?</li>
+              <li>Quais resultados esperam alcançar ao final do projeto?</li>
+              <li>O que vocês não gostariam que acontecesse durante a consultoria?</li>
+            </ul>
+          </div>
+
+          <div class="dica-box">
+            <div class="dica-label">Dica da Fundadora</div>
+            <div class="dica-text">A reunião de abertura define o tom de toda a consultoria. Quando a liderança percebe organização, escuta e respeito, tende a se comprometer mais com o projeto. Valorize esse momento e construa uma relação de parceria desde o primeiro encontro.</div>
+          </div>
+
+          <div class="checklist-box">
+            <div class="checklist-box-title">Checklist de Encerramento</div>
+            <div class="mapa-checklist" id="cl-mod2">
+              <label class="check-item"><input type="checkbox" onchange="saveCl('mod2',this)"><span>Objetivos apresentados</span></label>
+              <label class="check-item"><input type="checkbox" onchange="saveCl('mod2',this)"><span>Expectativas alinhadas</span></label>
+              <label class="check-item"><input type="checkbox" onchange="saveCl('mod2',this)"><span>Cronograma explicado</span></label>
+              <label class="check-item"><input type="checkbox" onchange="saveCl('mod2',this)"><span>Participantes identificados</span></label>
+              <label class="check-item"><input type="checkbox" onchange="saveCl('mod2',this)"><span>Próxima visita agendada</span></label>
+              <label class="check-item"><input type="checkbox" onchange="saveCl('mod2',this)"><span>Anotações organizadas</span></label>
+            </div>
+            <button class="cl-reset" onclick="resetCl('mod2')">Limpar checklist</button>
+          </div>
+        </div><!-- /mod-2 -->
+
+        <!-- MOD 3 -->
+        <div class="mod-panel" id="mod-3">
+          <div class="mod-heading">Módulo 3 — Entrevista Estratégica com a Diretoria</div>
+          <div class="mod-objective">Conduzir entrevistas estratégicas com a diretoria para compreender a essência da organização, sua história, desafios, expectativas e visão de futuro.</div>
+
+          <div class="mod-cols">
+            <div>
+              <div class="mod-section">
+                <div class="mod-section-title">Antes da Entrevista</div>
+                <ul class="mod-list">
+                  <li>Reserve um ambiente silencioso e sem interrupções</li>
+                  <li>Explique que a conversa é confidencial</li>
+                  <li>Reforce que não existem respostas certas ou erradas</li>
+                  <li>Mantenha um clima leve e acolhedor</li>
+                </ul>
+              </div>
+              <div class="mod-section">
+                <div class="mod-section-title">Postura do Consultor</div>
+                <ul class="mod-list">
+                  <li>Ouça atentamente antes de formular novas perguntas</li>
+                  <li>Permita que o entrevistado conclua seu raciocínio</li>
+                  <li>Evite emitir opiniões durante a entrevista</li>
+                  <li>Anote palavras e frases que revelem a cultura da empresa</li>
+                  <li>Observe também a linguagem não verbal</li>
+                </ul>
+              </div>
+              <div class="mod-section">
+                <div class="mod-section-title">O Que Observar</div>
+                <ul class="mod-list">
+                  <li>Assuntos que geram emoção ou preocupação</li>
+                  <li>Contradições entre respostas</li>
+                  <li>Alinhamento entre os diretores</li>
+                  <li>Facilidade ou dificuldade para falar sobre pessoas</li>
+                  <li>Coerência entre discurso e prática</li>
+                </ul>
+              </div>
+            </div>
+            <div>
+              <div class="mod-section">
+                <div class="mod-section-title">Roteiro da Entrevista</div>
+                <div class="mod-sub-heading">1. História da empresa</div>
+                <ul class="mod-list">
+                  <li>Como surgiu a empresa?</li>
+                  <li>Quais foram os momentos mais marcantes da trajetória?</li>
+                  <li>Do que vocês mais se orgulham?</li>
+                </ul>
+                <div class="mod-sub-heading">2. Momento atual</div>
+                <ul class="mod-list">
+                  <li>Como você define a empresa hoje?</li>
+                  <li>Quais são os maiores desafios enfrentados atualmente?</li>
+                  <li>O que mais preocupa a diretoria?</li>
+                </ul>
+                <div class="mod-sub-heading">3. Pessoas e liderança</div>
+                <ul class="mod-list">
+                  <li>Como você descreve sua equipe?</li>
+                  <li>Quais comportamentos mais admira nos colaboradores?</li>
+                  <li>Quais comportamentos precisam ser desenvolvidos?</li>
+                  <li>Como avalia a atuação das lideranças?</li>
+                </ul>
+                <div class="mod-sub-heading">4. Cultura organizacional</div>
+                <ul class="mod-list">
+                  <li>Se a empresa fosse uma pessoa, como ela seria?</li>
+                  <li>Quais valores nunca podem ser perdidos?</li>
+                  <li>Quais comportamentos não são aceitos?</li>
+                </ul>
+                <div class="mod-sub-heading">5. Comunicação</div>
+                <ul class="mod-list">
+                  <li>Como as informações circulam na empresa?</li>
+                  <li>Há conflitos frequentes entre setores?</li>
+                  <li>Os colaboradores compreendem os objetivos da organização?</li>
+                </ul>
+                <div class="mod-sub-heading">6. Futuro</div>
+                <ul class="mod-list">
+                  <li>Onde a empresa pretende chegar nos próximos cinco anos?</li>
+                  <li>Como você gostaria que sua equipe fosse reconhecida?</li>
+                  <li>Qual legado deseja deixar?</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <div class="dica-box">
+            <div class="dica-label">Dica da Fundadora</div>
+            <div class="dica-text">As melhores respostas normalmente aparecem quando o entrevistado percebe que está sendo ouvido com respeito. Permita momentos de silêncio, incentive exemplos práticos e faça perguntas complementares. Muitas vezes, a verdadeira necessidade da empresa está nas entrelinhas da conversa.</div>
+          </div>
+
+          <div class="checklist-box">
+            <div class="checklist-box-title">Checklist Final</div>
+            <div class="mapa-checklist" id="cl-mod3">
+              <label class="check-item"><input type="checkbox" onchange="saveCl('mod3',this)"><span>História da empresa compreendida</span></label>
+              <label class="check-item"><input type="checkbox" onchange="saveCl('mod3',this)"><span>Desafios identificados</span></label>
+              <label class="check-item"><input type="checkbox" onchange="saveCl('mod3',this)"><span>Expectativas registradas</span></label>
+              <label class="check-item"><input type="checkbox" onchange="saveCl('mod3',this)"><span>Informações sobre cultura coletadas</span></label>
+              <label class="check-item"><input type="checkbox" onchange="saveCl('mod3',this)"><span>Percepções registradas logo após a entrevista</span></label>
+            </div>
+            <button class="cl-reset" onclick="resetCl('mod3')">Limpar checklist</button>
+          </div>
+        </div><!-- /mod-3 -->
+
+        <!-- MOD 4 -->
+        <div class="mod-panel" id="mod-4">
+          <div class="mod-heading">Módulo 4 — Entrevista com Gestores e Lideranças</div>
+          <div class="mod-objective">Compreender como a gestão acontece na prática, identificar desafios enfrentados pelas lideranças e levantar informações que auxiliem na construção de um plano de desenvolvimento consistente.</div>
+
+          <div class="mod-cols">
+            <div>
+              <div class="mod-section">
+                <div class="mod-section-title">Preparação</div>
+                <ul class="mod-list">
+                  <li>Agende entrevistas individuais</li>
+                  <li>Reserve um ambiente tranquilo</li>
+                  <li>Explique que o objetivo é compreender a realidade e não avaliar o desempenho do gestor</li>
+                  <li>Garanta confidencialidade</li>
+                </ul>
+              </div>
+              <div class="mod-section">
+                <div class="mod-section-title">Competências do Consultor</div>
+                <ul class="mod-list">
+                  <li>Escuta ativa</li>
+                  <li>Empatia</li>
+                  <li>Neutralidade</li>
+                  <li>Capacidade investigativa</li>
+                  <li>Boa comunicação</li>
+                </ul>
+              </div>
+              <div class="mod-section">
+                <div class="mod-section-title">Perguntas de Aprofundamento</div>
+                <ul class="mod-list">
+                  <li>Pode me dar um exemplo dessa situação?</li>
+                  <li>Como isso impacta os resultados?</li>
+                  <li>O que você já tentou fazer para resolver?</li>
+                  <li>De que forma a consultoria pode contribuir?</li>
+                </ul>
+              </div>
+            </div>
+            <div>
+              <div class="mod-section">
+                <div class="mod-section-title">Roteiro da Entrevista</div>
+                <div class="mod-sub-heading">1. Papel do gestor</div>
+                <ul class="mod-list">
+                  <li>Há quanto tempo você lidera esta equipe?</li>
+                  <li>Quais são suas principais responsabilidades?</li>
+                  <li>O que considera mais desafiador na função?</li>
+                </ul>
+                <div class="mod-sub-heading">2. Equipe</div>
+                <ul class="mod-list">
+                  <li>Como você descreveria sua equipe?</li>
+                  <li>Quais são os principais pontos fortes?</li>
+                  <li>Quais comportamentos precisam ser desenvolvidos?</li>
+                </ul>
+                <div class="mod-sub-heading">3. Comunicação</div>
+                <ul class="mod-list">
+                  <li>As informações chegam com clareza?</li>
+                  <li>Como ocorrem os alinhamentos com a equipe?</li>
+                  <li>Quais dificuldades de comunicação você percebe?</li>
+                </ul>
+                <div class="mod-sub-heading">4. Desenvolvimento</div>
+                <ul class="mod-list">
+                  <li>Quais treinamentos seriam importantes?</li>
+                  <li>Como você realiza feedback?</li>
+                  <li>Com que frequência conversa sobre desenvolvimento com a equipe?</li>
+                </ul>
+                <div class="mod-sub-heading">5. Processos</div>
+                <ul class="mod-list">
+                  <li>Há atividades sem padronização?</li>
+                  <li>Existem retrabalhos frequentes?</li>
+                  <li>O que poderia tornar a rotina mais eficiente?</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <div class="dica-box">
+            <div class="dica-label">Dica da Fundadora</div>
+            <div class="dica-text">O gestor conhece detalhes da operação que muitas vezes não chegam à diretoria. Escute atentamente, valide as informações com outras fontes e procure compreender o contexto antes de elaborar qualquer conclusão.</div>
+          </div>
+
+          <div class="checklist-box">
+            <div class="checklist-box-title">Checklist Final</div>
+            <div class="mapa-checklist" id="cl-mod4">
+              <label class="check-item"><input type="checkbox" onchange="saveCl('mod4',this)"><span>Entrevistas realizadas</span></label>
+              <label class="check-item"><input type="checkbox" onchange="saveCl('mod4',this)"><span>Necessidades de treinamento identificadas</span></label>
+              <label class="check-item"><input type="checkbox" onchange="saveCl('mod4',this)"><span>Gargalos de comunicação registrados</span></label>
+              <label class="check-item"><input type="checkbox" onchange="saveCl('mod4',this)"><span>Boas práticas mapeadas</span></label>
+              <label class="check-item"><input type="checkbox" onchange="saveCl('mod4',this)"><span>Anotações organizadas para o relatório</span></label>
+            </div>
+            <button class="cl-reset" onclick="resetCl('mod4')">Limpar checklist</button>
+          </div>
+        </div><!-- /mod-4 -->
+
+        <!-- MOD 5 -->
+        <div class="mod-panel" id="mod-5">
+          <div class="mod-heading">Módulo 5 — Entrevista com Colaboradores</div>
+          <div class="mod-objective">Ouvir os colaboradores para compreender como eles percebem a empresa, a liderança, a comunicação, o ambiente de trabalho e os processos. Essa etapa complementa a visão da diretoria e dos gestores, tornando o diagnóstico mais completo e imparcial.</div>
+
+          <div class="mod-cols">
+            <div>
+              <div class="mod-section">
+                <div class="mod-section-title">Preparação</div>
+                <ul class="mod-list">
+                  <li>Escolha um ambiente reservado e tranquilo</li>
+                  <li>Explique que a entrevista é confidencial</li>
+                  <li>Esclareça que não há respostas certas ou erradas</li>
+                  <li>Crie um clima de confiança antes de iniciar as perguntas</li>
+                </ul>
+              </div>
+              <div class="mod-section">
+                <div class="mod-section-title">Postura do Consultor</div>
+                <ul class="mod-list">
+                  <li>Escute com atenção</li>
+                  <li>Demonstre respeito e empatia</li>
+                  <li>Evite expressões que indiquem julgamento</li>
+                  <li>Não interrompa o colaborador</li>
+                  <li>Agradeça a sinceridade ao final da conversa</li>
+                </ul>
+              </div>
+              <div class="mod-section">
+                <div class="mod-section-title">Cuidados Importantes</div>
+                <ul class="mod-list">
+                  <li>Nunca exponha a identidade de um colaborador no relatório</li>
+                  <li>Apresente resultados de forma consolidada</li>
+                  <li>Evite criar expectativas sobre mudanças imediatas</li>
+                  <li>Respeite o tempo de cada entrevistado</li>
+                </ul>
+              </div>
+            </div>
+            <div>
+              <div class="mod-section">
+                <div class="mod-section-title">Roteiro da Entrevista</div>
+                <div class="mod-sub-heading">1. Integração</div>
+                <ul class="mod-list">
+                  <li>Há quanto tempo você trabalha na empresa?</li>
+                  <li>Como foi sua integração quando entrou?</li>
+                  <li>Você recebeu orientações suficientes para iniciar suas atividades?</li>
+                </ul>
+                <div class="mod-sub-heading">2. Ambiente de trabalho</div>
+                <ul class="mod-list">
+                  <li>Como você descreveria o ambiente da empresa?</li>
+                  <li>Como é o relacionamento entre os colegas?</li>
+                  <li>Você se sente respeitado no dia a dia?</li>
+                </ul>
+                <div class="mod-sub-heading">3. Liderança</div>
+                <ul class="mod-list">
+                  <li>Seu líder oferece apoio quando necessário?</li>
+                  <li>Você recebe feedback sobre seu trabalho?</li>
+                  <li>Como é a comunicação com sua liderança?</li>
+                </ul>
+                <div class="mod-sub-heading">4. Comunicação</div>
+                <ul class="mod-list">
+                  <li>As informações chegam de forma clara?</li>
+                  <li>Você sente que pode expressar suas ideias?</li>
+                  <li>Existe abertura para sugestões?</li>
+                </ul>
+                <div class="mod-sub-heading">5. Desenvolvimento</div>
+                <ul class="mod-list">
+                  <li>Você acredita que a empresa investe no desenvolvimento dos colaboradores?</li>
+                  <li>Quais treinamentos considera importantes?</li>
+                  <li>O que você gostaria de aprender?</li>
+                </ul>
+                <div class="mod-sub-heading">6. Percepção geral</div>
+                <ul class="mod-list">
+                  <li>O que mais gosta na empresa?</li>
+                  <li>O que poderia melhorar?</li>
+                  <li>Se pudesse mudar uma coisa hoje, qual seria?</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <div class="dica-box">
+            <div class="dica-label">Dica da Fundadora</div>
+            <div class="dica-text">A confiança é construída nos primeiros minutos da conversa. Quando o colaborador percebe que será ouvido com respeito e que suas respostas serão tratadas com confidencialidade, tende a compartilhar informações valiosas para o diagnóstico.</div>
+          </div>
+
+          <div class="checklist-box">
+            <div class="checklist-box-title">Checklist Final</div>
+            <div class="mapa-checklist" id="cl-mod5">
+              <label class="check-item"><input type="checkbox" onchange="saveCl('mod5',this)"><span>Entrevistas concluídas</span></label>
+              <label class="check-item"><input type="checkbox" onchange="saveCl('mod5',this)"><span>Percepções registradas</span></label>
+              <label class="check-item"><input type="checkbox" onchange="saveCl('mod5',this)"><span>Pontos fortes identificados</span></label>
+              <label class="check-item"><input type="checkbox" onchange="saveCl('mod5',this)"><span>Oportunidades de melhoria registradas</span></label>
+              <label class="check-item"><input type="checkbox" onchange="saveCl('mod5',this)"><span>Informações organizadas para o relatório final</span></label>
+            </div>
+            <button class="cl-reset" onclick="resetCl('mod5')">Limpar checklist</button>
+          </div>
+        </div><!-- /mod-5 -->
+
+        <!-- MOD 6 -->
+        <div class="mod-panel" id="mod-6">
+          <div class="mod-heading">Módulo 6 — Observação em Campo e Coleta de Evidências</div>
+          <div class="mod-objective">Orientar o consultor na observação sistemática do ambiente organizacional, coletando evidências que complementem as entrevistas e permitam um diagnóstico baseado em fatos. Nem tudo o que acontece na empresa é verbalizado.</div>
+
+          <div class="mod-cols">
+            <div>
+              <div class="mod-section">
+                <div class="mod-section-title">O Que Observar</div>
+                <div class="mod-sub-heading">Ambiente físico</div>
+                <ul class="mod-list">
+                  <li>Organização dos setores</li>
+                  <li>Limpeza e sinalização</li>
+                  <li>Condições de segurança</li>
+                  <li>Ergonomia dos postos de trabalho</li>
+                </ul>
+                <div class="mod-sub-heading">Pessoas</div>
+                <ul class="mod-list">
+                  <li>Relacionamento entre colaboradores</li>
+                  <li>Integração entre equipes</li>
+                  <li>Respeito e cordialidade</li>
+                  <li>Postura das lideranças</li>
+                  <li>Engajamento durante as atividades</li>
+                </ul>
+                <div class="mod-sub-heading">Processos</div>
+                <ul class="mod-list">
+                  <li>Fluxo de trabalho</li>
+                  <li>Retrabalhos</li>
+                  <li>Padronização das atividades</li>
+                  <li>Distribuição de responsabilidades</li>
+                  <li>Comunicação entre setores</li>
+                </ul>
+              </div>
+            </div>
+            <div>
+              <div class="mod-section">
+                <div class="mod-section-title">Registro das Evidências</div>
+                <ul class="mod-list">
+                  <li>Anote apenas fatos observados</li>
+                  <li>Separe fatos de interpretações</li>
+                  <li>Registre exemplos concretos</li>
+                  <li>Utilize linguagem objetiva e profissional</li>
+                  <li>Organize as evidências por tema</li>
+                </ul>
+              </div>
+              <div class="mod-section">
+                <div class="mod-section-title">Sinais de Alerta</div>
+                <ul class="mod-list">
+                  <li>Comunicação falha entre setores</li>
+                  <li>Conflitos frequentes</li>
+                  <li>Falta de padronização</li>
+                  <li>Desmotivação visível</li>
+                  <li>Excesso de centralização das decisões</li>
+                  <li>Baixa participação da liderança</li>
+                </ul>
+              </div>
+              <div class="mod-section">
+                <div class="mod-section-title">Boas Práticas</div>
+                <ul class="mod-list">
+                  <li>Solicite autorização antes de registrar fotos</li>
+                  <li>Mantenha postura discreta</li>
+                  <li>Observe sem interferir na rotina</li>
+                  <li>Confirme informações importantes com diferentes fontes</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <div class="dica-box">
+            <div class="dica-label">Dica da Fundadora</div>
+            <div class="dica-text">O olhar do consultor deve ser curioso, respeitoso e imparcial. Muitas vezes, pequenos detalhes observados durante uma visita ajudam a compreender problemas que não apareceram nas entrevistas. O diagnóstico ganha qualidade quando diferentes fontes de informação são analisadas em conjunto.</div>
+          </div>
+
+          <div class="checklist-box">
+            <div class="checklist-box-title">Checklist Final</div>
+            <div class="mapa-checklist" id="cl-mod6">
+              <label class="check-item"><input type="checkbox" onchange="saveCl('mod6',this)"><span>Ambiente observado</span></label>
+              <label class="check-item"><input type="checkbox" onchange="saveCl('mod6',this)"><span>Pessoas observadas</span></label>
+              <label class="check-item"><input type="checkbox" onchange="saveCl('mod6',this)"><span>Processos analisados</span></label>
+              <label class="check-item"><input type="checkbox" onchange="saveCl('mod6',this)"><span>Evidências registradas</span></label>
+              <label class="check-item"><input type="checkbox" onchange="saveCl('mod6',this)"><span>Informações organizadas para o relatório</span></label>
+            </div>
+            <button class="cl-reset" onclick="resetCl('mod6')">Limpar checklist</button>
+          </div>
+        </div><!-- /mod-6 -->
+
+        <!-- MOD 7 -->
+        <div class="mod-panel" id="mod-7">
+          <div class="mod-heading">Módulo 7 — Construção do Relatório de Diagnóstico</div>
+          <div class="mod-objective">Padronizar a elaboração do Relatório de Diagnóstico Organizacional, transformando as informações coletadas em análises claras, técnicas e úteis para a tomada de decisão da empresa.</div>
+
+          <div class="mod-cols">
+            <div>
+              <div class="mod-section">
+                <div class="mod-section-title">Princípios do Relatório</div>
+                <ul class="mod-list">
+                  <li>Basear todas as conclusões em evidências</li>
+                  <li>Utilizar linguagem clara, objetiva e respeitosa</li>
+                  <li>Valorizar os pontos fortes antes de apresentar oportunidades de melhoria</li>
+                  <li>Apresentar recomendações viáveis para a realidade da empresa</li>
+                </ul>
+              </div>
+              <div class="mod-section">
+                <div class="mod-section-title">Ferramentas Recomendadas</div>
+                <ul class="mod-list">
+                  <li>Análise SWOT — forças, fraquezas, oportunidades e ameaças</li>
+                  <li>Matriz GUT — priorização</li>
+                  <li>5W2H — estruturação do plano de ação</li>
+                  <li>Indicadores de RH — acompanhamento</li>
+                </ul>
+              </div>
+              <div class="mod-section">
+                <div class="mod-section-title">Cuidados na Elaboração</div>
+                <ul class="mod-list">
+                  <li>Evite opiniões sem evidências</li>
+                  <li>Não exponha nomes de colaboradores</li>
+                  <li>Utilize dados consolidados</li>
+                  <li>Apresente oportunidades de melhoria com foco construtivo</li>
+                </ul>
+              </div>
+            </div>
+            <div>
+              <div class="mod-section">
+                <div class="mod-section-title">Estrutura do Relatório</div>
+                <ul class="mod-list">
+                  <li><strong>1. Identificação do Projeto</strong> — Nome da empresa, segmento, data, consultor, período</li>
+                  <li><strong>2. Objetivo do Diagnóstico</strong> — Finalidade da consultoria</li>
+                  <li><strong>3. Metodologia Aplicada</strong> — Reuniões, entrevistas, observação, análise documental</li>
+                  <li><strong>4. Principais Evidências</strong> — Pontos fortes, pontos de atenção, riscos, oportunidades</li>
+                  <li><strong>5. Análise por Dimensão</strong> — Cultura, liderança, comunicação, processos, T&D, clima</li>
+                  <li><strong>6. Plano Inicial de Recomendações</strong> — Ações prioritárias, responsáveis, prazo, impacto</li>
+                  <li><strong>7. Conclusão</strong> — Resumo dos achados e próximos passos</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <div class="dica-box">
+            <div class="dica-label">Dica da Fundadora</div>
+            <div class="dica-text">Um bom relatório não é aquele que aponta mais problemas, mas aquele que ajuda a empresa a enxergar caminhos. O cliente deve terminar a leitura entendendo onde está, para onde pode ir e quais são os primeiros passos para alcançar esse objetivo.</div>
+          </div>
+
+          <div class="checklist-box">
+            <div class="checklist-box-title">Checklist Final</div>
+            <div class="mapa-checklist" id="cl-mod7">
+              <label class="check-item"><input type="checkbox" onchange="saveCl('mod7',this)"><span>Todas as evidências organizadas</span></label>
+              <label class="check-item"><input type="checkbox" onchange="saveCl('mod7',this)"><span>Relatório revisado</span></label>
+              <label class="check-item"><input type="checkbox" onchange="saveCl('mod7',this)"><span>Linguagem objetiva</span></label>
+              <label class="check-item"><input type="checkbox" onchange="saveCl('mod7',this)"><span>Recomendações priorizadas</span></label>
+              <label class="check-item"><input type="checkbox" onchange="saveCl('mod7',this)"><span>Material pronto para devolutiva</span></label>
+            </div>
+            <button class="cl-reset" onclick="resetCl('mod7')">Limpar checklist</button>
+          </div>
+        </div><!-- /mod-7 -->
+
+        <!-- MOD 8 -->
+        <div class="mod-panel" id="mod-8">
+          <div class="mod-heading">Módulo 8 — Devolutiva Estratégica para a Diretoria</div>
+          <div class="mod-objective">Padronizar a reunião de devolutiva do Diagnóstico Organizacional, apresentando os resultados de forma clara, respeitosa e estratégica, fortalecendo a confiança da diretoria e conduzindo a empresa para a próxima etapa da consultoria.</div>
+
+          <div class="mod-cols">
+            <div>
+              <div class="mod-section">
+                <div class="mod-section-title">Preparação da Reunião</div>
+                <ul class="mod-list">
+                  <li>Agendar a reunião com antecedência</li>
+                  <li>Garantir a presença dos principais tomadores de decisão</li>
+                  <li>Revisar todo o relatório antes da apresentação</li>
+                  <li>Preparar apresentação em slides e materiais de apoio</li>
+                  <li>Organizar um ambiente confortável e reservado</li>
+                </ul>
+              </div>
+              <div class="mod-section">
+                <div class="mod-section-title">Estrutura da Apresentação</div>
+                <ul class="mod-list">
+                  <li><strong>1. Abertura</strong> — Agradecer pela confiança, relembrar o objetivo</li>
+                  <li><strong>2. Pontos fortes</strong> — Apresentar potencialidades, reconhecer boas práticas</li>
+                  <li><strong>3. Oportunidades de melhoria</strong> — Com objetividade, sem linguagem acusatória</li>
+                  <li><strong>4. Recomendações</strong> — Prioridades e impacto esperado</li>
+                  <li><strong>5. Próximos passos</strong> — Cronograma, responsabilidades, compromisso</li>
+                </ul>
+              </div>
+            </div>
+            <div>
+              <div class="mod-section">
+                <div class="mod-section-title">Como Conduzir Conversas Difíceis</div>
+                <ul class="mod-list">
+                  <li>Foque nos fatos e evidências</li>
+                  <li>Evite personalizar problemas</li>
+                  <li>Reconheça os esforços da empresa</li>
+                  <li>Conduza a conversa para soluções</li>
+                  <li>Escute atentamente as reações da diretoria</li>
+                </ul>
+              </div>
+              <div class="mod-section">
+                <div class="mod-section-title">Possíveis Objeções e Como Responder</div>
+                <ul class="mod-list">
+                  <li><em>"Não imaginávamos que esse problema existia."</em> → Explique quais evidências sustentam a análise</li>
+                  <li><em>"Isso sempre foi feito dessa forma."</em> → Mostre os impactos atuais e as oportunidades de melhoria</li>
+                  <li><em>"Não temos recursos para tudo agora."</em> → Auxilie na priorização das ações</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <div class="dica-box">
+            <div class="dica-label">Dica da Fundadora</div>
+            <div class="dica-text">A devolutiva não deve gerar desconforto, mas consciência. O cliente precisa sair da reunião acreditando que é possível evoluir. Sempre apresente desafios acompanhados de caminhos viáveis para solucioná-los.</div>
+          </div>
+
+          <div class="checklist-box">
+            <div class="checklist-box-title">Checklist Final</div>
+            <div class="mapa-checklist" id="cl-mod8">
+              <label class="check-item"><input type="checkbox" onchange="saveCl('mod8',this)"><span>Relatório apresentado</span></label>
+              <label class="check-item"><input type="checkbox" onchange="saveCl('mod8',this)"><span>Pontos fortes valorizados</span></label>
+              <label class="check-item"><input type="checkbox" onchange="saveCl('mod8',this)"><span>Oportunidades de melhoria compreendidas</span></label>
+              <label class="check-item"><input type="checkbox" onchange="saveCl('mod8',this)"><span>Plano de ação validado</span></label>
+              <label class="check-item"><input type="checkbox" onchange="saveCl('mod8',this)"><span>Próxima etapa aprovada</span></label>
+            </div>
+            <button class="cl-reset" onclick="resetCl('mod8')">Limpar checklist</button>
+          </div>
+        </div><!-- /mod-8 -->
+
+      </div><!-- /bloco guia de campo -->
+
+      <!-- ─── BLOCO 3: MANUAL DA CONSULTORA ─── -->
+      <div class="mapa-block">
+        <div class="mapa-block-title">Manual da Consultora — Checklists por Etapa</div>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+
+          <div class="checklist-box">
+            <div class="checklist-box-title">1. Diagnóstico Organizacional</div>
+            <div class="mapa-checklist" id="cl-man1">
+              <label class="check-item"><input type="checkbox" onchange="saveCl('man1',this)"><span>Agendar reunião de abertura</span></label>
+              <label class="check-item"><input type="checkbox" onchange="saveCl('man1',this)"><span>Apresentar cronograma</span></label>
+              <label class="check-item"><input type="checkbox" onchange="saveCl('man1',this)"><span>Realizar entrevista com a diretoria</span></label>
+              <label class="check-item"><input type="checkbox" onchange="saveCl('man1',this)"><span>Entrevistar gestores</span></label>
+              <label class="check-item"><input type="checkbox" onchange="saveCl('man1',this)"><span>Observar a rotina</span></label>
+              <label class="check-item"><input type="checkbox" onchange="saveCl('man1',this)"><span>Registrar evidências</span></label>
+              <label class="check-item"><input type="checkbox" onchange="saveCl('man1',this)"><span>Fotografar materiais (quando autorizado)</span></label>
+              <label class="check-item"><input type="checkbox" onchange="saveCl('man1',this)"><span>Identificar prioridades</span></label>
+              <label class="check-item"><input type="checkbox" onchange="saveCl('man1',this)"><span>Consolidar informações</span></label>
+              <label class="check-item"><input type="checkbox" onchange="saveCl('man1',this)"><span>Preparar devolutiva</span></label>
+            </div>
+            <button class="cl-reset" onclick="resetCl('man1')">Limpar</button>
+          </div>
+
+          <div class="checklist-box">
+            <div class="checklist-box-title">2. Estruturação da Gestão de Pessoas</div>
+            <div class="mapa-checklist" id="cl-man2">
+              <label class="check-item"><input type="checkbox" onchange="saveCl('man2',this)"><span>Mapear processos existentes</span></label>
+              <label class="check-item"><input type="checkbox" onchange="saveCl('man2',this)"><span>Levantar documentos</span></label>
+              <label class="check-item"><input type="checkbox" onchange="saveCl('man2',this)"><span>Identificar lacunas</span></label>
+              <label class="check-item"><input type="checkbox" onchange="saveCl('man2',this)"><span>Criar modelos necessários</span></label>
+              <label class="check-item"><input type="checkbox" onchange="saveCl('man2',this)"><span>Definir calendário anual</span></label>
+              <label class="check-item"><input type="checkbox" onchange="saveCl('man2',this)"><span>Validar com a direção</span></label>
+              <label class="check-item"><input type="checkbox" onchange="saveCl('man2',this)"><span>Ajustar documentos</span></label>
+              <label class="check-item"><input type="checkbox" onchange="saveCl('man2',this)"><span>Preparar implantação</span></label>
+            </div>
+            <button class="cl-reset" onclick="resetCl('man2')">Limpar</button>
+          </div>
+
+          <div class="checklist-box">
+            <div class="checklist-box-title">3. Cultura Organizacional</div>
+            <div class="mapa-checklist" id="cl-man3">
+              <label class="check-item"><input type="checkbox" onchange="saveCl('man3',this)"><span>Validar missão, visão e valores</span></label>
+              <label class="check-item"><input type="checkbox" onchange="saveCl('man3',this)"><span>Definir comportamentos esperados</span></label>
+              <label class="check-item"><input type="checkbox" onchange="saveCl('man3',this)"><span>Criar princípios da cultura</span></label>
+              <label class="check-item"><input type="checkbox" onchange="saveCl('man3',this)"><span>Planejar comunicação</span></label>
+              <label class="check-item"><input type="checkbox" onchange="saveCl('man3',this)"><span>Produzir materiais de apoio</span></label>
+              <label class="check-item"><input type="checkbox" onchange="saveCl('man3',this)"><span>Apresentar à diretoria</span></label>
+            </div>
+            <button class="cl-reset" onclick="resetCl('man3')">Limpar</button>
+          </div>
+
+          <div class="checklist-box">
+            <div class="checklist-box-title">4. Desenvolvimento da Liderança</div>
+            <div class="mapa-checklist" id="cl-man4">
+              <label class="check-item"><input type="checkbox" onchange="saveCl('man4',this)"><span>Definir conteúdo conforme diagnóstico</span></label>
+              <label class="check-item"><input type="checkbox" onchange="saveCl('man4',this)"><span>Preparar apresentação</span></label>
+              <label class="check-item"><input type="checkbox" onchange="saveCl('man4',this)"><span>Aplicar treinamento</span></label>
+              <label class="check-item"><input type="checkbox" onchange="saveCl('man4',this)"><span>Conduzir dinâmicas</span></label>
+              <label class="check-item"><input type="checkbox" onchange="saveCl('man4',this)"><span>Estimular plano de ação individual</span></label>
+            </div>
+            <button class="cl-reset" onclick="resetCl('man4')">Limpar</button>
+          </div>
+
+          <div class="checklist-box">
+            <div class="checklist-box-title">5. Desenvolvimento da Equipe</div>
+            <div class="mapa-checklist" id="cl-man5">
+              <label class="check-item"><input type="checkbox" onchange="saveCl('man5',this)"><span>Preparar palestra</span></label>
+              <label class="check-item"><input type="checkbox" onchange="saveCl('man5',this)"><span>Aplicar dinâmica</span></label>
+              <label class="check-item"><input type="checkbox" onchange="saveCl('man5',this)"><span>Apresentar cultura</span></label>
+              <label class="check-item"><input type="checkbox" onchange="saveCl('man5',this)"><span>Construir compromisso coletivo</span></label>
+              <label class="check-item"><input type="checkbox" onchange="saveCl('man5',this)"><span>Aplicar avaliação</span></label>
+            </div>
+            <button class="cl-reset" onclick="resetCl('man5')">Limpar</button>
+          </div>
+
+          <div class="checklist-box">
+            <div class="checklist-box-title">6. Consolidação</div>
+            <div class="mapa-checklist" id="cl-man6">
+              <label class="check-item"><input type="checkbox" onchange="saveCl('man6',this)"><span>Revisar todas as entregas</span></label>
+              <label class="check-item"><input type="checkbox" onchange="saveCl('man6',this)"><span>Reunir evidências</span></label>
+              <label class="check-item"><input type="checkbox" onchange="saveCl('man6',this)"><span>Comparar cenário inicial e final</span></label>
+              <label class="check-item"><input type="checkbox" onchange="saveCl('man6',this)"><span>Apresentar resultados</span></label>
+              <label class="check-item"><input type="checkbox" onchange="saveCl('man6',this)"><span>Entregar relatório final</span></label>
+              <label class="check-item"><input type="checkbox" onchange="saveCl('man6',this)"><span>Sugerir próximos passos</span></label>
+            </div>
+            <button class="cl-reset" onclick="resetCl('man6')">Limpar</button>
+          </div>
+
+        </div><!-- /grid manual -->
+
+        <div style="margin-top:20px;padding:14px 18px;background:rgba(200,155,60,.06);border-radius:12px;border:1px solid rgba(200,155,60,.15)">
+          <div style="font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,.3);margin-bottom:8px">Indicadores para Acompanhar</div>
+          <div style="display:flex;flex-wrap:wrap;gap:8px">
+            <span style="font-size:12px;color:rgba(255,255,255,.5);background:rgba(255,255,255,.06);padding:4px 12px;border-radius:20px">Engajamento da liderança</span>
+            <span style="font-size:12px;color:rgba(255,255,255,.5);background:rgba(255,255,255,.06);padding:4px 12px;border-radius:20px">Participação da equipe</span>
+            <span style="font-size:12px;color:rgba(255,255,255,.5);background:rgba(255,255,255,.06);padding:4px 12px;border-radius:20px">Cumprimento do cronograma</span>
+            <span style="font-size:12px;color:rgba(255,255,255,.5);background:rgba(255,255,255,.06);padding:4px 12px;border-radius:20px">Implantação das ações</span>
+            <span style="font-size:12px;color:rgba(255,255,255,.5);background:rgba(255,255,255,.06);padding:4px 12px;border-radius:20px">Feedback da diretoria</span>
+            <span style="font-size:12px;color:rgba(255,255,255,.5);background:rgba(255,255,255,.06);padding:4px 12px;border-radius:20px">Percepção de melhoria da comunicação</span>
+          </div>
+        </div>
+
+      </div><!-- /bloco manual -->
+
+    </div><!-- /mapa-wrap -->
+  </div><!-- /panel-mapa -->
+
+  <!-- ═══════════════════════════════════════════════════════════
+       PAINEL: MANUAL
+  ═══════════════════════════════════════════════════════════ -->
+  <div id="panel-manual" class="main-panel">
+    <div class="mapa-wrap">
+      <div class="mapa-header">
+        <div class="mapa-header-badge">Manual de Consultoria Organizacional</div>
+        <h2>RH com Propósito® — 8 Capítulos</h2>
+        <p>Fundamentos, procedimentos, ferramentas e boas práticas de toda a metodologia.</p>
+      </div>
+
+      <!-- CAP 1 -->
+      <div class="etapa-card" id="cap-1"><div class="etapa-header" onclick="toggleCap(1)"><div class="etapa-num">1</div><div class="etapa-title-group"><div class="etapa-label">Capítulo 1</div><div class="etapa-name">A Metodologia RH com Propósito</div></div><span class="etapa-chevron">▶</span></div>
+      <div class="etapa-body">
+        <div class="mod-section"><div class="mod-section-title">Missão</div><p style="font-size:13px;color:rgba(255,255,255,.6);line-height:1.7">Desenvolver pessoas e fortalecer organizações por meio de uma gestão humanizada, estratégica e orientada para resultados.</p></div>
+        <div class="mod-section"><div class="mod-section-title">Visão</div><p style="font-size:13px;color:rgba(255,255,255,.6);line-height:1.7">Ser referência em consultoria organizacional, reconhecida pela transformação de culturas, desenvolvimento de lideranças e valorização das pessoas.</p></div>
+        <div class="mod-section"><div class="mod-section-title">Valores</div><ul class="mod-list"><li>Respeito às pessoas</li><li>Ética</li><li>Humanização</li><li>Comprometimento</li><li>Desenvolvimento contínuo</li><li>Excelência</li><li>Propósito</li></ul></div>
+        <div class="mod-section"><div class="mod-section-title">Os 6 Pilares da Metodologia</div><ul class="mod-list"><li>Diagnosticar</li><li>Estruturar</li><li>Fortalecer</li><li>Desenvolver Líderes</li><li>Desenvolver Equipes</li><li>Consolidar Resultados</li></ul></div>
+        <div class="dica-box"><div class="dica-label">Filosofia</div><div class="dica-text">"Transformar empresas é consequência de desenvolver pessoas. Antes de processos, existem histórias. Antes de resultados, existem pessoas. E é nelas que começa toda transformação."</div></div>
+      </div></div>
+
+      <!-- CAP 2 -->
+      <div class="etapa-card" id="cap-2"><div class="etapa-header" onclick="toggleCap(2)"><div class="etapa-num">2</div><div class="etapa-title-group"><div class="etapa-label">Capítulo 2</div><div class="etapa-name">Preparação da Consultoria</div></div><span class="etapa-chevron">▶</span></div>
+      <div class="etapa-body">
+        <div class="mod-cols">
+          <div>
+            <div class="mod-section"><div class="mod-section-title">2.1 Aprovação da Proposta</div><ul class="mod-list"><li>Confirmar aprovação formal</li><li>Definir responsável pelo projeto</li><li>Confirmar canais de comunicação</li><li>Definir previsão de início</li></ul></div>
+            <div class="mod-section"><div class="mod-section-title">2.2 Formalização Contratual</div><ul class="mod-list"><li>Dados das partes</li><li>Escopo do projeto</li><li>Prazo de execução</li><li>Forma de pagamento</li><li>Cláusula de confidencialidade</li></ul></div>
+            <div class="mod-section"><div class="mod-section-title">2.3 Cadastro do Cliente</div><ul class="mod-list"><li>Razão Social, CNPJ, Endereço</li><li>Segmento e nº de colaboradores</li><li>Data de início e prazo previsto</li><li>Consultor responsável</li></ul></div>
+          </div>
+          <div>
+            <div class="mod-section"><div class="mod-section-title">2.4 Pasta do Projeto</div><ul class="mod-list"><li><strong>Física:</strong> Contrato, Proposta, Cronograma, Questionários, Anotações, Relatórios, Plano de Ação</li><li><strong>Digital:</strong> 01 Contrato / 02 Diagnóstico / 03 Cultura / 04 Liderança / 05 Treinamentos / 06 Relatórios / 07 Indicadores / 08 Fotos / 09 Documentos da Empresa</li></ul></div>
+            <div class="mod-section"><div class="mod-section-title">2.5 Documentos a Solicitar</div><ul class="mod-list"><li>Organograma</li><li>Regulamento Interno</li><li>Descrição de Cargos</li><li>Missão, Visão e Valores</li><li>Lista de Colaboradores</li><li>Escala de Trabalho</li><li>Indicadores</li></ul></div>
+            <div class="mod-section"><div class="mod-section-title">2.10 Critérios para Iniciar</div><ul class="mod-list"><li>Contrato assinado</li><li>Cronograma aprovado</li><li>Empresa cadastrada</li><li>Documentação mínima recebida</li><li>Materiais preparados</li><li>Agenda confirmada</li></ul></div>
+          </div>
+        </div>
+        <div class="fala-box">"Olá! Passando para confirmar nossa reunião de abertura da consultoria no dia XX/XX, às XXh. Será um prazer iniciar este projeto ao lado da equipe. Qualquer necessidade de ajuste, permaneço à disposição."</div>
+      </div></div>
+
+      <!-- CAP 3 -->
+      <div class="etapa-card" id="cap-3"><div class="etapa-header" onclick="toggleCap(3)"><div class="etapa-num">3</div><div class="etapa-title-group"><div class="etapa-label">Capítulo 3</div><div class="etapa-name">Diagnóstico Organizacional</div></div><span class="etapa-chevron">▶</span></div>
+      <div class="etapa-body">
+        <div class="mod-cols">
+          <div>
+            <div class="mod-section"><div class="mod-section-title">3.1 Objetivos do Diagnóstico</div><ul class="mod-list"><li>Compreender a história da empresa</li><li>Conhecer a visão da diretoria</li><li>Identificar desafios organizacionais</li><li>Avaliar processos de gestão de pessoas</li><li>Observar o ambiente organizacional</li><li>Levantar informações para o plano de ação</li></ul></div>
+            <div class="mod-section"><div class="mod-section-title">3.3 Postura do Consultor</div><ul class="mod-list"><li>Ser pontual</li><li>Ouvir mais do que falar</li><li>Evitar julgamentos</li><li>Não apresentar soluções precipitadas</li><li>Manter postura imparcial</li><li>Garantir confidencialidade</li></ul></div>
+            <div class="mod-section"><div class="mod-section-title">3.7 Entrevista com Gestores</div><ul class="mod-list"><li>Como você descreve sua equipe?</li><li>Quais são as maiores dificuldades?</li><li>Como ocorre a comunicação?</li><li>Como acompanha os resultados?</li><li>Como realiza feedback?</li><li>Quais treinamentos considera necessários?</li></ul></div>
+          </div>
+          <div>
+            <div class="mod-section"><div class="mod-section-title">3.5 Entrevista com a Diretoria</div><ul class="mod-list"><li>História da empresa</li><li>Momento atual</li><li>Principais desafios</li><li>Liderança</li><li>Comunicação</li><li>Equipe</li><li>Objetivos futuros</li><li>Expectativas quanto ao projeto</li></ul></div>
+            <div class="mod-section"><div class="mod-section-title">3.8 Conversa com Colaboradores</div><ul class="mod-list"><li>O que mais gosta no trabalho?</li><li>Quais dificuldades encontra?</li><li>Sente-se ouvido?</li><li>Como avalia a comunicação?</li><li>O que mudaria na empresa?</li></ul></div>
+            <div class="mod-section"><div class="mod-section-title">3.11 Elaboração do Relatório</div><ul class="mod-list"><li>Resumo executivo</li><li>Objetivo do diagnóstico</li><li>Metodologia</li><li>Principais evidências</li><li>Pontos fortes</li><li>Oportunidades de melhoria</li><li>Plano inicial de ação</li></ul></div>
+          </div>
+        </div>
+        <div class="mod-section"><div class="mod-section-title">3.13 Critérios para Encerramento</div><ul class="mod-list" style="display:flex;flex-wrap:wrap;gap:8px 20px"><li>Entrevistas concluídas</li><li>Observações registradas</li><li>Documentos analisados</li><li>Relatório finalizado</li><li>Devolutiva realizada</li><li>Diagnóstico validado pela diretoria</li></ul></div>
+      </div></div>
+
+      <!-- CAP 4 -->
+      <div class="etapa-card" id="cap-4"><div class="etapa-header" onclick="toggleCap(4)"><div class="etapa-num">4</div><div class="etapa-title-group"><div class="etapa-label">Capítulo 4</div><div class="etapa-name">Estruturação do Recursos Humanos</div></div><span class="etapa-chevron">▶</span></div>
+      <div class="etapa-body">
+        <div class="mod-cols">
+          <div>
+            <div class="mod-section"><div class="mod-section-title">4.3 Organização dos Processos</div><ul class="mod-list"><li>Recrutamento e Seleção</li><li>Integração de novos colaboradores</li><li>Treinamento e Desenvolvimento</li><li>Avaliação de Desempenho</li><li>Feedback</li><li>Comunicação Interna</li><li>Desligamento</li></ul></div>
+            <div class="mod-section"><div class="mod-section-title">4.4 Padronização de Documentos</div><ul class="mod-list"><li>Descrição de Cargos</li><li>Organograma</li><li>Políticas Internas</li><li>Procedimentos Operacionais</li><li>Formulários e Checklists</li></ul></div>
+          </div>
+          <div>
+            <div class="mod-section"><div class="mod-section-title">4.5 Indicadores de RH</div><ul class="mod-list"><li>Rotatividade</li><li>Absenteísmo</li><li>Treinamentos realizados</li><li>Tempo de contratação</li><li>Avaliações concluídas</li><li>Engajamento da equipe</li></ul></div>
+            <div class="mod-section"><div class="mod-section-title">4.7 Critérios para Encerramento</div><ul class="mod-list"><li>Processos estruturados</li><li>Documentos padronizados</li><li>Responsáveis definidos</li><li>Indicadores implantados</li><li>Plano validado pela diretoria</li></ul></div>
+          </div>
+        </div>
+      </div></div>
+
+      <!-- CAP 5 -->
+      <div class="etapa-card" id="cap-5"><div class="etapa-header" onclick="toggleCap(5)"><div class="etapa-num">5</div><div class="etapa-title-group"><div class="etapa-label">Capítulo 5</div><div class="etapa-name">Fortalecimento da Cultura Organizacional</div></div><span class="etapa-chevron">▶</span></div>
+      <div class="etapa-body">
+        <div class="mod-cols">
+          <div>
+            <div class="mod-section"><div class="mod-section-title">5.1 Compreendendo a Cultura Atual</div><ul class="mod-list"><li>Identificar comportamentos predominantes</li><li>Mapear crenças, hábitos e práticas</li><li>Reconhecer pontos fortes existentes</li><li>Identificar comportamentos que dificultam resultados</li></ul></div>
+            <div class="mod-section"><div class="mod-section-title">5.2 Construção da Identidade</div><ul class="mod-list"><li>Revisar ou construir a Missão</li><li>Revisar ou construir a Visão</li><li>Definir os Valores</li><li>Registrar o propósito da organização</li></ul></div>
+            <div class="mod-section"><div class="mod-section-title">5.3 Comportamentos Esperados</div><ul class="mod-list"><li>Definir regras de convivência</li><li>Construir os compromissos da equipe</li><li>Estabelecer padrões de atendimento</li><li>Alinhar responsabilidades individuais</li></ul></div>
+          </div>
+          <div>
+            <div class="mod-section"><div class="mod-section-title">5.5 Comunicação da Cultura</div><ul class="mod-list"><li>Produzir cartilha da cultura</li><li>Fixar MVV em locais estratégicos</li><li>Apresentar a cultura aos novos colaboradores</li><li>Utilizar campanhas internas de reforço</li></ul></div>
+            <div class="mod-section"><div class="mod-section-title">Boas Práticas</div><ul class="mod-list"><li>Respeitar a história antes de propor mudanças</li><li>Construir a cultura junto com a liderança</li><li>Envolver os colaboradores no processo</li><li>Transformar MVV em atitudes do dia a dia</li><li>Reforçar continuamente por meio de exemplos</li></ul></div>
+          </div>
+        </div>
+        <div class="dica-box"><div class="dica-label">Princípio</div><div class="dica-text">Cultura não é um quadro na parede, mas um comportamento vivido diariamente.</div></div>
+      </div></div>
+
+      <!-- CAP 6 -->
+      <div class="etapa-card" id="cap-6"><div class="etapa-header" onclick="toggleCap(6)"><div class="etapa-num">6</div><div class="etapa-title-group"><div class="etapa-label">Capítulo 6</div><div class="etapa-name">Desenvolvimento da Liderança</div></div><span class="etapa-chevron">▶</span></div>
+      <div class="etapa-body">
+        <div class="mod-cols">
+          <div>
+            <div class="mod-section"><div class="mod-section-title">6.2 Competências Essenciais</div><ul class="mod-list"><li>Comunicação clara</li><li>Escuta ativa</li><li>Inteligência emocional</li><li>Tomada de decisão</li><li>Delegação</li><li>Gestão de conflitos</li><li>Feedback construtivo</li><li>Desenvolvimento de pessoas</li></ul></div>
+            <div class="mod-section"><div class="mod-section-title">6.4 Temas de Treinamento</div><ul class="mod-list"><li>Liderança com propósito</li><li>Comunicação e feedback</li><li>Gestão do tempo</li><li>Formação de equipes</li><li>Engajamento e motivação</li><li>Tomada de decisão</li></ul></div>
+          </div>
+          <div>
+            <div class="mod-section"><div class="mod-section-title">6.3 PDI — Plano de Desenvolvimento</div><ul class="mod-list"><li>Definir objetivos individuais</li><li>Estabelecer competências prioritárias</li><li>Criar cronograma de acompanhamento</li></ul></div>
+            <div class="mod-section"><div class="mod-section-title">6.6 Indicadores</div><ul class="mod-list"><li>Engajamento da equipe</li><li>Redução de conflitos</li><li>Cumprimento de metas</li><li>Participação em treinamentos</li><li>Percepção dos colaboradores</li></ul></div>
+            <div class="mod-section"><div class="mod-section-title">Princípios da Liderança</div><ul class="mod-list"><li>Liderar pelo exemplo</li><li>Desenvolver pessoas continuamente</li><li>Construir relações de confiança</li><li>Comunicar com clareza e respeito</li><li>Valorizar resultados sem perder foco nas pessoas</li></ul></div>
+          </div>
+        </div>
+      </div></div>
+
+      <!-- CAP 7 -->
+      <div class="etapa-card" id="cap-7"><div class="etapa-header" onclick="toggleCap(7)"><div class="etapa-num">7</div><div class="etapa-title-group"><div class="etapa-label">Capítulo 7</div><div class="etapa-name">Desenvolvimento da Equipe</div></div><span class="etapa-chevron">▶</span></div>
+      <div class="etapa-body">
+        <div class="mod-cols">
+          <div>
+            <div class="mod-section"><div class="mod-section-title">7.2 Integração e Acolhimento</div><ul class="mod-list"><li>Padronizar processo de integração</li><li>Apresentar MVV e cultura</li><li>Esclarecer regras, responsabilidades e expectativas</li></ul></div>
+            <div class="mod-section"><div class="mod-section-title">7.3 Desenvolvimento Comportamental</div><ul class="mod-list"><li>Comunicação interpessoal</li><li>Trabalho em equipe</li><li>Protagonismo</li><li>Inteligência emocional</li><li>Ética e responsabilidade</li><li>Atendimento ao cliente</li></ul></div>
+          </div>
+          <div>
+            <div class="mod-section"><div class="mod-section-title">7.5 Engajamento da Equipe</div><ul class="mod-list"><li>Promover campanhas internas</li><li>Realizar dinâmicas de integração</li><li>Reconhecer boas práticas</li><li>Estimular sugestões de melhoria</li></ul></div>
+            <div class="mod-section"><div class="mod-section-title">7.7 Indicadores</div><ul class="mod-list"><li>Participação em treinamentos</li><li>Engajamento da equipe</li><li>Redução do absenteísmo</li><li>Redução da rotatividade</li><li>Satisfação dos colaboradores</li></ul></div>
+          </div>
+        </div>
+        <div class="dica-box"><div class="dica-label">Princípio</div><div class="dica-text">Equipes fortes constroem empresas fortes.</div></div>
+      </div></div>
+
+      <!-- CAP 8 -->
+      <div class="etapa-card" id="cap-8"><div class="etapa-header" onclick="toggleCap(8)"><div class="etapa-num">8</div><div class="etapa-title-group"><div class="etapa-label">Capítulo 8</div><div class="etapa-name">Acompanhamento, Indicadores e Consolidação</div></div><span class="etapa-chevron">▶</span></div>
+      <div class="etapa-body">
+        <div class="mod-cols">
+          <div>
+            <div class="mod-section"><div class="mod-section-title">8.3 Indicadores de Desempenho</div><ul class="mod-list"><li>Rotatividade</li><li>Absenteísmo</li><li>Engajamento</li><li>Participação em treinamentos</li><li>Cumprimento dos planos de ação</li><li>Resultados específicos definidos pela empresa</li></ul></div>
+            <div class="mod-section"><div class="mod-section-title">8.4 Avaliação dos Resultados</div><ul class="mod-list"><li>Comparar cenário inicial e atual</li><li>Identificar melhorias alcançadas</li><li>Registrar desafios ainda existentes</li><li>Apresentar recomendações para continuidade</li></ul></div>
+          </div>
+          <div>
+            <div class="mod-section"><div class="mod-section-title">8.6 Relatório Final</div><ul class="mod-list"><li>Resumo das ações executadas</li><li>Resultados alcançados</li><li>Indicadores comparativos</li><li>Recomendações futuras</li><li>Plano de continuidade</li></ul></div>
+            <div class="mod-section"><div class="mod-section-title">8.7 Encerramento da Consultoria</div><ul class="mod-list"><li>Apresentação do relatório final</li><li>Validação junto à diretoria</li><li>Entrega dos materiais produzidos</li><li>Avaliação da satisfação do cliente</li></ul></div>
+          </div>
+        </div>
+        <div class="dica-box"><div class="dica-label">Mensagem Final</div><div class="dica-text">O verdadeiro sucesso da consultoria é percebido quando a empresa continua evoluindo mesmo após o encerramento do projeto.</div></div>
+      </div></div>
+
+    </div><!-- /mapa-wrap -->
+  </div><!-- /panel-manual -->
+
+  <!-- ═══════════════════════════════════════════════════════════
+       PAINEL: QUESTIONÁRIOS RHCP
+  ═══════════════════════════════════════════════════════════ -->
+  <div id="panel-questionarios" class="main-panel">
+    <div class="mapa-wrap">
+      <div class="mapa-header">
+        <div class="mapa-header-badge">Consultoria — Etapa de Diagnóstico</div>
+        <h2>Questionários Consultoria RHCP</h2>
+        <p>Formulários estruturados com questões objetivas e subjetivas para Direção, Gestores e Colaboradores. Cada questionário pode ser impresso como prova ou preenchido digitalmente — todas as respostas são salvas na base de dados.</p>
+      </div>
+
+      <div class="mapa-block">
+        <div class="mapa-block-title">Selecione o Questionário</div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:16px;margin-bottom:32px">
+
+          <a href="questionarios-rhcp.html?tipo=direcao" target="_blank" class="sec-card" style="text-decoration:none">
+            <div class="sec-card-icon">🏛️</div>
+            <div class="sec-card-label">Diagnóstico · 3.5</div>
+            <div class="sec-card-title">Questionário — Direção</div>
+            <div style="font-size:12px;color:rgba(255,255,255,.4);margin-bottom:10px;line-height:1.5">10 questões mistas para diretores e sócios. Aborda história, cultura, liderança, comunicação e objetivos.</div>
+            <span class="sec-card-btn">Abrir / Imprimir →</span>
+          </a>
+
+          <a href="questionarios-rhcp.html?tipo=gestores" target="_blank" class="sec-card" style="text-decoration:none">
+            <div class="sec-card-icon">👥</div>
+            <div class="sec-card-label">Diagnóstico · 3.7</div>
+            <div class="sec-card-title">Questionário — Gestores</div>
+            <div style="font-size:12px;color:rgba(255,255,255,.4);margin-bottom:10px;line-height:1.5">10 questões mistas para líderes e gestores. Foco em equipe, comunicação, feedback e processos.</div>
+            <span class="sec-card-btn">Abrir / Imprimir →</span>
+          </a>
+
+          <a href="questionarios-rhcp.html?tipo=colaboradores" target="_blank" class="sec-card" style="text-decoration:none">
+            <div class="sec-card-icon">💬</div>
+            <div class="sec-card-label">Diagnóstico · 3.8</div>
+            <div class="sec-card-title">Questionário — Colaboradores</div>
+            <div style="font-size:12px;color:rgba(255,255,255,.4);margin-bottom:10px;line-height:1.5">10 questões mistas para colaboradores. Clima, liderança, comunicação e percepção geral.</div>
+            <span class="sec-card-btn">Abrir / Imprimir →</span>
+          </a>
+
+        </div>
+      </div>
+
+      <div class="mapa-block">
+        <div class="mapa-block-title">Respostas Salvas na Base</div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px">
+          <div class="checklist-box" style="cursor:pointer" onclick="openViewer('rhcp_direcao');switchMain('respostas')">
+            <div class="checklist-box-title">Direção — respostas</div>
+            <div style="font-size:22px;color:var(--gold);font-weight:700;margin:8px 0" id="count-rhcp_direcao">—</div>
+            <div style="font-size:11px;color:rgba(255,255,255,.3)">Clique para visualizar</div>
+          </div>
+          <div class="checklist-box" style="cursor:pointer" onclick="openViewer('rhcp_gestores');switchMain('respostas')">
+            <div class="checklist-box-title">Gestores — respostas</div>
+            <div style="font-size:22px;color:var(--gold);font-weight:700;margin:8px 0" id="count-rhcp_gestores">—</div>
+            <div style="font-size:11px;color:rgba(255,255,255,.3)">Clique para visualizar</div>
+          </div>
+          <div class="checklist-box" style="cursor:pointer" onclick="openViewer('rhcp_colaboradores');switchMain('respostas')">
+            <div class="checklist-box-title">Colaboradores — respostas</div>
+            <div style="font-size:22px;color:var(--gold);font-weight:700;margin:8px 0" id="count-rhcp_colaboradores">—</div>
+            <div style="font-size:11px;color:rgba(255,255,255,.3)">Clique para visualizar</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div><!-- /panel-questionarios -->
+
+</div><!-- /app -->
+
+<div class="toast" id="toast"></div>
+
+<script>
+const ADMIN_PASS = 'admin';
+const SB_URL = 'https://jngyyterkatblntpsjbm.supabase.co';
+const SB_KEY = 'sb_publishable_30rUV3wLjGCDd4DggNYePQ_CwkdB1br';
+
+let sb = null;
+let viewerRows = [], viewerIdx = 0, viewerSec = '', viewerFilterEmpresa = null;
+
+// ── AUTH ──────────────────────────────────────────
+function checkPw() {
+  const val = document.getElementById('pwInput').value;
+  if (val === ADMIN_PASS) {
+    document.getElementById('pw-screen').style.display = 'none';
+    document.getElementById('app').style.display = 'block';
+    init();
+  } else {
+    document.getElementById('pwErr').textContent = 'Senha incorreta.';
+    document.getElementById('pwInput').value = '';
+    setTimeout(() => document.getElementById('pwErr').textContent = '', 2500);
+  }
+}
+document.getElementById('pwInput').addEventListener('keydown', e => { if (e.key === 'Enter') checkPw(); });
+
+// ── INIT ──────────────────────────────────────────
+async function init() {
+  try {
+    sb = window.supabase.createClient(SB_URL, SB_KEY);
+  } catch(e) {
+    console.error('Supabase init error:', e);
+    showToast('Erro ao conectar ao banco de dados.');
+    return;
+  }
+  loadCounts();
+  loadChecklist();
+}
+
+// ── MAIN TABS ─────────────────────────────────────
+function switchMain(tab) {
+  ['respostas','mapa','manual','questionarios'].forEach(t => {
+    document.getElementById('panel-' + t).classList.toggle('active', t === tab);
+    document.getElementById('mtab-' + t).classList.toggle('active', t === tab);
+  });
+}
+
+// ── MODULE TABS ───────────────────────────────────
+let currentMod = 1;
+function switchMod(n) {
+  document.getElementById('mod-' + currentMod).classList.remove('active');
+  document.querySelectorAll('.mod-tab')[currentMod - 1].classList.remove('active');
+  currentMod = n;
+  document.getElementById('mod-' + n).classList.add('active');
+  document.querySelectorAll('.mod-tab')[n - 1].classList.add('active');
+}
+
+// ── ETAPAS ACCORDION ─────────────────────────────
+function toggleEtapa(n) { document.getElementById('etapa-' + n).classList.toggle('open'); }
+function toggleCap(n) { document.getElementById('cap-' + n).classList.toggle('open'); }
+
+// ── COUNTS ───────────────────────────────────────
+async function loadCounts() {
+  const sections = ['pre_diagnostico','direcao','gestores','colaboradores','questionario','rhcp_direcao','rhcp_gestores','rhcp_colaboradores','rs_m1','rs_m2','rs_m3','rs_m4','rs_m5','rs_m6','rs_m7','rs_m8','rs_m10','rs_m11','rs_m12','rs_m13','confirmacao_evento','pre_palestra_executivo','pesquisa_experiencia'];
+  await Promise.all(sections.map(async sec => {
+    try {
+      const { data, error } = await sb.from('responses').select('id').eq('section', sec);
+      if (error) throw error;
+      const n = data ? data.length : 0;
+      const el = document.getElementById('count-' + sec);
+      if (el) {
+        el.textContent = n === 1 ? '1 resposta' : `${n} respostas`;
+        el.classList.remove('loading');
+      }
+    } catch(e) {
+      const el = document.getElementById('count-' + sec);
+      if (el) { el.textContent = 'erro'; el.classList.remove('loading'); }
+    }
+  }));
+}
+
+// ── CHECKLIST PERSISTENCE ─────────────────────────
+const CL_KEY = 'rh_admin_checklists';
+
+function loadChecklist() {
+  const data = JSON.parse(localStorage.getItem(CL_KEY) || '{}');
+  Object.entries(data).forEach(([key, states]) => {
+    const el = document.getElementById('cl-' + key);
+    if (!el) return;
+    const boxes = el.querySelectorAll('input[type=checkbox]');
+    states.forEach((v, i) => { if (boxes[i]) boxes[i].checked = v; });
+  });
+}
+
+function saveCl(key) {
+  const el = document.getElementById('cl-' + key);
+  if (!el) return;
+  const states = [...el.querySelectorAll('input[type=checkbox]')].map(b => b.checked);
+  const data = JSON.parse(localStorage.getItem(CL_KEY) || '{}');
+  data[key] = states;
+  localStorage.setItem(CL_KEY, JSON.stringify(data));
+}
+
+function resetCl(key) {
+  const el = document.getElementById('cl-' + key);
+  if (!el) return;
+  el.querySelectorAll('input[type=checkbox]').forEach(b => b.checked = false);
+  const data = JSON.parse(localStorage.getItem(CL_KEY) || '{}');
+  delete data[key];
+  localStorage.setItem(CL_KEY, JSON.stringify(data));
+}
+
+// ── VIEWER ───────────────────────────────────────
+const SECTION_LABELS = {
+  pre_diagnostico: '📋 Pré-Diagnóstico Organizacional',
+  direcao:         '🏛️ Diagnóstico — Direção',
+  gestores:        '👥 Diagnóstico — Gestores',
+  colaboradores:   '💬 Diagnóstico — Colaboradores',
+  questionario:    '📝 Questionário de Diagnóstico',
+  rhcp_direcao:    '🏛️ Questionário RHCP — Direção',
+  rhcp_gestores:   '👥 Questionário RHCP — Gestores',
+  rhcp_colaboradores: '💬 Questionário RHCP — Colaboradores',
+  rs_m1:  '🔍 R&S — M1 · Briefing Inicial da Vaga',
+  rs_m2:  '🔍 R&S — M2 · Reunião com o Gestor',
+  rs_m3:  '🔍 R&S — M3 · Perfil do Cargo / Persona',
+  rs_m4:  '🔍 R&S — M4 · Proposta Comercial',
+  rs_m5:  '🔍 R&S — M5 · Planejamento da Divulgação',
+  rs_m6:  '🔍 R&S — M6 · Triagem de Currículos',
+  rs_m7:  '🔍 R&S — M7 · Pré-Entrevista',
+  rs_m8:  '🔍 R&S — M8 · Entrevista por Competências',
+  rs_m10: '🔍 R&S — M10 · Relatório do Candidato',
+  rs_m11: '🔍 R&S — M11 · Apresentação dos Finalistas',
+  rs_m12: '🔍 R&S — M12 · Contratação e Formalização',
+  rs_m13: '🔍 R&S — M13 · Integração e Onboarding',
+  confirmacao_evento: '🎉 Confirmações de Presença — Evento',
+  pre_palestra_executivo: '🎤 Pré-Palestra Executivo',
+  pesquisa_experiencia: '📋 Pesquisa de Experiência'
+};
+const PERGUNTAS = {
+  direcao:      ['1. História da empresa','2. Principais objetivos para os próximos anos','3. Maiores desafios enfrentados','4. Comportamentos esperados dos colaboradores','5. O que precisa melhorar na equipe','6. Como gostaria que a empresa fosse reconhecida'],
+  gestores:     ['1. Principal desafio da equipe','2. Conflitos mais frequentes','3. Como ocorre a comunicação entre setores','4. O que mais impacta os resultados','5. Que apoio precisa para liderar melhor'],
+  colaboradores:['1. O que mais gosta de trabalhar nesta empresa','2. O que poderia melhorar','3. Se sente ouvido pela liderança','4. Avaliação da comunicação interna','5. O que faz uma pessoa ter sucesso aqui']
+};
+const QUESTIONARIO_QS = ['Como você avalia o clima organizacional da empresa atualmente?','Como você avalia a comunicação entre líderes e colaboradores?','Como você avalia o comprometimento da equipe?','Quais desafios você percebe com maior frequência?','Os colaboradores compreendem claramente os objetivos da empresa?','Você acredita que os líderes estão preparados para desenvolver suas equipes?','Como você avalia o alinhamento da equipe com os valores da empresa?','Quais são os três maiores desafios da empresa atualmente?','O que você espera que melhore após este trabalho?','Quais comportamentos gostaria de ver mais presentes na equipe?','Quais comportamentos precisam ser reduzidos ou eliminados?','O que você considera inegociável dentro da cultura da empresa?','Se pudesse mudar apenas uma coisa na empresa hoje, o que seria?','Existe alguma informação que você considera importante para a construção deste trabalho?'];
+const PRE_DIAG_SECTIONS = [
+  { title:'Informações da empresa', fields:[['empresa','Empresa'],['responsavel','Responsável'],['cargo','Cargo'],['segmento','Segmento'],['cidade','Cidade'],['anos_empresa','Anos de empresa'],['num_colaboradores','Nº de colaboradores']]},
+  { title:'Sobre a equipe', fields:[['desc_equipe','Descrição da equipe'],['maiores_desafios','Maiores desafios'],['maior_preocupacao','Maior preocupação'],['dific_contratar','Dificuldade para contratar'],['dific_manter','Dificuldade para manter']]},
+  { title:'Liderança', fields:[['tem_lideres','Possui líderes/gestores'],['avaliacao_lideres','Avaliação dos líderes'],['desafio_lideranca','Desafio da liderança']]},
+  { title:'Comunicação', fields:[['avaliacao_comunicacao','Avaliação da comunicação'],['feedback_frequencia','Frequência de feedback']]},
+  { title:'Cultura', fields:[['tem_mvv','Possui MVV'],['colab_conhecem_mvv','Colaboradores conhecem MVV'],['frase_cultura','Cultura em uma frase']]},
+  { title:'Clima organizacional', fields:[['clima','Como colaboradores chegam ao trabalho'],['conflitos','Conflitos frequentes']]},
+  { title:'Desenvolvimento', fields:[['realiza_treinamentos','Realiza treinamentos'],['temas_importantes','Temas mais importantes']]},
+  { title:'Objetivos', fields:[['motivacao','Motivação para buscar RH com Propósito'],['expectativa','Expectativa nos próximos 6 meses'],['prioridade','Problema prioritário'],['sucesso','Definição de sucesso']]},
+  { title:'Encerramento', fields:[['adicional','Informações adicionais'],['como_conheceu','Como conheceu o RH com Propósito']]}
+];
+
+async function openViewer(section) {
+  if (!sb) { try { sb = window.supabase.createClient(SB_URL, SB_KEY); } catch(e) { showToast('Erro de conexão.'); return; } }
+  viewerSec = section;
+  viewerFilterEmpresa = null;
+  showToast('Carregando respostas…');
+  let allRows = [];
+  try {
+    const { data, error } = await sb.from('responses').select('*').eq('section', section).order('created_at', { ascending: true });
+    if (error) throw error;
+    allRows = data || [];
+  } catch(e) { showToast('Erro ao carregar respostas: ' + (e.message || e)); return; }
+  if (!allRows.length) { showToast('Nenhuma resposta encontrada para esta seção.'); document.getElementById('resp-viewer').style.display = 'none'; return; }
+  const empresas = [...new Set(allRows.map(r => (r.company || '').trim()).filter(Boolean))];
+  const hasBlank = allRows.some(r => !(r.company || '').trim());
+  const cfEl = document.getElementById('company-filter');
+  const chips = document.getElementById('cf-chips');
+  chips.innerHTML = '';
+  if (empresas.length > 1 || (empresas.length >= 1 && hasBlank)) {
+    cfEl.style.display = 'flex';
+    const mkChip = (label, val) => {
+      const b = document.createElement('button');
+      b.className = 'cf-btn' + (val === viewerFilterEmpresa ? ' active' : '');
+      b.textContent = label;
+      b.onclick = () => applyFilter(allRows, val, b);
+      chips.appendChild(b);
+    };
+    mkChip('Todas', null);
+    empresas.forEach(e => mkChip(e, e));
+    if (hasBlank) mkChip('Sem empresa', '');
+  } else { cfEl.style.display = 'none'; }
+  viewerRows = allRows;
+  document.getElementById('rv-title').textContent = SECTION_LABELS[section] || section;
+  document.getElementById('resp-viewer').style.display = 'block';
+  viewerIdx = 0;
+  renderResp();
+  document.getElementById('resp-viewer').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+function applyFilter(allRows, empresa, activeBtn) {
+  viewerFilterEmpresa = empresa;
+  document.querySelectorAll('#cf-chips .cf-btn').forEach(b => b.classList.remove('active'));
+  if (activeBtn) activeBtn.classList.add('active');
+  viewerRows = empresa === null ? allRows : allRows.filter(r => (r.company || '').trim() === empresa);
+  viewerIdx = 0; renderResp();
+}
+
+function showResp(idx) { if (idx < 0 || idx >= viewerRows.length) return; viewerIdx = idx; renderResp(); }
+
+function renderResp() {
+  const total = viewerRows.length;
+  document.getElementById('rv-count').textContent = total ? `${viewerIdx + 1} de ${total}` : '0 respostas';
+  document.getElementById('rv-prev').disabled = viewerIdx === 0;
+  document.getElementById('rv-next').disabled = viewerIdx >= total - 1;
+  if (!total) { document.getElementById('rv-body').innerHTML = '<div style="color:rgba(255,255,255,.4);font-size:14px;text-align:center;padding:20px">Nenhuma resposta encontrada.</div>'; return; }
+  document.getElementById('rv-body').innerHTML = buildCard(viewerRows[viewerIdx], viewerSec);
+}
+
+function buildCard(row, section) {
+  const nome = row.nome || '—'; const cargo = row.cargo_setor || '—';
+  const data = row.data_resposta || (row.created_at || '').split('T')[0] || '—'; const empresa = row.company || '';
+  let html = `<div class="rv-respondent"><div class="rv-nome">${esc(nome)}</div><div class="rv-meta">${esc(cargo)}${empresa ? ' · ' + esc(empresa) : ''}${data ? ' · ' + data : ''}</div></div>`;
+  if (section === 'pre_diagnostico') {
+    let d = {}; try { d = JSON.parse(row.r1 || '{}'); } catch {}
+    PRE_DIAG_SECTIONS.forEach(sec => {
+      html += `<div class="rv-section-sep">${esc(sec.title)}</div>`;
+      sec.fields.forEach(([key, label]) => { const val = d[key]; if (val) html += `<div class="rv-q"><div class="rv-q-label">${esc(label)}</div><div class="rv-q-ans">${esc(String(val))}</div></div>`; });
+    });
+  } else if (section === 'questionario') {
+    let d = {}; try { d = JSON.parse(row.r1 || '{}'); } catch {}
+    QUESTIONARIO_QS.forEach((q, i) => { const val = d[`q${i+1}`]; if (val) html += `<div class="rv-q"><div class="rv-q-label">${i+1}. ${esc(q)}</div><div class="rv-q-ans">${esc(String(val))}</div></div>`; });
+  } else if (section.startsWith('rhcp_')) {
+    let d = {}; try { d = JSON.parse(row.r1 || '{}'); } catch {}
+    for (let i = 1; i <= 10; i++) {
+      const obj = d[`q${i}_obj`]; const subj = d[`q${i}_subj`];
+      if (obj || subj) {
+        html += `<div class="rv-section-sep">Questão ${i}</div>`;
+        if (obj)  html += `<div class="rv-q"><div class="rv-q-label">Objetiva</div><div class="rv-q-ans">${esc(obj)}</div></div>`;
+        if (subj) html += `<div class="rv-q"><div class="rv-q-label">Subjetiva</div><div class="rv-q-ans">${esc(subj)}</div></div>`;
+      }
+    }
+  } else if (section.startsWith('rs_')) {
+    let d = {}; try { d = JSON.parse(row.r1 || '{}'); } catch {}
+    Object.entries(d).forEach(([key, val]) => {
+      if (val) {
+        const label = key.replace(/^m\d+-/, '').replace(/_/g, ' ');
+        html += `<div class="rv-q"><div class="rv-q-label">${esc(label)}</div><div class="rv-q-ans">${esc(String(val))}</div></div>`;
+      }
+    });
+  } else if (section === 'confirmacao_evento') {
+    let d = {}; try { d = JSON.parse(row.r1 || '{}'); } catch {}
+    const map = [['nome','Nome completo'],['setor','Setor'],['participacao','Participação'],['motivo','Motivo da ausência']];
+    map.forEach(([key, label]) => { if (d[key]) html += `<div class="rv-q"><div class="rv-q-label">${esc(label)}</div><div class="rv-q-ans">${esc(String(d[key]))}</div></div>`; });
+  } else if (section === 'pre_palestra_executivo') {
+    let d = {}; try { d = JSON.parse(row.r1 || '{}'); } catch {}
+    const map = [
+      ['diretor','Diretor(a)'],['empresa','Empresa'],['data','Data'],['projeto','Projeto'],
+      ['q1_alternativa','Q1 · Cultura (alternativa)'],['q1_texto','Q1 · Cultura (detalhe)'],
+      ['q2_alternativas','Q2 · Comportamentos a fortalecer'],['q2_texto','Q2 · Complemento'],
+      ['q3_alternativa','Q3 · Principal desafio'],['q3_texto','Q3 · Detalhe'],
+      ['q4_alternativas','Q4 · O que não compreendem'],['q4_texto','Q4 · Complemento'],
+      ['q5_alternativas','Q5 · Inegociáveis'],['q5_texto','Q5 · Complemento'],
+      ['q6_resposta','Q6 · Situação interna'],['q6_texto','Q6 · Descrição'],
+      ['q7_alternativas','Q7 · Resultado esperado'],['q7_texto','Q7 · Complemento'],
+      ['q8_mensagem','Q8 · Mensagem única'],
+      ['atitude1','Atitude 1'],['atitude2','Atitude 2'],['atitude3','Atitude 3'],
+    ];
+    map.forEach(([key, label]) => { if (d[key]) html += `<div class="rv-q"><div class="rv-q-label">${esc(label)}</div><div class="rv-q-ans">${esc(String(d[key]))}</div></div>`; });
+  } else if (section === 'pesquisa_experiencia') {
+    let d = {}; try { d = JSON.parse(row.r1 || '{}'); } catch {}
+    const map = [
+      ['empresa','Empresa'],['nome','Nome'],['cargo','Cargo / Setor'],
+      ['q1_avaliacao','Q1 · Avaliação geral'],
+      ['q2_organizacao','Q2 · Organização (1-5)'],
+      ['q3_conteudo','Q3 · Conteúdo fez sentido'],
+      ['q4_envolvimento','Q4 · Envolvimento dos colaboradores'],
+      ['q5_valor','Q5 · O que gerou valor'],
+      ['q6_impacto','Q6 · Impacto pós-encontro'],
+      ['q7_melhoria','Q7 · Sugestões de melhoria'],
+      ['q8_nps','Q8 · NPS (0-10)'],
+      ['q9_frase','Q9 · Frase sobre a experiência'],
+    ];
+    map.forEach(([key, label]) => { if (d[key] !== undefined && d[key] !== '') html += `<div class="rv-q"><div class="rv-q-label">${esc(label)}</div><div class="rv-q-ans">${esc(String(d[key]))}</div></div>`; });
+  } else {
+    const pergs = PERGUNTAS[section] || []; const rs = [row.r1, row.r2, row.r3, row.r4, row.r5, row.r6];
+    pergs.forEach((label, i) => { if (rs[i]) html += `<div class="rv-q"><div class="rv-q-label">${esc(label)}</div><div class="rv-q-ans">${esc(rs[i])}</div></div>`; });
+  }
+  return html;
+}
+
+function gerarPDF() {
+  const row = viewerRows[viewerIdx];
+  if (!row) return;
+  const sectionLabel = (SECTION_LABELS[viewerSec] || viewerSec).replace(/[\u{1F300}-\u{1FFFF}]/gu, '').trim();
+  const cardHtml = buildCard(row, viewerSec);
+  const dataHoje = new Date().toLocaleDateString('pt-BR', { day: '2-digit', month: 'long', year: 'numeric' });
+
+  const html = `<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>${sectionLabel}</title>
+<style>
+@page { margin: 18mm 22mm; }
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Segoe UI', Arial, sans-serif; background: #fff; color: #1A1A1A; font-size: 11pt; line-height: 1.5; }
+
+.pdf-header { background: #0A1C12; color: #fff; padding: 22px 28px 18px; margin-bottom: 26px; border-radius: 8px; }
+.pdf-tag { font-size: 7.5pt; font-weight: 700; letter-spacing: 2.5px; text-transform: uppercase; color: #C89B3C; margin-bottom: 7px; }
+.pdf-title { font-size: 16pt; font-weight: 800; color: #fff; line-height: 1.15; }
+.pdf-date { font-size: 8pt; color: rgba(255,255,255,.5); margin-top: 6px; }
+
+.rv-respondent { background: #F7F5F0; border-left: 4px solid #C89B3C; padding: 13px 18px; margin-bottom: 22px; border-radius: 0 6px 6px 0; display: block; }
+.rv-nome { font-size: 13pt; font-weight: 700; color: #0A1C12; margin-bottom: 3px; }
+.rv-meta { font-size: 8.5pt; color: #6B6B6B; }
+
+.rv-section-sep { font-size: 7.5pt; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: #1A5C45; border-bottom: 1.5px solid #E0DDD8; padding-bottom: 5px; margin: 20px 0 11px; }
+
+.rv-q { margin-bottom: 15px; }
+.rv-q-label { font-size: 7.5pt; font-weight: 700; color: #8A8A8A; text-transform: uppercase; letter-spacing: .6px; margin-bottom: 4px; }
+.rv-q-ans { font-size: 10.5pt; color: #1A1A1A; line-height: 1.55; border-left: 2px solid #E0DDD8; padding-left: 11px; }
+
+.pdf-footer { border-top: 1px solid #E0DDD8; padding-top: 10px; margin-top: 30px; display: flex; justify-content: space-between; font-size: 7.5pt; color: #AAAAAA; }
+
+@media print {
+  body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .pdf-header { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .rv-respondent { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+}
+</style>
+</head>
+<body>
+<div class="pdf-header">
+  <div class="pdf-tag">RH com Propósito</div>
+  <div class="pdf-title">${sectionLabel}</div>
+  <div class="pdf-date">Gerado em ${dataHoje}</div>
+</div>
+${cardHtml}
+<div class="pdf-footer">
+  <span>RH com Propósito · Cristiele Rodrigues</span>
+  <span>Documento gerado em ${dataHoje}</span>
+</div>
+<script>window.onload = () => { window.print(); };<\/script>
+</body>
+</html>`;
+
+  const win = window.open('', '_blank');
+  if (!win) { showToast('Permita pop-ups para gerar o PDF.'); return; }
+  win.document.write(html);
+  win.document.close();
+}
+
+function closeViewer() { document.getElementById('resp-viewer').style.display = 'none'; viewerRows = []; viewerIdx = 0; }
+function esc(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>'); }
+function showToast(msg) { const t = document.getElementById('toast'); t.textContent = msg; t.classList.add('show'); setTimeout(() => t.classList.remove('show'), 2500); }
+</script>
+</body>
+</html>

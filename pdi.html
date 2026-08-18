@@ -6,10 +6,6 @@
 <title>PDI — Plano de Desenvolvimento Individual | RH com Propósito</title>
 <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700;900&family=Playfair+Display:ital,wght@0,700;1,400&display=swap" rel="stylesheet">
 
-<script>
-  const WEB3FORMS_KEY = 'SUA_CHAVE_AQUI'; // ← cole sua chave aqui (mesma do outro questionário)
-</script>
-
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
@@ -284,20 +280,6 @@ body::before{
 .thanks-brand{display:inline-flex;align-items:center;justify-content:center;padding:16px 32px;background:var(--g-dark);border-radius:12px}
 .thanks-brand svg{height:52px;width:auto}
 
-/* ─── SETUP BANNER ──────────────────────── */
-.setup-banner{
-  position:fixed;bottom:0;left:0;right:0;z-index:200;
-  background:var(--g-dark);border-top:3px solid var(--gold);
-  padding:14px 28px;display:none;align-items:center;justify-content:space-between;gap:20px;
-  flex-wrap:wrap;
-}
-.setup-banner-text{display:flex;flex-direction:column;gap:3px}
-.setup-banner-text strong{font-size:13px;color:var(--white)}
-.setup-banner-text span{font-size:12px;color:rgba(255,255,255,.55)}
-.setup-banner-actions{display:flex;align-items:center;gap:10px}
-.btn-setup{padding:9px 18px;border-radius:6px;border:none;cursor:pointer;background:var(--gold);color:white;font-size:12px;font-weight:700;letter-spacing:.5px}
-.btn-dismiss{width:28px;height:28px;border-radius:50%;border:none;cursor:pointer;background:rgba(255,255,255,.1);color:rgba(255,255,255,.5);font-size:14px;display:flex;align-items:center;justify-content:center}
-
 /* ─── MODAL ─────────────────────────────── */
 .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:300;display:none;align-items:center;justify-content:center;padding:20px}
 .modal-overlay.show{display:flex}
@@ -316,13 +298,6 @@ body::before{
 .modal-input-row input{flex:1;border:1.5px solid #D8EDE4;border-radius:6px;padding:10px 14px;font-size:13px;font-family:'Lato',sans-serif;outline:none}
 .modal-input-row input:focus{border-color:var(--g-mid)}
 .modal-input-row button{padding:10px 18px;border-radius:6px;border:none;cursor:pointer;background:var(--g-dark);color:white;font-size:13px;font-weight:700;white-space:nowrap}
-
-/* ─── SEND OVERLAY ──────────────────────── */
-.send-overlay{position:fixed;inset:0;background:rgba(15,31,24,.85);z-index:400;display:none;flex-direction:column;align-items:center;justify-content:center;gap:20px}
-.send-overlay.show{display:flex}
-.send-spinner{width:48px;height:48px;border-radius:50%;border:3px solid rgba(200,155,60,.2);border-top-color:var(--gold);animation:spin 1s linear infinite}
-@keyframes spin{to{transform:rotate(360deg)}}
-.send-text{color:rgba(255,255,255,.7);font-size:14px;letter-spacing:.5px}
 
 /* ─── TOASTS ────────────────────────────── */
 .toast{
@@ -849,8 +824,11 @@ body::before{
           <button class="btn btn-start" style="width:auto;padding:14px 32px;font-size:13px;background:var(--g-pale);color:var(--g-dark);border:1.5px solid var(--g-light);box-shadow:none" onclick="printAnswers()">
             🖨️ &nbsp;Imprimir / Salvar PDI
           </button>
-          <button id="mailtoFallbackBtn" class="btn btn-start" style="width:auto;padding:14px 32px;font-size:13px;display:none" onclick="openMailto()">
+          <button class="btn btn-start" style="width:auto;padding:14px 32px;font-size:13px" onclick="openMailto()">
             📧 &nbsp;Enviar por email
+          </button>
+          <button class="btn btn-start" style="width:auto;padding:14px 32px;font-size:13px;background:var(--g-pale);color:var(--g-dark);border:1.5px solid var(--g-light);box-shadow:none" onclick="downloadAnswers()">
+            ⬇️ &nbsp;Baixar respostas (.txt)
           </button>
         </div>
       </div>
@@ -859,65 +837,13 @@ body::before{
 
 </div><!-- /container -->
 
-<!-- ─── SETUP BANNER ─────────────────────── -->
-<div class="setup-banner" id="setupBanner">
-  <div class="setup-banner-text">
-    <strong>⚙️ Configuração necessária — Envio de email não ativado</strong>
-    <span>Clique em "Como ativar" para receber os PDIs em cristiele_rodrigues@yahoo.com.br</span>
-  </div>
-  <div class="setup-banner-actions">
-    <button class="btn-setup" onclick="openSetupModal()">Como ativar →</button>
-    <button class="btn-dismiss" onclick="document.getElementById('setupBanner').style.display='none'">✕</button>
-  </div>
-</div>
-
-<!-- ─── SETUP MODAL ──────────────────────── -->
-<div class="modal-overlay" id="setupModal">
-  <div class="modal-box">
-    <div class="modal-header">
-      <button class="modal-close-btn" onclick="closeSetupModal()">✕</button>
-      <div class="modal-eyebrow">Configuração — 1 minuto</div>
-      <div class="modal-title">Ativar envio de email</div>
-    </div>
-    <div class="modal-body">
-      <div class="modal-steps">
-        <div class="modal-step">
-          <div class="modal-step-num">1</div>
-          <div class="modal-step-text">Acesse <a href="https://web3forms.com" target="_blank">web3forms.com</a> e informe o email <strong>cristiele_rodrigues@yahoo.com.br</strong></div>
-        </div>
-        <div class="modal-step">
-          <div class="modal-step-num">2</div>
-          <div class="modal-step-text">Confirme o link que chegará no email para obter sua chave de acesso</div>
-        </div>
-        <div class="modal-step">
-          <div class="modal-step-num">3</div>
-          <div class="modal-step-text">Cole a chave abaixo e clique em Salvar</div>
-        </div>
-      </div>
-      <div class="modal-input-row">
-        <input type="text" id="keyInput" placeholder="Cole sua chave aqui…">
-        <button onclick="saveKey()">Salvar</button>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- ─── SEND OVERLAY ─────────────────────── -->
-<div class="send-overlay" id="sendOverlay">
-  <div class="send-spinner"></div>
-  <div class="send-text">Enviando PDI…</div>
-</div>
-
 <!-- ─── TOASTS ────────────────────────────── -->
 <div class="toast toast-success" id="toastSuccess"></div>
 <div class="toast toast-error" id="toastError"></div>
 
 <script>
 // ─── CONFIG ──────────────────────────────
-const DEST_EMAIL = 'cristiele_rodrigues@yahoo.com.br';
-let activeKey = (typeof WEB3FORMS_KEY !== 'undefined' && WEB3FORMS_KEY !== 'SUA_CHAVE_AQUI')
-  ? WEB3FORMS_KEY
-  : (localStorage.getItem('w3f_key') || '');
+const DEST_EMAIL = 'eu@brennooliver.com.br';
 
 // ─── STATE ───────────────────────────────
 let current = 0;
@@ -962,10 +888,6 @@ function init() {
   buildIndicadores();
   buildResultados();
   updateUI();
-
-  if (!activeKey) {
-    document.getElementById('setupBanner').style.display = 'flex';
-  }
 }
 
 function buildDots() {
@@ -1055,10 +977,6 @@ function showPhase(n) {
   window.scrollTo({top: 0, behavior: 'smooth'});
   current = n;
   updateUI();
-  if (n === 10) {
-    const btn = document.getElementById('mailtoFallbackBtn');
-    if (btn) btn.style.display = (!activeKey) ? 'inline-flex' : 'none';
-  }
 }
 
 function startPDI() {
@@ -1187,116 +1105,9 @@ function finish() {
 }
 
 // ─── EMAIL SEND ───────────────────────────
-async function sendAndAdvance() {
-  if (!activeKey) {
-    showPhase(10);
-    return;
-  }
-
-  const overlay = document.getElementById('sendOverlay');
-  overlay.classList.add('show');
-
-  const dataFmt = answers.data ? new Date(answers.data + 'T12:00:00').toLocaleDateString('pt-BR') : '—';
-
-  const planoRows = answers.plano.filter(r => r.comp || r.acao).map((r, i) => `
-    <tr>
-      <td style="padding:8px 12px;border-bottom:1px solid #e8f5ee;font-size:12px;color:#999;text-align:center">${i+1}</td>
-      <td style="padding:8px 12px;border-bottom:1px solid #e8f5ee;font-size:13px;color:#3d3d3d">${r.comp||'—'}</td>
-      <td style="padding:8px 12px;border-bottom:1px solid #e8f5ee;font-size:13px;color:#3d3d3d">${r.acao||'—'}</td>
-      <td style="padding:8px 12px;border-bottom:1px solid #e8f5ee;font-size:13px;color:#3d3d3d">${r.responsavel||'—'}</td>
-      <td style="padding:8px 12px;border-bottom:1px solid #e8f5ee;font-size:13px;color:#3d3d3d">${r.prazo||'—'}</td>
-    </tr>`).join('');
-
-  const row = (label, val) => `
-    <tr>
-      <td style="padding:12px 16px;border-bottom:1px solid #e8f5ee;font-size:11px;font-weight:700;letter-spacing:1px;color:#C89B3C;text-transform:uppercase;vertical-align:top;width:30%">${label}</td>
-      <td style="padding:12px 16px;border-bottom:1px solid #e8f5ee;font-size:13px;color:#3d3d3d;line-height:1.7;vertical-align:top">${(val||'—').replace(/\n/g,'<br>')}</td>
-    </tr>`;
-
-  const htmlBody = `<div style="font-family:Arial,sans-serif;max-width:720px;margin:0 auto">
-  <div style="background:#1A5C45;padding:28px 32px">
-    <div style="font-size:9px;font-weight:700;letter-spacing:3px;color:#C89B3C;margin-bottom:8px">RH COM PROPÓSITO</div>
-    <div style="font-size:20px;font-weight:700;color:white">PDI — Plano de Desenvolvimento Individual</div>
-    <div style="font-size:12px;color:rgba(255,255,255,.5);margin-top:4px">Programa Desenvolver com Propósito</div>
-  </div>
-  <div style="background:#C89B3C;height:3px"></div>
-  <table style="width:100%;border-collapse:collapse;background:#F2FAF6">
-    <tr>
-      <td style="padding:10px 20px;font-size:12px;color:#3d3d3d"><b>Colaborador:</b> ${answers.nome||'—'}</td>
-      <td style="padding:10px 10px;font-size:12px;color:#3d3d3d"><b>Cargo:</b> ${answers.cargo||'—'}</td>
-    </tr>
-    <tr>
-      <td style="padding:10px 20px;font-size:12px;color:#3d3d3d"><b>Setor:</b> ${answers.setor||'—'}</td>
-      <td style="padding:10px 10px;font-size:12px;color:#3d3d3d"><b>Líder:</b> ${answers.lider||'—'}</td>
-    </tr>
-    <tr>
-      <td colspan="2" style="padding:10px 20px;font-size:12px;color:#3d3d3d"><b>Data:</b> ${dataFmt}</td>
-    </tr>
-  </table>
-  <table style="width:100%;border-collapse:collapse;background:white">
-    ${row('Pontos fortes', answers.pontos_fortes)}
-    ${row('Oportunidades', answers.oportunidades)}
-    ${row('Competência 1', answers.comp1)}
-    ${row('Competência 2', answers.comp2)}
-    ${row('Competência 3', answers.comp3)}
-    ${row('Objetivo 1', (answers.obj1_titulo ? answers.obj1_titulo + '\n' : '') + answers.obj1_desc)}
-    ${row('Objetivo 2', (answers.obj2_titulo ? answers.obj2_titulo + '\n' : '') + answers.obj2_desc)}
-    ${row('Objetivo 3', (answers.obj3_titulo ? answers.obj3_titulo + '\n' : '') + answers.obj3_desc)}
-    ${row('Indicadores', answers.indicadores.join(', ') + (answers.ind_outros ? '; ' + answers.ind_outros : ''))}
-    ${row('1ª Revisão', [answers.rev1_data, answers.rev1_evolucoes, answers.rev1_ajustes].filter(Boolean).join('\n'))}
-    ${row('2ª Revisão', [answers.rev2_data, answers.rev2_evolucoes, answers.rev2_ajustes].filter(Boolean).join('\n'))}
-    ${row('3ª Revisão', [answers.rev3_data, answers.rev3_evolucoes, answers.rev3_ajustes].filter(Boolean).join('\n'))}
-    ${row('Resultado final', answers.resultado)}
-  </table>
-  ${planoRows ? `
-  <div style="background:#F2FAF6;padding:12px 16px;font-size:11px;font-weight:700;letter-spacing:1px;color:#1A5C45;text-transform:uppercase">Plano de Ação</div>
-  <table style="width:100%;border-collapse:collapse;background:white">
-    <tr>
-      <th style="padding:8px 12px;background:#1A5C45;color:white;font-size:10px;text-transform:uppercase;text-align:left">#</th>
-      <th style="padding:8px 12px;background:#1A5C45;color:white;font-size:10px;text-transform:uppercase;text-align:left">Competência</th>
-      <th style="padding:8px 12px;background:#1A5C45;color:white;font-size:10px;text-transform:uppercase;text-align:left">Ação</th>
-      <th style="padding:8px 12px;background:#1A5C45;color:white;font-size:10px;text-transform:uppercase;text-align:left">Responsável</th>
-      <th style="padding:8px 12px;background:#1A5C45;color:white;font-size:10px;text-transform:uppercase;text-align:left">Prazo</th>
-    </tr>
-    ${planoRows}
-  </table>` : ''}
-  <div style="background:#1A5C45;padding:14px 32px;text-align:center">
-    <span style="font-size:11px;color:rgba(255,255,255,.4)">RH com Propósito — PDI — Programa Desenvolver com Propósito</span>
-  </div>
-</div>`;
-
-  const payload = {
-    access_key: activeKey,
-    subject: `[RH com Propósito] PDI — ${answers.nome||'Colaborador'} (${answers.cargo||''})`,
-    from_name: 'PDI RH com Propósito',
-    to: DEST_EMAIL,
-    message: buildPlainText(),
-    html: htmlBody,
-    'Colaborador': answers.nome||'—',
-    'Cargo': answers.cargo||'—',
-    'Setor': answers.setor||'—',
-    'Líder': answers.lider||'—',
-    'Data': dataFmt,
-    'Resultado': answers.resultado||'—',
-  };
-
-  try {
-    const res = await fetch('https://api.web3forms.com/submit', {
-      method:'POST',
-      headers:{'Content-Type':'application/json','Accept':'application/json'},
-      body: JSON.stringify(payload),
-    });
-    const json = await res.json();
-    overlay.classList.remove('show');
-    if (json.success) {
-      showPhase(10);
-      showToast('success', `✓ &nbsp;PDI enviado para ${DEST_EMAIL}`);
-    } else throw new Error(json.message);
-  } catch(err) {
-    overlay.classList.remove('show');
-    showToast('error', '✕ &nbsp;Falha no envio. Use o botão de email na próxima tela.');
-    setTimeout(() => showPhase(10), 2000);
-  }
+function sendAndAdvance() {
+  showPhase(10);
+  openMailto();
 }
 
 function buildPlainText() {
@@ -1348,28 +1159,52 @@ function buildPlainText() {
   return lines.join('\n');
 }
 
-function openMailto() {
-  const subject = encodeURIComponent(`[RH com Propósito] PDI — ${answers.nome||'Colaborador'}`);
-  const body = encodeURIComponent(buildPlainText());
-  window.open(`mailto:${DEST_EMAIL}?subject=${subject}&body=${body}`);
+async function openMailto() {
+  const key = localStorage.getItem('w3f_key');
+  const subject = `[RH com Propósito] PDI — ${answers.nome||'Colaborador'}`;
+  const body = buildPlainText();
+
+  if (!key) {
+    // fallback: open email client
+    window.open(`mailto:${DEST_EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`);
+    return;
+  }
+
+  const btn = document.querySelector('button[onclick="openMailto()"]');
+  if (btn) { btn.disabled = true; btn.textContent = '⏳  Enviando…'; }
+
+  try {
+    const res = await fetch('https://api.web3forms.com/submit', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+      body: JSON.stringify({ access_key: key, subject, message: body, from_name: 'PDI — RH com Propósito' })
+    });
+    const data = await res.json();
+    if (data.success) {
+      showToast('success', '✅ PDI enviado com sucesso!');
+      if (btn) { btn.textContent = '✅  Enviado!'; }
+    } else {
+      throw new Error(data.message || 'Erro desconhecido');
+    }
+  } catch (err) {
+    showToast('error', `❌ Falha ao enviar: ${err.message}`);
+    if (btn) { btn.disabled = false; btn.innerHTML = '📧 &nbsp;Enviar por email'; }
+  }
 }
 
 function printAnswers() { window.print(); }
 
-// ─── MODAL / TOAST ───────────────────────
-function openSetupModal()  { document.getElementById('setupModal').classList.add('show'); }
-function closeSetupModal() { document.getElementById('setupModal').classList.remove('show'); }
-
-function saveKey() {
-  const k = document.getElementById('keyInput').value.trim();
-  if (!k || k.length < 8) { alert('Por favor, cole uma chave válida.'); return; }
-  localStorage.setItem('w3f_key', k);
-  activeKey = k;
-  document.getElementById('setupBanner').style.display = 'none';
-  closeSetupModal();
-  showToast('success', '✓ Chave salva! O envio de email está ativo.');
+function downloadAnswers() {
+  const nome = (answers.nome || 'colaborador').replace(/\s+/g, '_');
+  const filename = `PDI_${nome}.txt`;
+  const blob = new Blob([buildPlainText()], { type: 'text/plain;charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = filename; a.click();
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
 }
 
+// ─── TOAST ───────────────────────────────
 function showToast(type, msg) {
   const id = type === 'success' ? 'toastSuccess' : 'toastError';
   const el = document.getElementById(id);

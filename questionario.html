@@ -14,6 +14,7 @@
 <script>
   const WEB3FORMS_KEY = 'SUA_CHAVE_AQUI'; // ← cole sua chave aqui
 </script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,300;0,400;0,700;0,900;1,300;1,400&family=Playfair+Display:ital,wght@0,700;0,900;1,700&display=swap" rel="stylesheet">
@@ -1511,9 +1512,31 @@ function finish() {
 }
 
 // ─── EMAIL SEND ───────────────────────────
+const SB_URL_Q = 'https://jngyyterkatblntpsjbm.supabase.co';
+const SB_KEY_Q = 'sb_publishable_30rUV3wLjGCDd4DggNYePQ_CwkdB1br';
+function getSbQ() {
+  if (!window.supabase) return null;
+  return window.supabase.createClient(SB_URL_Q, SB_KEY_Q);
+}
+async function saveToSupabaseQ() {
+  try {
+    const sb = getSbQ();
+    if (!sb) return;
+    await sb.from('responses').insert({
+      section: 'questionario',
+      company: '',
+      nome: answers.nome || '',
+      cargo_setor: answers.cargo || '',
+      data_resposta: answers.data || new Date().toISOString().split('T')[0],
+      r1: JSON.stringify(answers)
+    });
+  } catch(_) {}
+}
+
 async function sendAndAdvance() {
   if (!activeKey || activeKey === 'SUA_CHAVE_AQUI') {
-    // No key configured — go to thank-you page, which will show the mailto fallback button
+    // No key configured — save to Supabase and go to thank-you page
+    saveToSupabaseQ();
     showPhase(15);
     return;
   }
@@ -1578,6 +1601,7 @@ async function sendAndAdvance() {
     const json = await res.json();
     overlay.classList.remove('show');
     if (json.success) {
+      saveToSupabaseQ();
       showPhase(15);
       showToast('success', `✓ &nbsp;Respostas enviadas para ${DEST_EMAIL}`);
     } else {

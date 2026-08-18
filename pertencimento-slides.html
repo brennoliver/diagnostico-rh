@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Construindo Pertencimento — Apresentação</title>
+<link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700;900&family=Playfair+Display:ital,wght@0,600;0,700;1,500;1,600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --green:#1A5C45;--green-mid:#2E7D58;
+  --gold:#C89B3C;--gold-light:#E8C96A;
+  --dark:#07101A;
+  --blue:#1A3A5C;--blue-mid:#2E5F8A;--blue-light:#4A8AB5;
+  --teal:#1A4A5C;--teal-mid:#2E7A8A;
+  --purple:#2E1A5C;--purple-mid:#5A3A9A;
+  --rose:#5C1A2E;--rose-mid:#8A2E50;
+}
+html,body{height:100%;overflow:hidden;font-family:'Lato',sans-serif}
+body{background:var(--dark);color:white;user-select:none}
+
+/* ── PROGRESS ── */
+#progress-bar{position:fixed;top:0;left:0;right:0;height:3px;z-index:200;background:rgba(255,255,255,.08)}
+#progress-fill{height:100%;background:linear-gradient(90deg,var(--blue-mid),var(--gold));transition:width .4s ease;width:0%}
+
+/* ── TOP NAV ── */
+#topnav{
+  position:fixed;top:3px;left:0;right:0;height:50px;z-index:100;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 24px;
+  background:rgba(7,16,26,.92);backdrop-filter:blur(10px);
+  border-bottom:1px solid rgba(74,138,181,.15);
+}
+.nav-brand{display:flex;align-items:center;gap:10px}
+.nav-logo{height:32px;width:auto}
+.nav-div{width:1px;height:20px;background:rgba(74,138,181,.25)}
+.nav-title{font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,.4);font-weight:300}
+.nav-right{display:flex;align-items:center;gap:10px}
+.nav-back{
+  display:inline-flex;align-items:center;gap:5px;padding:6px 12px;
+  border-radius:7px;border:1px solid rgba(255,255,255,.12);
+  background:rgba(255,255,255,.05);color:rgba(255,255,255,.5);
+  font-size:11px;font-weight:700;cursor:pointer;text-decoration:none;
+  transition:all .2s;letter-spacing:.5px;
+}
+.nav-back:hover{background:rgba(255,255,255,.1);color:white}
+#slide-counter{font-size:11px;color:rgba(255,255,255,.35);letter-spacing:.5px;font-weight:700}
+
+/* ── SLIDES ── */
+#slides-wrap{position:fixed;top:53px;left:0;right:0;bottom:0;overflow:hidden}
+.slide{
+  position:absolute;inset:0;
+  display:none;align-items:center;justify-content:center;
+  padding:32px 24px;overflow:hidden;
+  animation:fadeSlide .35s ease both;
+}
+.slide.active{display:flex}
+@keyframes fadeSlide{
+  from{opacity:0;transform:translateY(18px)}
+  to{opacity:1;transform:translateY(0)}
+}
+
+/* ── THEMES ── */
+.s-dark{background:linear-gradient(145deg,#040C14 0%,#0B1E30 55%,#060E1A 100%)}
+.s-blue{background:linear-gradient(145deg,#050E1A,#0D2440,#08121E)}
+.s-teal{background:linear-gradient(145deg,#050E12,#0D2830,#06101A)}
+.s-purple{background:linear-gradient(145deg,#0A060E,#1A103A,#080614)}
+.s-rose{background:linear-gradient(145deg,#0E0508,#2A0D1C,#0A0508)}
+.s-green{background:linear-gradient(145deg,#050E08,#0D2418,#060E0A)}
+.s-close{background:radial-gradient(ellipse 80% 80% at 50% 50%,#0D1E35,#040C14)}
+
+/* ── INNER ── */
+.slide-inner{width:100%;max-width:860px;margin:0 auto}
+.slide-inner.center{text-align:center}
+
+/* ── COMMON ── */
+.eyebrow{font-size:10px;font-weight:700;letter-spacing:3px;text-transform:uppercase;margin-bottom:12px}
+.c-blue{color:#7EAECF}
+.c-teal{color:#7ECFCF}
+.c-purple{color:#AA7ECF}
+.c-rose{color:#CF7E9E}
+.c-green{color:#7ECFA4}
+.c-gold{color:var(--gold)}
+.c-white{color:rgba(255,255,255,.45)}
+
+.slide-title{font-family:'Playfair Display',serif;font-size:clamp(26px,4.5vw,46px);font-weight:700;line-height:1.15;margin-bottom:8px}
+
+.big-emoji{font-size:clamp(60px,10vw,100px);line-height:1;margin-bottom:20px;filter:drop-shadow(0 4px 24px rgba(0,0,0,.4))}
+.big-emoji.small{font-size:clamp(44px,7vw,72px)}
+
+/* ── COVER ── */
+.cover-kicker{font-size:11px;letter-spacing:4px;text-transform:uppercase;color:#7EAECF;font-weight:700;margin-bottom:20px}
+.cover-title{font-family:'Playfair Display',serif;font-size:clamp(34px,6vw,66px);font-weight:700;color:white;line-height:1.1;margin-bottom:18px}
+.cover-title em{color:var(--gold-light);font-style:italic}
+.cover-desc{font-size:15px;color:rgba(255,255,255,.45);line-height:1.7;max-width:520px;margin:0 auto 36px}
+.pills{display:flex;justify-content:center;gap:8px;flex-wrap:wrap}
+.pill{padding:6px 16px;border-radius:20px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);font-size:11px;font-weight:700;letter-spacing:.5px;color:rgba(255,255,255,.45)}
+
+/* ── OBJETIVO ── */
+.objetivo-box{
+  background:rgba(74,138,181,.08);border:1.5px solid rgba(74,138,181,.25);
+  border-radius:16px;padding:36px 40px;max-width:680px;margin:20px auto 0;
+}
+.objetivo-text{font-family:'Playfair Display',serif;font-size:clamp(16px,2.8vw,22px);color:white;line-height:1.7;font-style:italic}
+.objetivo-text strong{color:#7EAECF;font-style:normal}
+
+/* ── AGENDA CARDS ── */
+.agenda-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin-top:28px}
+.agenda-card{padding:20px 18px;border-radius:14px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);display:flex;gap:14px;align-items:flex-start}
+.agenda-num{width:36px;height:36px;border-radius:10px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-size:18px;font-weight:700}
+.agenda-text .label{font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:4px}
+.agenda-text .title{font-size:14px;font-weight:700;color:white;line-height:1.3}
+
+/* ── MODULE TITLE ── */
+.mod-badge{width:80px;height:80px;border-radius:20px;margin:0 auto 28px;display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-size:36px;font-weight:700}
+
+/* ── CONTENT CARDS ── */
+.content-cards{display:flex;flex-direction:column;gap:10px;margin-top:20px}
+.c-card{padding:16px 20px;border-radius:12px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);display:flex;gap:14px;align-items:flex-start}
+.c-icon{font-size:20px;flex-shrink:0;line-height:1;margin-top:2px}
+.c-body .c-title{font-size:13px;font-weight:900;margin-bottom:4px;letter-spacing:.2px}
+.c-body .c-text{font-size:13px;color:rgba(255,255,255,.55);line-height:1.65}
+
+/* ── ENTREGA BADGE ── */
+.entrega-box{
+  margin-top:18px;padding:16px 20px;border-radius:10px;
+  display:flex;align-items:flex-start;gap:12px;
+  background:rgba(200,155,60,.08);border:1px solid rgba(200,155,60,.22);
+}
+.entrega-label{font-size:10px;font-weight:900;letter-spacing:2px;text-transform:uppercase;color:var(--gold);margin-bottom:4px}
+.entrega-text{font-size:13px;color:rgba(255,255,255,.7);line-height:1.5;font-weight:600}
+
+/* ── BULLET LIST ── */
+.bullet-list{display:flex;flex-direction:column;gap:8px;margin-top:18px}
+.b-item{display:flex;align-items:flex-start;gap:12px;padding:12px 16px;border-radius:10px;background:rgba(255,255,255,.04)}
+.b-dot{flex-shrink:0;width:7px;height:7px;border-radius:50%;margin-top:5px}
+.b-text{font-size:13px;color:rgba(255,255,255,.7);line-height:1.55;font-weight:600}
+
+/* ── CRONOGRAMA ── */
+.crono-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:24px}
+.crono-card{padding:18px 14px;border-radius:12px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);text-align:center}
+.crono-mes{font-size:11px;font-weight:900;letter-spacing:2px;text-transform:uppercase;margin-bottom:8px}
+.crono-desc{font-size:12px;color:rgba(255,255,255,.6);line-height:1.5}
+
+/* ── REFLECTION ── */
+.reflection-box{background:rgba(200,155,60,.08);border:1.5px solid rgba(200,155,60,.25);border-radius:16px;padding:36px 40px;text-align:center;max-width:640px;margin:24px auto 0}
+.refl-label{font-size:10px;font-weight:900;letter-spacing:2.5px;text-transform:uppercase;color:var(--gold);margin-bottom:16px}
+.refl-text{font-family:'Playfair Display',serif;font-size:clamp(17px,3vw,24px);color:white;line-height:1.6;font-style:italic}
+
+/* ── NAV BUTTONS ── */
+.nav-btn{position:fixed;top:50%;transform:translateY(-50%);width:46px;height:46px;border-radius:50%;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.1);color:rgba(255,255,255,.5);font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s;z-index:50}
+.nav-btn:hover{background:rgba(255,255,255,.15);color:white}
+.nav-btn:disabled{opacity:.2;cursor:default}
+#btn-prev{left:14px}
+#btn-next{right:14px}
+
+/* ── DOTS ── */
+#dots-wrap{position:fixed;bottom:16px;left:50%;transform:translateX(-50%);display:flex;gap:5px;z-index:100;background:rgba(7,16,26,.7);backdrop-filter:blur(8px);padding:6px 12px;border-radius:20px;border:1px solid rgba(255,255,255,.07)}
+.dot{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.2);cursor:pointer;transition:all .2s}
+.dot.active{background:var(--gold);width:18px;border-radius:4px}
+
+/* ── HINT ── */
+#hint{position:fixed;bottom:50px;right:20px;font-size:10px;color:rgba(255,255,255,.2);letter-spacing:.5px;display:flex;align-items:center;gap:6px}
+
+@media(max-width:640px){
+  .agenda-grid{grid-template-columns:1fr}
+  .crono-grid{grid-template-columns:repeat(2,1fr)}
+  #btn-prev{left:6px}
+  #btn-next{right:6px}
+  .slide{padding:24px 12px}
+  .objetivo-box,.reflection-box{padding:24px 20px}
+}
+</style>
+</head>
+<body>
+
+<div id="progress-bar"><div id="progress-fill"></div></div>
+
+<div id="topnav">
+  <div class="nav-brand">
+    <svg class="nav-logo" viewBox="0 0 900.76 921.01" xmlns="http://www.w3.org/2000/svg">
+      <path fill="#f8f1eb" d="M403.28,261.57c-.83.35-1.09.02-.54-.67,1.02-4.13,2.26-8.24,3.71-12.35,1.49-4.52,3.22-8.83,5.2-12.93l-.65-.82c.24-1.23,1.85-5.36,3.2-5.22,1.83-4.96,4.4-10.39,7.09-15.12.05-.1.24-.12.46-.12-.19-.15-.36-.3-.42-.49-.18-.55,3.92-7.53,4.61-8.5l1.13-.11c.27-1.56,1.75-3.76,2.97-4.7,1.01-3.45,2.81-6.64,5.42-9.57,2.3-3.73,5.11-6.83,8.43-9.31l.57-1.66c5.75-7.98,12.8-15.04,19.86-21.9,1.48-.74,2.91-1.62,4.27-2.64l-.18-1.03c6.17-4.51,11.89-9.55,17.19-15.13l7.72-10.09,1.12-.53c2.33-2.92,4.78-5.46,7.33-7.64l-.37-.95,23.24-24.44,1.02.04c.38-1.42-.45-1.1-1.51-.67.16.33.35.86.14,1-8.62,5.88-18.3,12.08-27.25,17.47l-.96-.48-1.34,1.34c-7.79,6.07-15.63,12.14-23.51,18.21l-1.8.76c-1.9,2.18-4.09,4.35-6.58,6.49.54.78,0,1.35-.79.85-1,1.48-2.17,2.91-3.51,4.29l-1.11-.2c-1.5,2.32-3.83,4.58-5.98,6.15-.4,1.05-.84,2.11-1.57,2.98-3.46,4.12-6.92,8.26-10.38,12.38-.73.87-1.7,1.49-2.67,2.07-.97,2.09-2.91,5.17-4.72,6.54l-.25,1.4c-3.76,5.69-7.39,11.48-10.89,17.37l-2.01,1.84c-.36,1.84-1.56,4.19-2.86,5.58,1.28.56.44,3.26-.94,3.18-1.85,2.98-3.46,6.13-4.82,9.45l-.42.14c-.16,1.24-.53,2.44-1.1,3.61.5.93-.19,2.16-1.36,1.96-.96,3.06-2.05,6.12-3.27,9.19-1.49,3.97-3.02,7.82-4.61,11.56-.89,4.01-2.53,8.89-4.36,12.67l.72.71c-1.55,5.13-3.8,11.29-5.84,16.27-.85,2.07-1.71,3.83-3.02,5.67-5.94,12.72-20.4,29.32-33.68,34.42-3.48,1.34-7.42.67-10.29-1.5-2.47-1.86-4.21-5.38-3.76-8.86.64-4.89,3.59-8.92,7.68-11.61,6.11-4.02,10.95-9.06,14.23-15.68,7.84-15.78,10.86-44.32,9.25-61.99l-2.72-29.94c-4.06-44.62,14.8-88.21,46.76-118.84,14.62-14.01,31.39-25.61,50.85-31.51,6.81-2.07,13.08-4.44,19.71-6.99,7.23-2.78,14.39-4.88,22.04-6.48,14.1-2.95,27.95-4.98,42.38-6l35.26-2.49c13.92-.98,27.51-1.73,41.2-4.2,6.4-1.16,9-5.09,11.66-3.44.76.47,1.82,1.64,2.02,2.93,1.02,6.42.97,12.63.95,19.24-.06,15.85-1.36,31.14-3.1,46.93-4.46,40.65-15.24,77.61-38.7,111.31-6.59,9.47-13.61,18.07-22.12,25.8-14.44,13.11-31.29,22.39-49.91,28.31-16.44,5.23-33.04,8.41-50.19,10.09l-28.18,2.77c-10.3,1.01-20,3.68-29.83,6.9-5.48,1.79-10.5,4.22-15.32,6.9Z"/>
+      <text style="font-family:Inter-Medium,Inter;font-size:104.57px;font-weight:500;fill:#f8f1eb" transform="translate(16.34 834.11)">COM PROPÓSITO</text>
+      <text style="font-family:MinionConceptRoman-Semibold,'Minion Variable Concept';font-size:620.66px;font-weight:600;fill:#f8f1eb" transform="translate(0 702.57)">RH</text>
+    </svg>
+    <div class="nav-div"></div>
+    <div class="nav-title">Construindo Pertencimento</div>
+  </div>
+  <div class="nav-right">
+    <span id="slide-counter">1 / 14</span>
+    <a class="nav-back" href="diagnostico.html">← Construindo Juntos</a>
+  </div>
+</div>
+
+<div id="slides-wrap">
+
+  <!-- ═══ SLIDE 1 — CAPA ═══ -->
+  <div class="slide s-dark active" id="s1">
+    <div class="slide-inner center">
+      <div class="big-emoji">🤝</div>
+      <div class="cover-kicker">Programa de Engajamento</div>
+      <div class="cover-title">Construindo <em>Pertencimento</em></div>
+      <div class="cover-desc">Um programa para fortalecer o engajamento, o senso de pertencimento e a conexão entre colaboradores e empresa.</div>
+      <div class="pills">
+        <span class="pill">1. Implantação</span>
+        <span class="pill">2. Reconhecimento</span>
+        <span class="pill">3. Pertencimento</span>
+        <span class="pill">4. Aproximação</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ SLIDE 2 — OBJETIVO ═══ -->
+  <div class="slide s-blue" id="s2">
+    <div class="slide-inner center">
+      <div class="big-emoji small">🎯</div>
+      <div class="eyebrow c-blue" style="text-align:center">Objetivo do Programa</div>
+      <div class="objetivo-box">
+        <div class="objetivo-text">
+          Fortalecer o <strong>engajamento</strong>, o senso de <strong>pertencimento</strong> e a conexão entre colaboradores e empresa, criando um ambiente mais <strong>participativo, colaborativo</strong> e alinhado à cultura organizacional.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ SLIDE 3 — VISÃO GERAL ═══ -->
+  <div class="slide s-dark" id="s3">
+    <div class="slide-inner">
+      <div class="eyebrow c-white" style="text-align:center">Estrutura do Programa</div>
+      <div class="slide-title" style="text-align:center;margin-bottom:4px">4 módulos, 6 <em style="color:var(--gold-light)">meses</em></div>
+      <div class="agenda-grid">
+        <div class="agenda-card">
+          <div class="agenda-num" style="color:#7EAECF;background:rgba(126,174,207,.1);border:1px solid rgba(126,174,207,.25)">1</div>
+          <div class="agenda-text">
+            <div class="label" style="color:#7EAECF">Módulo 1 · Mês 1</div>
+            <div class="title">Implantação do Programa Construindo Juntos</div>
+          </div>
+        </div>
+        <div class="agenda-card">
+          <div class="agenda-num" style="color:#7ECFCF;background:rgba(126,207,207,.1);border:1px solid rgba(126,207,207,.25)">2</div>
+          <div class="agenda-text">
+            <div class="label" style="color:#7ECFCF">Módulo 2 · Mês 2</div>
+            <div class="title">Ações de Reconhecimento e Valorização</div>
+          </div>
+        </div>
+        <div class="agenda-card">
+          <div class="agenda-num" style="color:#AA7ECF;background:rgba(170,126,207,.1);border:1px solid rgba(170,126,207,.25)">3</div>
+          <div class="agenda-text">
+            <div class="label" style="color:#AA7ECF">Módulo 3 · Mês 3</div>
+            <div class="title">Criação de Senso de Pertencimento</div>
+          </div>
+        </div>
+        <div class="agenda-card">
+          <div class="agenda-num" style="color:#CF7E9E;background:rgba(207,126,158,.1);border:1px solid rgba(207,126,158,.25)">4</div>
+          <div class="agenda-text">
+            <div class="label" style="color:#CF7E9E">Módulo 4 · Mês 4</div>
+            <div class="title">Aproximação entre Direção e Equipe</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ SLIDE 4 — MÓDULO 1 TÍTULO ═══ -->
+  <div class="slide s-blue" id="s4">
+    <div class="slide-inner center">
+      <div class="big-emoji">🚀</div>
+      <div class="eyebrow c-blue">Módulo 1</div>
+      <div class="slide-title">Implantação do Programa <em style="color:#7EAECF">Construindo Juntos</em></div>
+      <div style="font-size:14px;color:rgba(255,255,255,.4);margin-top:10px">Lançamento, engajamento e abertura dos canais de participação.</div>
+    </div>
+  </div>
+
+  <!-- ═══ SLIDE 5 — MÓDULO 1 ATIVIDADES ═══ -->
+  <div class="slide s-blue" id="s5">
+    <div class="slide-inner">
+      <div class="eyebrow c-blue">Módulo 1 · Implantação</div>
+      <div class="slide-title" style="margin-bottom:4px">O que será <em style="color:#7EAECF">realizado</em></div>
+      <div class="bullet-list">
+        <div class="b-item">
+          <div class="b-dot" style="background:#7EAECF"></div>
+          <div class="b-text">📣 Apresentação do programa para toda a equipe</div>
+        </div>
+        <div class="b-item">
+          <div class="b-dot" style="background:#7EAECF"></div>
+          <div class="b-text">💡 Explicação sobre engajamento, pertencimento e participação</div>
+        </div>
+        <div class="b-item">
+          <div class="b-dot" style="background:#7EAECF"></div>
+          <div class="b-text">🌱 Dinâmica: <em style="font-style:italic;color:rgba(255,255,255,.85)">"A empresa que eu gostaria de trabalhar"</em></div>
+        </div>
+        <div class="b-item">
+          <div class="b-dot" style="background:#7EAECF"></div>
+          <div class="b-text">🔍 Levantamento de oportunidades de melhoria</div>
+        </div>
+        <div class="b-item">
+          <div class="b-dot" style="background:#7EAECF"></div>
+          <div class="b-text">📬 Implantação de caixa de sugestões, mural de ideias e formulário de participação</div>
+        </div>
+      </div>
+      <div class="entrega-box">
+        <div style="font-size:20px">📦</div>
+        <div>
+          <div class="entrega-label">Entrega</div>
+          <div class="entrega-text">Estruturação dos canais de participação dos colaboradores</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ SLIDE 6 — MÓDULO 2 TÍTULO ═══ -->
+  <div class="slide s-teal" id="s6">
+    <div class="slide-inner center">
+      <div class="big-emoji">⭐</div>
+      <div class="eyebrow c-teal">Módulo 2</div>
+      <div class="slide-title">Ações de <em style="color:#7ECFCF">Reconhecimento</em> e Valorização</div>
+      <div style="font-size:14px;color:rgba(255,255,255,.4);margin-top:10px">Mapear o que motiva as pessoas e criar uma cultura de reconhecimento.</div>
+    </div>
+  </div>
+
+  <!-- ═══ SLIDE 7 — MÓDULO 2 ATIVIDADES ═══ -->
+  <div class="slide s-teal" id="s7">
+    <div class="slide-inner">
+      <div class="eyebrow c-teal">Módulo 2 · Reconhecimento</div>
+      <div class="slide-title" style="margin-bottom:4px">O que será <em style="color:#7ECFCF">realizado</em></div>
+      <div class="bullet-list">
+        <div class="b-item">
+          <div class="b-dot" style="background:#7ECFCF"></div>
+          <div class="b-text">💬 Roda de conversa sobre motivação e reconhecimento</div>
+        </div>
+        <div class="b-item">
+          <div class="b-dot" style="background:#7ECFCF"></div>
+          <div class="b-text">🗺️ Mapeamento dos fatores que geram valorização na equipe</div>
+        </div>
+        <div class="b-item">
+          <div class="b-dot" style="background:#7ECFCF"></div>
+          <div class="b-text">🎓 Apresentação sobre reconhecimento e retenção de talentos</div>
+        </div>
+        <div class="b-item">
+          <div class="b-dot" style="background:#7ECFCF"></div>
+          <div class="b-text">🏆 Criação do programa <strong style="color:#7ECFCF">Colaborador Destaque</strong></div>
+        </div>
+        <div class="b-item">
+          <div class="b-dot" style="background:#7ECFCF"></div>
+          <div class="b-text">📌 Implantação de mural de reconhecimento e cartões de agradecimento</div>
+        </div>
+      </div>
+      <div class="entrega-box">
+        <div style="font-size:20px">📦</div>
+        <div>
+          <div class="entrega-label">Entrega</div>
+          <div class="entrega-text">Regulamento e calendário das ações de reconhecimento</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ SLIDE 8 — MÓDULO 3 TÍTULO ═══ -->
+  <div class="slide s-purple" id="s8">
+    <div class="slide-inner center">
+      <div class="big-emoji">🌳</div>
+      <div class="eyebrow c-purple">Módulo 3</div>
+      <div class="slide-title">Criação de Senso de <em style="color:#AA7ECF">Pertencimento</em></div>
+      <div style="font-size:14px;color:rgba(255,255,255,.4);margin-top:10px">Conectar cada colaborador à história, à cultura e ao propósito da empresa.</div>
+    </div>
+  </div>
+
+  <!-- ═══ SLIDE 9 — MÓDULO 3 ATIVIDADES ═══ -->
+  <div class="slide s-purple" id="s9">
+    <div class="slide-inner">
+      <div class="eyebrow c-purple">Módulo 3 · Pertencimento</div>
+      <div class="slide-title" style="margin-bottom:4px">O que será <em style="color:#AA7ECF">realizado</em></div>
+      <div class="bullet-list">
+        <div class="b-item">
+          <div class="b-dot" style="background:#AA7ECF"></div>
+          <div class="b-text">🏢 Apresentação da missão, visão, valores e cultura organizacional</div>
+        </div>
+        <div class="b-item">
+          <div class="b-dot" style="background:#AA7ECF"></div>
+          <div class="b-text">🤲 Dinâmica: <em style="font-style:italic;color:rgba(255,255,255,.85)">"Eu faço parte disso"</em></div>
+        </div>
+        <div class="b-item">
+          <div class="b-dot" style="background:#AA7ECF"></div>
+          <div class="b-text">🔎 Reflexão sobre a contribuição individual para os resultados da empresa</div>
+        </div>
+        <div class="b-item">
+          <div class="b-dot" style="background:#AA7ECF"></div>
+          <div class="b-text">🌳 Construção da <strong style="color:#AA7ECF">Árvore do Pertencimento</strong></div>
+        </div>
+        <div class="b-item">
+          <div class="b-dot" style="background:#AA7ECF"></div>
+          <div class="b-text">🎨 Produção de materiais visuais reforçando a cultura da organização</div>
+        </div>
+      </div>
+      <div class="entrega-box">
+        <div style="font-size:20px">📦</div>
+        <div>
+          <div class="entrega-label">Entrega</div>
+          <div class="entrega-text">Materiais internos para fortalecimento da cultura e pertencimento</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ SLIDE 10 — MÓDULO 4 TÍTULO ═══ -->
+  <div class="slide s-rose" id="s10">
+    <div class="slide-inner center">
+      <div class="big-emoji">☕</div>
+      <div class="eyebrow c-rose">Módulo 4</div>
+      <div class="slide-title">Aproximação entre <em style="color:#CF7E9E">Direção</em> e Equipe</div>
+      <div style="font-size:14px;color:rgba(255,255,255,.4);margin-top:10px">Construir pontes de confiança e compromissos mútuos entre liderança e time.</div>
+    </div>
+  </div>
+
+  <!-- ═══ SLIDE 11 — MÓDULO 4 ATIVIDADES ═══ -->
+  <div class="slide s-rose" id="s11">
+    <div class="slide-inner">
+      <div class="eyebrow c-rose">Módulo 4 · Aproximação</div>
+      <div class="slide-title" style="margin-bottom:4px">O que será <em style="color:#CF7E9E">realizado</em></div>
+      <div class="bullet-list">
+        <div class="b-item">
+          <div class="b-dot" style="background:#CF7E9E"></div>
+          <div class="b-text">🗣️ Realização de roda de conversa entre direção e colaboradores</div>
+        </div>
+        <div class="b-item">
+          <div class="b-dot" style="background:#CF7E9E"></div>
+          <div class="b-text">👂 Escuta ativa das necessidades e expectativas da equipe</div>
+        </div>
+        <div class="b-item">
+          <div class="b-dot" style="background:#CF7E9E"></div>
+          <div class="b-text">🎯 Compartilhamento da visão e objetivos da empresa pela direção</div>
+        </div>
+        <div class="b-item">
+          <div class="b-dot" style="background:#CF7E9E"></div>
+          <div class="b-text">☕ Dinâmica <strong style="color:#CF7E9E">Café com a Direção</strong></div>
+        </div>
+        <div class="b-item">
+          <div class="b-dot" style="background:#CF7E9E"></div>
+          <div class="b-text">🤝 Construção de compromissos mútuos entre liderança e equipe</div>
+        </div>
+      </div>
+      <div class="entrega-box">
+        <div style="font-size:20px">📦</div>
+        <div>
+          <div class="entrega-label">Entrega</div>
+          <div class="entrega-text">Plano de aproximação e fortalecimento da comunicação interna</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ SLIDE 12 — CRONOGRAMA ═══ -->
+  <div class="slide s-dark" id="s12">
+    <div class="slide-inner">
+      <div class="eyebrow c-white" style="text-align:center">Planejamento</div>
+      <div class="slide-title" style="text-align:center;margin-bottom:20px">Cronograma <em style="color:var(--gold-light)">Sugerido</em></div>
+      <div class="crono-grid">
+        <div class="crono-card" style="border-color:rgba(126,174,207,.2)">
+          <div class="crono-mes" style="color:#7EAECF">Mês 1</div>
+          <div class="crono-desc">Diagnóstico e lançamento do Programa Construindo Juntos</div>
+        </div>
+        <div class="crono-card" style="border-color:rgba(126,207,207,.2)">
+          <div class="crono-mes" style="color:#7ECFCF">Mês 2</div>
+          <div class="crono-desc">Reconhecimento e valorização</div>
+        </div>
+        <div class="crono-card" style="border-color:rgba(170,126,207,.2)">
+          <div class="crono-mes" style="color:#AA7ECF">Mês 3</div>
+          <div class="crono-desc">Pertencimento e cultura</div>
+        </div>
+        <div class="crono-card" style="border-color:rgba(207,126,158,.2)">
+          <div class="crono-mes" style="color:#CF7E9E">Mês 4</div>
+          <div class="crono-desc">Aproximação entre direção e equipe</div>
+        </div>
+        <div class="crono-card" style="border-color:rgba(200,155,60,.2)">
+          <div class="crono-mes" style="color:var(--gold)">Mês 5</div>
+          <div class="crono-desc">Avaliação dos resultados</div>
+        </div>
+        <div class="crono-card" style="border-color:rgba(126,207,164,.2)">
+          <div class="crono-mes" style="color:#7ECFA4">Mês 6</div>
+          <div class="crono-desc">Apresentação dos avanços e plano de continuidade</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ SLIDE 13 — ENCERRAMENTO ═══ -->
+  <div class="slide s-green" id="s13">
+    <div class="slide-inner center">
+      <div class="big-emoji small">✍️</div>
+      <div class="eyebrow c-green">Encerramento do Programa</div>
+      <div class="slide-title" style="margin-bottom:22px">Atividade <em style="color:#7ECFA4">Final</em></div>
+      <div class="reflection-box" style="border-color:rgba(126,207,164,.3);background:rgba(126,207,164,.06)">
+        <div class="refl-label" style="color:#7ECFA4">Cada colaborador preenche um cartão</div>
+        <div class="refl-text">
+          <em>"Eu me comprometo a contribuir com esta empresa através de…"</em>
+        </div>
+      </div>
+      <div style="margin-top:20px;font-size:13px;color:rgba(255,255,255,.35);line-height:1.6">
+        Os compromissos poderão ser expostos em mural interno<br>ou apresentados à liderança.
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ SLIDE 14 — FRASE FINAL ═══ -->
+  <div class="slide s-close" id="s14">
+    <div class="slide-inner center">
+      <div style="font-size:clamp(50px,8vw,80px);margin-bottom:28px;opacity:.7">🌟</div>
+      <div class="eyebrow c-white" style="text-align:center">Programa Construindo Juntos</div>
+      <div style="font-family:'Playfair Display',serif;font-size:clamp(18px,3.2vw,28px);color:white;line-height:1.6;font-style:italic;max-width:660px;margin:0 auto">
+        Pertencimento não se impõe.<br>
+        Se <strong style="color:var(--gold-light);font-style:normal">constrói</strong> — com escuta, reconhecimento<br>
+        e um ambiente onde cada pessoa sabe<br>
+        que <strong style="color:var(--gold-light);font-style:normal">faz diferença</strong>.
+      </div>
+      <div style="margin-top:36px;font-size:12px;color:rgba(255,255,255,.25);letter-spacing:1px">— RH com Propósito</div>
+    </div>
+  </div>
+
+</div><!-- /slides-wrap -->
+
+<button class="nav-btn" id="btn-prev" onclick="navigate(-1)">‹</button>
+<button class="nav-btn" id="btn-next" onclick="navigate(1)">›</button>
+<div id="dots-wrap"></div>
+<div id="hint">← → espaço</div>
+
+<script>
+const TOTAL = 14;
+let current = 1;
+
+function goTo(n) {
+  n = Math.max(1, Math.min(TOTAL, n));
+  if (n === current) return;
+  document.getElementById('s' + current).classList.remove('active');
+  current = n;
+  document.getElementById('s' + current).classList.add('active');
+  updateUI();
+}
+function navigate(dir) { goTo(current + dir); }
+
+function updateUI() {
+  document.getElementById('slide-counter').textContent = current + ' / ' + TOTAL;
+  document.getElementById('progress-fill').style.width = ((current / TOTAL) * 100) + '%';
+  document.getElementById('btn-prev').disabled = current === 1;
+  document.getElementById('btn-next').disabled = current === TOTAL;
+  document.querySelectorAll('.dot').forEach((d, i) => d.classList.toggle('active', i + 1 === current));
+}
+
+const dotsWrap = document.getElementById('dots-wrap');
+for (let i = 1; i <= TOTAL; i++) {
+  const d = document.createElement('div');
+  d.className = 'dot' + (i === 1 ? ' active' : '');
+  d.onclick = () => goTo(i);
+  d.title = 'Slide ' + i;
+  dotsWrap.appendChild(d);
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight' || e.key === 'ArrowDown' || e.key === ' ') { e.preventDefault(); navigate(1); }
+  if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') { e.preventDefault(); navigate(-1); }
+  if (e.key === 'Home') goTo(1);
+  if (e.key === 'End') goTo(TOTAL);
+});
+
+let tx = 0;
+const wrap = document.getElementById('slides-wrap');
+wrap.addEventListener('touchstart', e => { tx = e.touches[0].clientX; }, { passive: true });
+wrap.addEventListener('touchend', e => {
+  const dx = e.changedTouches[0].clientX - tx;
+  if (Math.abs(dx) > 40) navigate(dx < 0 ? 1 : -1);
+}, { passive: true });
+
+let hintShown = true;
+function hideHint() { if (hintShown) { document.getElementById('hint').style.opacity = '0'; hintShown = false; } }
+document.addEventListener('keydown', hideHint, { once: true });
+wrap.addEventListener('touchend', hideHint, { once: true });
+document.getElementById('btn-next').addEventListener('click', hideHint, { once: true });
+
+updateUI();
+</script>
+</body>
+</html>

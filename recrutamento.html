@@ -1,0 +1,972 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Recrutamento & Seleção — RH Hub</title>
+<style>
+:root{--gold:#C89B3C;--green:#1A5C45;--dark:#0A1C12;--bg:#F7F5F0;--text:#1A1A1A;--muted:#6B6B6B;--border:#E0DDD8;--radius:10px;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
+
+/* ── HEADER ── */
+header{background:var(--dark);color:#fff;padding:14px 20px;display:flex;align-items:center;gap:14px;flex-wrap:wrap;}
+header a{color:#fff;text-decoration:none;opacity:.65;font-size:.85rem;}header a:hover{opacity:1;}
+.header-title{font-size:1.1rem;font-weight:700;color:var(--gold);flex:1;min-width:0;}
+.auth-area{display:flex;align-items:center;gap:10px;margin-left:auto;}
+.auth-status{font-size:.78rem;color:rgba(255,255,255,.65);white-space:nowrap;}
+.auth-btn{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.25);color:#fff;border-radius:6px;padding:5px 12px;font-size:.78rem;cursor:pointer;transition:background .2s;white-space:nowrap;}
+.auth-btn:hover{background:rgba(255,255,255,.2);}
+.auth-btn.sair{background:rgba(220,50,50,.2);border-color:rgba(220,50,50,.4);}
+
+/* ── TABS ── */
+.tabs-wrap{background:#fff;border-bottom:2px solid var(--border);overflow-x:auto;white-space:nowrap;position:sticky;top:0;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,.07);}
+.tabs-inner{display:inline-flex;padding:0 12px;}
+.tab-btn{display:inline-block;padding:13px 16px;border:none;background:none;cursor:pointer;font-size:.82rem;font-weight:600;color:var(--muted);border-bottom:3px solid transparent;transition:all .2s;white-space:nowrap;}
+.tab-btn:hover{color:var(--green);}
+.tab-btn.active{color:var(--green);border-bottom-color:var(--green);}
+.lock-tag{font-size:.7em;opacity:.55;}
+body.role-consultora .lock-tag{display:none;}
+
+/* ── CONTENT ── */
+.content{max-width:900px;margin:0 auto;padding:28px 18px;}
+.mod-panel{display:none;}
+.mod-panel.active{display:block;}
+.mod-title{font-size:1.4rem;font-weight:800;color:var(--dark);margin-bottom:4px;}
+.mod-subtitle{color:var(--muted);font-size:.9rem;margin-bottom:24px;}
+
+/* ── SECTIONS ── */
+.section{background:#fff;border:1px solid var(--border);border-radius:var(--radius);padding:22px;margin-bottom:18px;}
+.section-title{font-size:.95rem;font-weight:700;color:var(--green);margin-bottom:14px;padding-bottom:7px;border-bottom:2px solid var(--border);}
+
+/* ── FIELDS ── */
+.field{margin-bottom:14px;}
+.field label{display:block;font-size:.82rem;font-weight:600;color:var(--text);margin-bottom:5px;}
+.field input,.field select,.field textarea{width:100%;border:1px solid var(--border);border-radius:6px;padding:9px 11px;font-size:.88rem;font-family:inherit;background:#fff;color:var(--text);transition:border-color .2s;}
+.field input:focus,.field select:focus,.field textarea:focus{outline:none;border-color:var(--green);}
+.field textarea{resize:vertical;min-height:76px;}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+.row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;}
+
+/* ── CHECKS / RADIOS ── */
+.check-group{display:flex;flex-wrap:wrap;gap:7px;}
+.check-item{display:flex;align-items:center;gap:5px;font-size:.82rem;padding:5px 11px;border:1px solid var(--border);border-radius:20px;cursor:pointer;transition:all .2s;}
+.check-item:has(input:checked){border-color:var(--green);background:#f0f7f4;}
+.radio-group{display:flex;flex-wrap:wrap;gap:7px;}
+.radio-item{display:flex;align-items:center;gap:5px;font-size:.82rem;padding:5px 13px;border:1px solid var(--border);border-radius:20px;cursor:pointer;transition:all .2s;}
+.radio-item:has(input:checked){border-color:var(--gold);background:#fdf8ee;}
+
+/* ── BUTTONS ── */
+.submit-row{display:flex;gap:10px;align-items:center;margin-top:22px;}
+.btn-save{background:var(--green);color:#fff;border:none;border-radius:8px;padding:13px 28px;font-size:.95rem;font-weight:700;cursor:pointer;transition:background .2s;}
+.btn-save:hover{background:#145040;}
+.btn-print{background:none;border:2px solid var(--border);border-radius:8px;padding:11px 18px;font-size:.88rem;font-weight:600;cursor:pointer;color:var(--muted);transition:all .2s;}
+.btn-print:hover{border-color:var(--green);color:var(--green);}
+
+/* ── NOTES ── */
+.note{background:#fdf8ee;border-left:3px solid var(--gold);padding:9px 13px;border-radius:4px;font-size:.82rem;color:#7a5a10;margin-bottom:14px;}
+.candidate-note{background:#f0f7f4;border-left:3px solid var(--green);padding:9px 13px;border-radius:4px;font-size:.82rem;color:#145040;margin-bottom:18px;}
+body.role-consultora .candidate-note,body.role-gestor .candidate-note{display:none;}
+
+/* ── ROLE-BASED VISIBILITY ── */
+.consultant-only{display:none!important;}
+.gestor-only{display:none!important;}
+body.role-consultora .consultant-only{display:block!important;}
+body.role-consultora .gestor-only{display:block!important;}
+body.role-gestor .gestor-only{display:block!important;}
+
+/* ── LOCK NOTICES ── */
+.lock-notice{background:#fffbf0;border:2px dashed var(--gold);border-radius:10px;padding:28px 20px;text-align:center;margin-bottom:18px;}
+.lock-notice-icon{font-size:1.8rem;margin-bottom:8px;}
+.lock-notice-text{color:var(--muted);font-size:.9rem;margin-bottom:14px;}
+.lock-notice-btn{background:var(--green);color:#fff;border:none;border-radius:8px;padding:10px 22px;font-size:.88rem;font-weight:600;cursor:pointer;}
+body.role-consultora .lock-notice{display:none!important;}
+
+.gestor-lock{background:#f0f4ff;border:2px dashed #818cf8;border-radius:10px;padding:22px 20px;text-align:center;margin-bottom:18px;}
+.gestor-lock-text{color:#4f46e5;font-size:.9rem;margin-bottom:12px;}
+.gestor-lock-btn{background:#4f46e5;color:#fff;border:none;border-radius:8px;padding:9px 20px;font-size:.88rem;font-weight:600;cursor:pointer;}
+body.role-gestor .gestor-lock{display:none!important;}
+body.role-consultora .gestor-lock{display:none!important;}
+
+/* ── TABLE ── */
+.table-eval{width:100%;border-collapse:collapse;font-size:.83rem;}
+.table-eval th,.table-eval td{border:1px solid var(--border);padding:7px 9px;text-align:left;}
+.table-eval th{background:#f0f7f4;font-weight:700;color:var(--green);}
+.table-eval input,.table-eval select,.table-eval textarea{border:none;width:100%;font-size:.83rem;font-family:inherit;background:transparent;padding:2px;}
+.table-eval input:focus,.table-eval select:focus{outline:1px solid var(--green);}
+
+/* ── AUTH MODAL ── */
+.modal-backdrop{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:1000;display:none;align-items:center;justify-content:center;}
+.modal-backdrop.open{display:flex;}
+.modal{background:#fff;border-radius:14px;padding:30px;width:340px;max-width:calc(100vw - 32px);}
+.modal-title{font-size:1.1rem;font-weight:800;color:var(--dark);margin-bottom:6px;}
+.modal-desc{font-size:.82rem;color:var(--muted);margin-bottom:18px;}
+.modal input[type=password]{width:100%;border:1px solid var(--border);border-radius:8px;padding:11px;font-size:.95rem;margin-bottom:12px;}
+.modal input[type=password]:focus{outline:none;border-color:var(--green);}
+.modal-btns{display:flex;gap:8px;}
+.modal-btn-primary{flex:1;background:var(--green);color:#fff;border:none;border-radius:8px;padding:11px;font-size:.9rem;font-weight:700;cursor:pointer;}
+.modal-btn-cancel{background:none;border:1px solid var(--border);border-radius:8px;padding:11px 15px;font-size:.9rem;cursor:pointer;color:var(--muted);}
+
+/* ── TOAST ── */
+.toast{position:fixed;bottom:22px;right:22px;background:#1A5C45;color:#fff;padding:13px 20px;border-radius:10px;font-weight:600;font-size:.88rem;z-index:9999;opacity:0;transform:translateY(16px);transition:all .3s;pointer-events:none;}
+.toast.show{opacity:1;transform:translateY(0);}
+
+/* ── LINKS PANEL (consultora only) ── */
+.links-panel{display:none;background:#fff;border-bottom:2px solid var(--border);padding:16px 20px;}
+body.role-consultora .links-panel{display:block;}
+.links-panel-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;cursor:pointer;user-select:none;}
+.links-panel-title{font-size:.85rem;font-weight:700;color:var(--green);}
+.links-panel-toggle{font-size:.75rem;color:var(--muted);}
+.links-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:8px;}
+.link-card{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:10px 12px;display:flex;align-items:center;justify-content:space-between;gap:8px;}
+.link-card-label{font-size:.8rem;font-weight:600;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.link-copy-btn{background:var(--green);color:#fff;border:none;border-radius:6px;padding:5px 10px;font-size:.75rem;font-weight:700;cursor:pointer;white-space:nowrap;transition:background .2s;flex-shrink:0;}
+.link-copy-btn:hover{background:#145040;}
+.link-open-btn{background:none;border:1px solid var(--border);border-radius:6px;padding:5px 9px;font-size:.75rem;cursor:pointer;color:var(--muted);transition:all .2s;flex-shrink:0;}
+.link-open-btn:hover{border-color:var(--green);color:var(--green);}
+.link-card-btns{display:flex;gap:5px;}
+
+/* ── SINGLE MODULE MODE ── */
+body.single-mod .tabs-wrap{display:none;}
+body.single-mod .links-panel{display:none!important;}
+
+@media(max-width:600px){.row2,.row3{grid-template-columns:1fr;}.links-grid{grid-template-columns:1fr;}}
+@media print{
+  header,.tabs-wrap,.submit-row,.toast,.modal-backdrop,.lock-notice,.gestor-lock,.auth-area,.candidate-note,.links-panel,.mod-back{display:none!important;}
+  .content{max-width:100%;padding:0;}
+  .mod-panel{display:block!important;}
+  .consultant-only,.gestor-only{display:block!important;}
+  .section{break-inside:avoid;}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <a href="index.html">← Hub</a>
+  <span class="header-title">🔍 Recrutamento &amp; Seleção</span>
+  <div class="auth-area">
+    <span class="auth-status" id="auth-status">🌐 Acesso público</span>
+    <button class="auth-btn" id="login-btn" onclick="openAuthModal()">Entrar</button>
+    <button class="auth-btn sair" id="logout-btn" onclick="doLogout()" style="display:none">Sair</button>
+  </div>
+</header>
+
+<div class="tabs-wrap">
+  <div class="tabs-inner">
+    <button class="tab-btn active" onclick="showMod(1,this)">M1 · Briefing</button>
+    <button class="tab-btn" onclick="showMod(2,this)">M2 · Gestor</button>
+    <button class="tab-btn" onclick="showMod(3,this)">M3 · Perfil</button>
+    <button class="tab-btn" onclick="showMod(4,this)">M4 · Proposta</button>
+    <button class="tab-btn" onclick="showMod(5,this)">M5 · Divulgação <span class="lock-tag">🔒</span></button>
+    <button class="tab-btn" onclick="showMod(6,this)">M6 · Triagem <span class="lock-tag">🔒</span></button>
+    <button class="tab-btn" onclick="showMod(7,this)">M7 · Pré-Entrevista</button>
+    <button class="tab-btn" onclick="showMod(8,this)">M8 · Competências</button>
+    <button class="tab-btn" onclick="showMod(10,this)">M10 · Relatório</button>
+    <button class="tab-btn" onclick="showMod(11,this)">M11 · Finalistas <span class="lock-tag">🔒</span></button>
+    <button class="tab-btn" onclick="showMod(12,this)">M12 · Contratação <span class="lock-tag">🔒</span></button>
+    <button class="tab-btn" onclick="showMod(13,this)">M13 · Integração</button>
+  </div>
+</div>
+
+<!-- LINKS PANEL: consultora only, hidden in single-mod mode -->
+<div class="links-panel" id="links-panel">
+  <div class="links-panel-header" onclick="toggleLinksPanel()">
+    <span class="links-panel-title">🔗 Links para compartilhar — libere por fase</span>
+    <span class="links-panel-toggle" id="links-toggle">▼ expandir</span>
+  </div>
+  <div id="links-grid-wrap" style="display:none">
+    <div class="links-grid" id="links-grid"></div>
+  </div>
+</div>
+
+<div class="content">
+
+<!-- ====== M1 (público) ====== -->
+<div id="m1" class="mod-panel active">
+  <div class="mod-title">Módulo 1 · Briefing Inicial da Vaga</div>
+  <div class="mod-subtitle">Levantamento inicial das necessidades de contratação</div>
+  <div class="section">
+    <div class="section-title">Dados da Empresa</div>
+    <div class="row2"><div class="field"><label>Empresa</label><input type="text" id="m1-empresa"></div><div class="field"><label>Responsável / Contato</label><input type="text" id="m1-responsavel"></div></div>
+    <div class="row3"><div class="field"><label>Cargo / Setor</label><input type="text" id="m1-cargo"></div><div class="field"><label>Telefone</label><input type="tel" id="m1-telefone"></div><div class="field"><label>E-mail</label><input type="email" id="m1-email"></div></div>
+    <div class="row2"><div class="field"><label>Cidade / UF</label><input type="text" id="m1-cidade"></div><div class="field"><label>Ramo de Atividade</label><input type="text" id="m1-ramo"></div></div>
+    <div class="field"><label>Número de Colaboradores</label><input type="number" id="m1-num_colaboradores"></div>
+  </div>
+  <div class="section">
+    <div class="section-title">Dados da Vaga</div>
+    <div class="row2"><div class="field"><label>Nome da Vaga</label><input type="text" id="m1-nome_vaga"></div><div class="field"><label>Setor / Área</label><input type="text" id="m1-setor"></div></div>
+    <div class="row2"><div class="field"><label>Quantidade de Vagas</label><input type="number" id="m1-qtd_vagas" value="1"></div><div class="field"><label>Data de Início Prevista</label><input type="date" id="m1-data_inicio"></div></div>
+    <div class="field"><label>Tipo de Vaga</label><div class="radio-group"><label class="radio-item"><input type="radio" name="m1-tipo_vaga" value="CLT"> CLT</label><label class="radio-item"><input type="radio" name="m1-tipo_vaga" value="PJ"> PJ</label><label class="radio-item"><input type="radio" name="m1-tipo_vaga" value="Temporário"> Temporário</label><label class="radio-item"><input type="radio" name="m1-tipo_vaga" value="Estágio"> Estágio</label><label class="radio-item"><input type="radio" name="m1-tipo_vaga" value="Outro"> Outro</label></div></div>
+    <div class="field"><label>Motivo da Contratação</label><div class="radio-group"><label class="radio-item"><input type="radio" name="m1-motivo" value="Vaga nova"> Vaga nova</label><label class="radio-item"><input type="radio" name="m1-motivo" value="Substituição"> Substituição</label><label class="radio-item"><input type="radio" name="m1-motivo" value="Expansão"> Expansão</label><label class="radio-item"><input type="radio" name="m1-motivo" value="Outro"> Outro</label></div></div>
+    <div class="field"><label>Urgência</label><div class="radio-group"><label class="radio-item"><input type="radio" name="m1-urgencia" value="Alta"> Alta</label><label class="radio-item"><input type="radio" name="m1-urgencia" value="Média"> Média</label><label class="radio-item"><input type="radio" name="m1-urgencia" value="Baixa"> Baixa</label></div></div>
+  </div>
+  <div class="section">
+    <div class="section-title">Contexto e Perfil</div>
+    <div class="field"><label>Histórico / Contexto da necessidade</label><textarea id="m1-historico"></textarea></div>
+    <div class="field"><label>Condições de Trabalho (salário, benefícios, horário, local)</label><textarea id="m1-condicoes"></textarea></div>
+    <div class="field"><label>Perfil Desejado</label><textarea id="m1-perfil"></textarea></div>
+    <div class="field"><label>Quem decide a contratação final?</label><input type="text" id="m1-decisao"></div>
+    <div class="field"><label>Próximo passo acordado</label><textarea id="m1-proximo_passo" rows="2"></textarea></div>
+  </div>
+  <div class="submit-row"><button class="btn-save" onclick="saveModule(1)">Salvar Módulo 1</button><button class="btn-print" onclick="window.print()">Imprimir</button></div>
+</div>
+
+<!-- ====== M2 (público) ====== -->
+<div id="m2" class="mod-panel">
+  <div class="mod-title">Módulo 2 · Reunião com o Gestor da Vaga</div>
+  <div class="mod-subtitle">Alinhamento aprofundado sobre a necessidade de contratação</div>
+  <div class="section">
+    <div class="section-title">Identificação</div>
+    <div class="row2"><div class="field"><label>Empresa</label><input type="text" id="m2-empresa"></div><div class="field"><label>Data da Reunião</label><input type="date" id="m2-data_reuniao"></div></div>
+    <div class="row2"><div class="field"><label>Gestor responsável pela vaga</label><input type="text" id="m2-gestor_vaga"></div><div class="field"><label>Participantes</label><input type="text" id="m2-participantes"></div></div>
+    <div class="field"><label>Nome da Vaga</label><input type="text" id="m2-nome_vaga"></div>
+  </div>
+  <div class="section">
+    <div class="section-title">Sobre a Contratação</div>
+    <div class="field"><label>Por que essa vaga existe agora?</label><textarea id="m2-por_que"></textarea></div>
+    <div class="field"><label>O que acontece se a vaga não for preenchida?</label><textarea id="m2-impacto"></textarea></div>
+    <div class="field"><label>Já houve tentativas anteriores? O que ocorreu?</label><textarea id="m2-tentativas"></textarea></div>
+    <div class="field"><label>Qual é o maior desafio que a pessoa vai enfrentar?</label><textarea id="m2-desafio"></textarea></div>
+    <div class="field"><label>O que faria a empresa dizer que a contratação foi um sucesso em 90 dias?</label><textarea id="m2-sucesso_90d"></textarea></div>
+  </div>
+  <div class="section">
+    <div class="section-title">Missão, Atividades e Competências</div>
+    <div class="field"><label>Missão do cargo</label><textarea id="m2-missao"></textarea></div>
+    <div class="field"><label>Principais atividades e responsabilidades</label><textarea id="m2-atividades"></textarea></div>
+    <div class="field"><label>Conhecimentos técnicos obrigatórios</label><textarea id="m2-tecnicos"></textarea></div>
+    <div class="field"><label>Competências comportamentais esperadas</label><div class="check-group"><label class="check-item"><input type="checkbox" name="m2-comp" value="Liderança"> Liderança</label><label class="check-item"><input type="checkbox" name="m2-comp" value="Comunicação"> Comunicação</label><label class="check-item"><input type="checkbox" name="m2-comp" value="Trabalho em equipe"> Trabalho em equipe</label><label class="check-item"><input type="checkbox" name="m2-comp" value="Proatividade"> Proatividade</label><label class="check-item"><input type="checkbox" name="m2-comp" value="Organização"> Organização</label><label class="check-item"><input type="checkbox" name="m2-comp" value="Foco em resultados"> Foco em resultados</label><label class="check-item"><input type="checkbox" name="m2-comp" value="Resiliência"> Resiliência</label><label class="check-item"><input type="checkbox" name="m2-comp" value="Adaptabilidade"> Adaptabilidade</label></div></div>
+    <div class="field"><label>Fit cultural esperado</label><textarea id="m2-cultura"></textarea></div>
+    <div class="field"><label>Condições da vaga</label><textarea id="m2-condicoes"></textarea></div>
+    <div class="field"><label>Processo seletivo acordado</label><textarea id="m2-processo"></textarea></div>
+  </div>
+  <div class="submit-row"><button class="btn-save" onclick="saveModule(2)">Salvar Módulo 2</button><button class="btn-print" onclick="window.print()">Imprimir</button></div>
+</div>
+
+<!-- ====== M3 (público) ====== -->
+<div id="m3" class="mod-panel">
+  <div class="mod-title">Módulo 3 · Perfil do Cargo / Persona da Vaga</div>
+  <div class="mod-subtitle">Construção detalhada do perfil ideal para a posição</div>
+  <div class="section">
+    <div class="section-title">Identificação</div>
+    <div class="row2"><div class="field"><label>Empresa</label><input type="text" id="m3-empresa"></div><div class="field"><label>Nome da Vaga</label><input type="text" id="m3-nome_vaga"></div></div>
+  </div>
+  <div class="section">
+    <div class="section-title">Missão do Cargo</div>
+    <div class="field"><label>Qual é o propósito dessa função? Por que ela existe?</label><textarea id="m3-missao_1"></textarea></div>
+    <div class="field"><label>Qual impacto essa pessoa gera para a empresa/equipe/cliente?</label><textarea id="m3-missao_2"></textarea></div>
+    <div class="field"><label>O que diferencia um desempenho médio de um excelente nessa vaga?</label><textarea id="m3-missao_3"></textarea></div>
+  </div>
+  <div class="section">
+    <div class="section-title">Top 5 Responsabilidades</div>
+    <div class="field"><label>1.</label><textarea id="m3-resp1" rows="2"></textarea></div>
+    <div class="field"><label>2.</label><textarea id="m3-resp2" rows="2"></textarea></div>
+    <div class="field"><label>3.</label><textarea id="m3-resp3" rows="2"></textarea></div>
+    <div class="field"><label>4.</label><textarea id="m3-resp4" rows="2"></textarea></div>
+    <div class="field"><label>5.</label><textarea id="m3-resp5" rows="2"></textarea></div>
+  </div>
+  <div class="section">
+    <div class="section-title">Rotina e Relacionamentos</div>
+    <div class="field"><label>Rotina diária</label><textarea id="m3-rotina_diaria"></textarea></div>
+    <div class="field"><label>Rotina semanal</label><textarea id="m3-rotina_semanal"></textarea></div>
+    <div class="field"><label>Rotina mensal</label><textarea id="m3-rotina_mensal"></textarea></div>
+    <div class="field"><label>Tomada de decisão autônoma</label><textarea id="m3-decisao"></textarea></div>
+    <div class="field"><label>Relaciona-se com</label><div class="check-group"><label class="check-item"><input type="checkbox" name="m3-relac" value="Diretoria"> Diretoria</label><label class="check-item"><input type="checkbox" name="m3-relac" value="Equipe própria"> Equipe própria</label><label class="check-item"><input type="checkbox" name="m3-relac" value="Outros setores"> Outros setores</label><label class="check-item"><input type="checkbox" name="m3-relac" value="Clientes"> Clientes</label><label class="check-item"><input type="checkbox" name="m3-relac" value="Fornecedores"> Fornecedores</label><label class="check-item"><input type="checkbox" name="m3-relac" value="Parceiros"> Parceiros</label></div></div>
+  </div>
+  <div class="section">
+    <div class="section-title">Requisitos</div>
+    <div class="field"><label>Competências técnicas obrigatórias</label><textarea id="m3-tec_obrig"></textarea></div>
+    <div class="field"><label>Competências técnicas desejáveis</label><textarea id="m3-tec_desej"></textarea></div>
+    <div class="field"><label>Escolaridade mínima</label><div class="radio-group"><label class="radio-item"><input type="radio" name="m3-escolaridade" value="Ensino Médio"> Ensino Médio</label><label class="radio-item"><input type="radio" name="m3-escolaridade" value="Técnico"> Técnico</label><label class="radio-item"><input type="radio" name="m3-escolaridade" value="Superior Cursando"> Superior Cursando</label><label class="radio-item"><input type="radio" name="m3-escolaridade" value="Superior Completo"> Superior Completo</label><label class="radio-item"><input type="radio" name="m3-escolaridade" value="Pós-graduação"> Pós-graduação</label></div></div>
+    <div class="field"><label>Experiência mínima exigida</label><input type="text" id="m3-experiencia"></div>
+    <div class="field"><label>Ferramentas / sistemas obrigatórios</label><textarea id="m3-ferramentas" rows="2"></textarea></div>
+    <div class="field"><label>Top 5 competências comportamentais</label><div class="check-group"><label class="check-item"><input type="checkbox" name="m3-comp" value="Liderança"> Liderança</label><label class="check-item"><input type="checkbox" name="m3-comp" value="Comunicação"> Comunicação</label><label class="check-item"><input type="checkbox" name="m3-comp" value="Trabalho em equipe"> Trabalho em equipe</label><label class="check-item"><input type="checkbox" name="m3-comp" value="Proatividade"> Proatividade</label><label class="check-item"><input type="checkbox" name="m3-comp" value="Organização"> Organização</label><label class="check-item"><input type="checkbox" name="m3-comp" value="Foco em resultados"> Foco em resultados</label><label class="check-item"><input type="checkbox" name="m3-comp" value="Resiliência"> Resiliência</label><label class="check-item"><input type="checkbox" name="m3-comp" value="Adaptabilidade"> Adaptabilidade</label><label class="check-item"><input type="checkbox" name="m3-comp" value="Inteligência emocional"> Inteligência emocional</label><label class="check-item"><input type="checkbox" name="m3-comp" value="Visão sistêmica"> Visão sistêmica</label></div></div>
+  </div>
+  <div class="section">
+    <div class="section-title">Perfil e Divulgação</div>
+    <div class="field"><label>Perfil ideal</label><textarea id="m3-perfil_ideal"></textarea></div>
+    <div class="field"><label>Perfil incompatível</label><textarea id="m3-perfil_incompat"></textarea></div>
+    <div class="field"><label>Oportunidades que a vaga oferece</label><textarea id="m3-oportunidades"></textarea></div>
+    <div class="field"><label>Informações para divulgação</label><textarea id="m3-divulgacao"></textarea></div>
+  </div>
+  <div class="submit-row"><button class="btn-save" onclick="saveModule(3)">Salvar Módulo 3</button><button class="btn-print" onclick="window.print()">Imprimir</button></div>
+</div>
+
+<!-- ====== M4 (público) ====== -->
+<div id="m4" class="mod-panel">
+  <div class="mod-title">Módulo 4 · Proposta Comercial</div>
+  <div class="mod-subtitle">Formalização das condições comerciais do processo seletivo</div>
+  <div class="section">
+    <div class="section-title">Dados da Empresa Contratante</div>
+    <div class="row2"><div class="field"><label>Razão Social</label><input type="text" id="m4-empresa"></div><div class="field"><label>CNPJ</label><input type="text" id="m4-cnpj"></div></div>
+    <div class="row2"><div class="field"><label>Responsável</label><input type="text" id="m4-responsavel"></div><div class="field"><label>E-mail</label><input type="email" id="m4-email"></div></div>
+    <div class="row2"><div class="field"><label>Cidade / UF</label><input type="text" id="m4-cidade"></div><div class="field"><label>Telefone</label><input type="tel" id="m4-telefone"></div></div>
+  </div>
+  <div class="section">
+    <div class="section-title">Escopo dos Serviços</div>
+    <div class="check-group"><label class="check-item"><input type="checkbox" name="m4-escopo" value="Briefing e alinhamento"> Briefing e alinhamento</label><label class="check-item"><input type="checkbox" name="m4-escopo" value="Mapeamento do perfil"> Mapeamento do perfil</label><label class="check-item"><input type="checkbox" name="m4-escopo" value="Divulgação da vaga"> Divulgação da vaga</label><label class="check-item"><input type="checkbox" name="m4-escopo" value="Triagem de currículos"> Triagem de currículos</label><label class="check-item"><input type="checkbox" name="m4-escopo" value="Pré-entrevista"> Pré-entrevista</label><label class="check-item"><input type="checkbox" name="m4-escopo" value="Entrevista por competências"> Entrevista por competências</label><label class="check-item"><input type="checkbox" name="m4-escopo" value="Relatório dos candidatos"> Relatório dos candidatos</label><label class="check-item"><input type="checkbox" name="m4-escopo" value="Apresentação dos finalistas"> Apresentação dos finalistas</label><label class="check-item"><input type="checkbox" name="m4-escopo" value="Apoio na negociação"> Apoio na negociação</label><label class="check-item"><input type="checkbox" name="m4-escopo" value="Acompanhamento pós-contratação"> Acompanhamento pós-contratação</label></div>
+  </div>
+  <div class="section">
+    <div class="section-title">Cronograma e Condições Comerciais</div>
+    <div class="row2"><div class="field"><label>Prazo para entrega dos finalistas</label><input type="text" id="m4-prazo_finalistas"></div><div class="field"><label>Data de início prevista</label><input type="date" id="m4-data_inicio"></div></div>
+    <div class="field"><label>Vaga</label><input type="text" id="m4-vaga_desc"></div>
+    <div class="field"><label>Valor dos honorários</label><input type="text" id="m4-honorarios"></div>
+    <div class="field"><label>Forma de pagamento</label><textarea id="m4-forma_pagamento" rows="2"></textarea></div>
+    <div class="field"><label>Política de reposição</label><textarea id="m4-politica_reposicao"></textarea></div>
+  </div>
+  <div class="section">
+    <div class="section-title">Aprovação</div>
+    <div class="row2"><div class="field"><label>Aprovado por</label><input type="text" id="m4-aprovado_empresa"></div><div class="field"><label>Data</label><input type="date" id="m4-data_aprovacao"></div></div>
+    <div class="field"><label>Observações</label><textarea id="m4-obs" rows="2"></textarea></div>
+  </div>
+  <div class="submit-row"><button class="btn-save" onclick="saveModule(4)">Salvar Módulo 4</button><button class="btn-print" onclick="window.print()">Imprimir</button></div>
+</div>
+
+<!-- ====== M5 (consultora only) ====== -->
+<div id="m5" class="mod-panel">
+  <div class="mod-title">Módulo 5 · Planejamento e Controle da Divulgação</div>
+  <div class="mod-subtitle">Estratégia de atração e divulgação da vaga</div>
+  <div class="lock-notice">
+    <div class="lock-notice-icon">🔒</div>
+    <p class="lock-notice-text">Este módulo é de acesso exclusivo da consultora.</p>
+    <button class="lock-notice-btn" onclick="openAuthModal()">Entrar como consultora →</button>
+  </div>
+  <div class="consultant-only">
+    <div class="section">
+      <div class="section-title">Identificação</div>
+      <div class="row2"><div class="field"><label>Empresa</label><input type="text" id="m5-empresa"></div><div class="field"><label>Nome da Vaga</label><input type="text" id="m5-nome_vaga"></div></div>
+      <div class="row2"><div class="field"><label>Início da divulgação</label><input type="date" id="m5-data_inicio"></div><div class="field"><label>Prazo para recebimento de CVs</label><input type="date" id="m5-data_limite"></div></div>
+    </div>
+    <div class="section">
+      <div class="section-title">Canais de Divulgação</div>
+      <div class="check-group"><label class="check-item"><input type="checkbox" name="m5-canais" value="LinkedIn"> LinkedIn</label><label class="check-item"><input type="checkbox" name="m5-canais" value="Indeed"> Indeed</label><label class="check-item"><input type="checkbox" name="m5-canais" value="Catho"> Catho</label><label class="check-item"><input type="checkbox" name="m5-canais" value="InfoJobs"> InfoJobs</label><label class="check-item"><input type="checkbox" name="m5-canais" value="Gupy"> Gupy</label><label class="check-item"><input type="checkbox" name="m5-canais" value="WhatsApp/redes"> WhatsApp / Redes</label><label class="check-item"><input type="checkbox" name="m5-canais" value="Banco de talentos"> Banco de talentos</label><label class="check-item"><input type="checkbox" name="m5-canais" value="Indicações"> Indicações</label><label class="check-item"><input type="checkbox" name="m5-canais" value="Site da empresa"> Site da empresa</label></div>
+      <div class="field" style="margin-top:12px"><label>Outros canais</label><textarea id="m5-outros_canais" rows="2"></textarea></div>
+    </div>
+    <div class="section">
+      <div class="section-title">Texto da Vaga</div>
+      <div class="field"><label>Título do anúncio</label><input type="text" id="m5-titulo_anuncio"></div>
+      <div class="field"><label>Descrição completa da vaga</label><textarea id="m5-texto_vaga" rows="8"></textarea></div>
+      <div class="field"><label>Palavras-chave para atração</label><input type="text" id="m5-palavras_chave"></div>
+    </div>
+    <div class="section">
+      <div class="section-title">Estratégia e Controle</div>
+      <div class="field"><label>Estratégia de abordagem</label><textarea id="m5-estrategia"></textarea></div>
+      <div class="field"><label>Meta de candidatos para triagem</label><input type="number" id="m5-meta_candidatos"></div>
+      <div class="field"><label>Avaliação dos resultados</label><textarea id="m5-avaliacao"></textarea></div>
+      <div class="field"><label>Observações</label><textarea id="m5-obs" rows="2"></textarea></div>
+    </div>
+    <div class="submit-row"><button class="btn-save" onclick="saveModule(5)">Salvar Módulo 5</button><button class="btn-print" onclick="window.print()">Imprimir</button></div>
+  </div>
+</div>
+
+<!-- ====== M6 (consultora only) ====== -->
+<div id="m6" class="mod-panel">
+  <div class="mod-title">Módulo 6 · Triagem de Currículos</div>
+  <div class="mod-subtitle">Avaliação e classificação dos candidatos recebidos</div>
+  <div class="lock-notice">
+    <div class="lock-notice-icon">🔒</div>
+    <p class="lock-notice-text">Este módulo é de acesso exclusivo da consultora.</p>
+    <button class="lock-notice-btn" onclick="openAuthModal()">Entrar como consultora →</button>
+  </div>
+  <div class="consultant-only">
+    <div class="section">
+      <div class="section-title">Identificação</div>
+      <div class="row2"><div class="field"><label>Empresa</label><input type="text" id="m6-empresa"></div><div class="field"><label>Vaga</label><input type="text" id="m6-vaga"></div></div>
+      <div class="row2"><div class="field"><label>Responsável pela triagem</label><input type="text" id="m6-responsavel"></div><div class="field"><label>Data</label><input type="date" id="m6-data"></div></div>
+    </div>
+    <div class="section">
+      <div class="section-title">Ficha do Candidato</div>
+      <div class="row2"><div class="field"><label>Nome do Candidato</label><input type="text" id="m6-candidato"></div><div class="field"><label>E-mail</label><input type="email" id="m6-email_candidato"></div></div>
+      <div class="row2"><div class="field"><label>Telefone</label><input type="tel" id="m6-tel_candidato"></div><div class="field"><label>Cidade / UF</label><input type="text" id="m6-cidade_candidato"></div></div>
+      <div class="row2"><div class="field"><label>Pretensão Salarial</label><input type="text" id="m6-pretensao"></div><div class="field"><label>Canal de origem</label><input type="text" id="m6-canal_origem"></div></div>
+    </div>
+    <div class="section">
+      <div class="section-title">Avaliação de Critérios</div>
+      <table class="table-eval">
+        <thead><tr><th>Critério</th><th>Obrigatório?</th><th>Atende?</th><th>Observação</th></tr></thead>
+        <tbody>
+          <tr><td>Escolaridade mínima</td><td><select id="m6-c1-obrig"><option>Sim</option><option>Não</option></select></td><td><select id="m6-c1-atende"><option>Sim</option><option>Parcial</option><option>Não</option></select></td><td><input type="text" id="m6-c1-obs"></td></tr>
+          <tr><td>Experiência na área</td><td><select id="m6-c2-obrig"><option>Sim</option><option>Não</option></select></td><td><select id="m6-c2-atende"><option>Sim</option><option>Parcial</option><option>Não</option></select></td><td><input type="text" id="m6-c2-obs"></td></tr>
+          <tr><td>Conhecimento técnico</td><td><select id="m6-c3-obrig"><option>Sim</option><option>Não</option></select></td><td><select id="m6-c3-atende"><option>Sim</option><option>Parcial</option><option>Não</option></select></td><td><input type="text" id="m6-c3-obs"></td></tr>
+          <tr><td>Pretensão salarial</td><td><select id="m6-c4-obrig"><option>Sim</option><option>Não</option></select></td><td><select id="m6-c4-atende"><option>Sim</option><option>Parcial</option><option>Não</option></select></td><td><input type="text" id="m6-c4-obs"></td></tr>
+          <tr><td>Localidade / disponibilidade</td><td><select id="m6-c5-obrig"><option>Sim</option><option>Não</option></select></td><td><select id="m6-c5-atende"><option>Sim</option><option>Parcial</option><option>Não</option></select></td><td><input type="text" id="m6-c5-obs"></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="section">
+      <div class="section-title">Classificação Final</div>
+      <div class="field"><label>Classificação</label><div class="radio-group"><label class="radio-item"><input type="radio" name="m6-classificacao" value="Aprovado para pré-entrevista"> Aprovado para pré-entrevista</label><label class="radio-item"><input type="radio" name="m6-classificacao" value="Em espera"> Em espera</label><label class="radio-item"><input type="radio" name="m6-classificacao" value="Reprovado"> Reprovado</label></div></div>
+      <div class="field"><label>Motivo / Observações</label><textarea id="m6-obs_classificacao"></textarea></div>
+      <div class="field"><label>Indicadores gerais</label><textarea id="m6-indicadores" rows="2"></textarea></div>
+    </div>
+    <div class="submit-row"><button class="btn-save" onclick="saveModule(6)">Salvar Módulo 6</button><button class="btn-print" onclick="window.print()">Imprimir</button></div>
+  </div>
+</div>
+
+<!-- ====== M7 (misto) ====== -->
+<div id="m7" class="mod-panel">
+  <div class="mod-title">Módulo 7 · Pré-Entrevista</div>
+  <div class="mod-subtitle">Triagem por telefone / online com o candidato</div>
+  <div class="candidate-note">👤 Responda as perguntas abaixo. Os demais campos serão preenchidos pela consultora.</div>
+
+  <!-- Identificação pública -->
+  <div class="section">
+    <div class="section-title">Identificação</div>
+    <div class="row2"><div class="field"><label>Nome do Candidato</label><input type="text" id="m7-candidato"></div><div class="field"><label>Data / Horário</label><input type="datetime-local" id="m7-data_hora"></div></div>
+    <!-- campos consultora dentro da mesma seção -->
+    <div class="consultant-only">
+      <div class="row2" style="margin-top:14px"><div class="field"><label>Empresa</label><input type="text" id="m7-empresa"></div><div class="field"><label>Vaga</label><input type="text" id="m7-vaga"></div></div>
+      <div class="row2"><div class="field"><label>Consultora responsável</label><input type="text" id="m7-consultora"></div><div class="field"><label>Formato</label><div class="radio-group"><label class="radio-item"><input type="radio" name="m7-formato" value="Telefone"> Telefone</label><label class="radio-item"><input type="radio" name="m7-formato" value="Online"> Online</label><label class="radio-item"><input type="radio" name="m7-formato" value="Presencial"> Presencial</label></div></div></div>
+    </div>
+  </div>
+
+  <!-- Q1-2: apenas consultora -->
+  <div class="section consultant-only">
+    <div class="section-title">Perguntas da Consultora (uso interno)</div>
+    <div class="field"><label>1. Apresentação da consultoria e da vaga — como o candidato reagiu?</label><textarea id="m7-q1" rows="2"></textarea></div>
+    <div class="field"><label>2. O candidato está ativo no mercado / disponível?</label><textarea id="m7-q2" rows="2"></textarea></div>
+  </div>
+
+  <!-- Q3-10: candidato -->
+  <div class="section">
+    <div class="section-title">Questões para o Candidato</div>
+    <div class="field"><label>3. O que te motivou a se candidatar para essa vaga?</label><textarea id="m7-q3" rows="2"></textarea></div>
+    <div class="field"><label>4. Me fale sobre sua trajetória profissional mais recente.</label><textarea id="m7-q4" rows="2"></textarea></div>
+    <div class="field"><label>5. Qual é a sua pretensão salarial?</label><textarea id="m7-q5" rows="2"></textarea></div>
+    <div class="field"><label>6. Tem disponibilidade para iniciar em breve?</label><textarea id="m7-q6" rows="2"></textarea></div>
+    <div class="field"><label>7. Tem alguma restrição de horário ou local de trabalho?</label><textarea id="m7-q7" rows="2"></textarea></div>
+    <div class="field"><label>8. Está participando de outros processos seletivos?</label><textarea id="m7-q8" rows="2"></textarea></div>
+    <div class="field"><label>9. Por que quer sair (ou saiu) da empresa atual/anterior?</label><textarea id="m7-q9" rows="2"></textarea></div>
+    <div class="field"><label>10. Tem alguma dúvida sobre a vaga ou o processo?</label><textarea id="m7-q10" rows="2"></textarea></div>
+  </div>
+
+  <!-- Avaliação e Decisão: apenas consultora -->
+  <div class="section consultant-only">
+    <div class="section-title">Avaliação e Decisão (uso interno)</div>
+    <div class="field"><label>Avaliação geral da consultora</label><textarea id="m7-avaliacao_consultora" rows="4"></textarea></div>
+    <div class="field"><label>Decisão</label><div class="radio-group"><label class="radio-item"><input type="radio" name="m7-decisao" value="Avançar para entrevista"> Avançar para entrevista</label><label class="radio-item"><input type="radio" name="m7-decisao" value="Em espera"> Em espera</label><label class="radio-item"><input type="radio" name="m7-decisao" value="Encerrar participação"> Encerrar participação</label></div></div>
+    <div class="field"><label>Agendamento da próxima etapa</label><textarea id="m7-agendamento" rows="2"></textarea></div>
+  </div>
+
+  <div class="submit-row"><button class="btn-save" onclick="saveModule(7)">Salvar Módulo 7</button><button class="btn-print" onclick="window.print()">Imprimir</button></div>
+</div>
+
+<!-- ====== M8 (misto — avaliação restrita) ====== -->
+<div id="m8" class="mod-panel">
+  <div class="mod-title">Módulo 8 · Entrevista por Competências</div>
+  <div class="mod-subtitle">Roteiro estruturado de entrevista comportamental (método STAR)</div>
+  <div class="section">
+    <div class="section-title">Identificação</div>
+    <div class="row2"><div class="field"><label>Empresa</label><input type="text" id="m8-empresa"></div><div class="field"><label>Vaga</label><input type="text" id="m8-vaga"></div></div>
+    <div class="row2"><div class="field"><label>Nome do Candidato</label><input type="text" id="m8-candidato"></div><div class="field"><label>Data / Horário</label><input type="datetime-local" id="m8-data_hora"></div></div>
+    <div class="row2"><div class="field"><label>Entrevistador(a)</label><input type="text" id="m8-entrevistador"></div><div class="field"><label>Formato</label><div class="radio-group"><label class="radio-item"><input type="radio" name="m8-formato" value="Presencial"> Presencial</label><label class="radio-item"><input type="radio" name="m8-formato" value="Online"> Online</label></div></div></div>
+  </div>
+  <div class="note">Use o método STAR: Situação → Tarefa → Ação → Resultado para cada pergunta comportamental.</div>
+  <div class="section"><div class="section-title">Bloco 1 · Trajetória Profissional</div>
+    <div class="field"><label>Me fale sobre você e sua trajetória mais relevante para essa vaga.</label><textarea id="m8-b1q1"></textarea></div>
+    <div class="field"><label>O que mais te orgulha na sua carreira até aqui?</label><textarea id="m8-b1q2"></textarea></div>
+  </div>
+  <div class="section"><div class="section-title">Bloco 2 · Resultados e Metas</div>
+    <div class="field"><label>Conte uma situação em que você teve que bater uma meta desafiadora.</label><textarea id="m8-b2q1"></textarea></div>
+    <div class="field"><label>Me dê um exemplo de um resultado significativo que você entregou.</label><textarea id="m8-b2q2"></textarea></div>
+  </div>
+  <div class="section"><div class="section-title">Bloco 3 · Trabalho em Equipe</div>
+    <div class="field"><label>Conte uma situação de conflito na equipe. Como você agiu?</label><textarea id="m8-b3q1"></textarea></div>
+    <div class="field"><label>Como você se relaciona com perfis diferentes dos seus?</label><textarea id="m8-b3q2"></textarea></div>
+  </div>
+  <div class="section"><div class="section-title">Bloco 4 · Resolução de Problemas</div>
+    <div class="field"><label>Me conte sobre uma decisão difícil com pouca informação. Como procedeu?</label><textarea id="m8-b4q1"></textarea></div>
+    <div class="field"><label>Descreva um problema complexo que você resolveu de forma criativa.</label><textarea id="m8-b4q2"></textarea></div>
+  </div>
+  <div class="section"><div class="section-title">Bloco 5 · Adaptabilidade</div>
+    <div class="field"><label>Conte sobre uma mudança significativa que você enfrentou. Como se adaptou?</label><textarea id="m8-b5q1"></textarea></div>
+    <div class="field"><label>Qual foi a última coisa relevante que você aprendeu por iniciativa própria?</label><textarea id="m8-b5q2"></textarea></div>
+  </div>
+  <div class="section"><div class="section-title">Bloco 6 · Alinhamento e Motivação</div>
+    <div class="field"><label>O que te atrai nessa vaga e nessa empresa?</label><textarea id="m8-b6q1"></textarea></div>
+    <div class="field"><label>Onde você quer estar profissionalmente daqui a 3 anos?</label><textarea id="m8-b6q2"></textarea></div>
+  </div>
+
+  <!-- Avaliação: apenas consultora -->
+  <div class="section consultant-only">
+    <div class="section-title">Avaliação e Decisão (uso interno)</div>
+    <table class="table-eval">
+      <thead><tr><th>Competência</th><th>Nota (1-5)</th><th>Observação</th></tr></thead>
+      <tbody>
+        <tr><td>Foco em resultados</td><td><input type="number" min="1" max="5" id="m8-av1-nota"></td><td><input type="text" id="m8-av1-obs"></td></tr>
+        <tr><td>Trabalho em equipe</td><td><input type="number" min="1" max="5" id="m8-av2-nota"></td><td><input type="text" id="m8-av2-obs"></td></tr>
+        <tr><td>Comunicação</td><td><input type="number" min="1" max="5" id="m8-av3-nota"></td><td><input type="text" id="m8-av3-obs"></td></tr>
+        <tr><td>Resolução de problemas</td><td><input type="number" min="1" max="5" id="m8-av4-nota"></td><td><input type="text" id="m8-av4-obs"></td></tr>
+        <tr><td>Adaptabilidade</td><td><input type="number" min="1" max="5" id="m8-av5-nota"></td><td><input type="text" id="m8-av5-obs"></td></tr>
+        <tr><td>Alinhamento cultural</td><td><input type="number" min="1" max="5" id="m8-av6-nota"></td><td><input type="text" id="m8-av6-obs"></td></tr>
+      </tbody>
+    </table>
+    <div class="field" style="margin-top:14px"><label>Parecer da consultora</label><textarea id="m8-parecer" rows="4"></textarea></div>
+    <div class="field"><label>Decisão</label><div class="radio-group"><label class="radio-item"><input type="radio" name="m8-proximo" value="Avançar para apresentação ao cliente"> Avançar ao cliente</label><label class="radio-item"><input type="radio" name="m8-proximo" value="Em espera"> Em espera</label><label class="radio-item"><input type="radio" name="m8-proximo" value="Encerrar participação"> Encerrar</label></div></div>
+  </div>
+
+  <div class="submit-row"><button class="btn-save" onclick="saveModule(8)">Salvar Módulo 8</button><button class="btn-print" onclick="window.print()">Imprimir</button></div>
+</div>
+
+<!-- ====== M10 (misto) ====== -->
+<div id="m10" class="mod-panel">
+  <div class="mod-title">Módulo 10 · Relatório do Candidato</div>
+  <div class="mod-subtitle">Histórico preenchido pelo candidato · Avaliação pela consultora</div>
+  <div class="candidate-note">👤 Preencha seu nome e histórico profissional abaixo e clique em Salvar.</div>
+
+  <!-- Candidato: nome (sempre visível) -->
+  <div class="section">
+    <div class="section-title">Candidato</div>
+    <div class="field"><label>Seu nome completo</label><input type="text" id="m10-candidato"></div>
+    <!-- dados da vaga: apenas consultora -->
+    <div class="consultant-only">
+      <div class="row2" style="margin-top:14px"><div class="field"><label>Empresa</label><input type="text" id="m10-empresa"></div><div class="field"><label>Vaga</label><input type="text" id="m10-vaga"></div></div>
+      <div class="row2"><div class="field"><label>Data do Relatório</label><input type="date" id="m10-data"></div><div class="field"><label>Pretensão Salarial</label><input type="text" id="m10-pretensao"></div></div>
+      <div class="field"><label>Disponibilidade para início</label><input type="text" id="m10-disponibilidade"></div>
+    </div>
+  </div>
+
+  <!-- Resumo do Processo: apenas consultora -->
+  <div class="section consultant-only">
+    <div class="section-title">Resumo do Processo (uso interno)</div>
+    <div class="field"><label>Etapas realizadas</label><div class="check-group"><label class="check-item"><input type="checkbox" name="m10-etapas" value="Triagem de currículo"> Triagem de currículo</label><label class="check-item"><input type="checkbox" name="m10-etapas" value="Pré-entrevista"> Pré-entrevista</label><label class="check-item"><input type="checkbox" name="m10-etapas" value="Entrevista por competências"> Entrevista por competências</label><label class="check-item"><input type="checkbox" name="m10-etapas" value="Testes técnicos"> Testes técnicos</label><label class="check-item"><input type="checkbox" name="m10-etapas" value="Avaliação comportamental"> Avaliação comportamental</label></div></div>
+  </div>
+
+  <!-- Histórico: candidato preenche -->
+  <div class="section">
+    <div class="section-title">Histórico Profissional Relevante</div>
+    <div class="field"><label>Resumo da trajetória profissional (últimas experiências mais relevantes)</label><textarea id="m10-historico" rows="7"></textarea></div>
+    <div class="field"><label>Formação acadêmica e cursos relevantes</label><textarea id="m10-formacao" rows="3"></textarea></div>
+  </div>
+
+  <!-- Avaliação de Competências: apenas consultora -->
+  <div class="section consultant-only">
+    <div class="section-title">Avaliação de Competências (uso interno)</div>
+    <table class="table-eval">
+      <thead><tr><th>Competência</th><th>Avaliação</th><th>Comentário</th></tr></thead>
+      <tbody>
+        <tr><td>Competência Técnica</td><td><select id="m10-comp1"><option>Excelente</option><option>Muito Bom</option><option>Bom</option><option>Regular</option><option>Insuficiente</option></select></td><td><input type="text" id="m10-comp1-obs"></td></tr>
+        <tr><td>Comunicação</td><td><select id="m10-comp2"><option>Excelente</option><option>Muito Bom</option><option>Bom</option><option>Regular</option><option>Insuficiente</option></select></td><td><input type="text" id="m10-comp2-obs"></td></tr>
+        <tr><td>Liderança / Influência</td><td><select id="m10-comp3"><option>Excelente</option><option>Muito Bom</option><option>Bom</option><option>Regular</option><option>Insuficiente</option></select></td><td><input type="text" id="m10-comp3-obs"></td></tr>
+        <tr><td>Foco em resultados</td><td><select id="m10-comp4"><option>Excelente</option><option>Muito Bom</option><option>Bom</option><option>Regular</option><option>Insuficiente</option></select></td><td><input type="text" id="m10-comp4-obs"></td></tr>
+        <tr><td>Adaptabilidade</td><td><select id="m10-comp5"><option>Excelente</option><option>Muito Bom</option><option>Bom</option><option>Regular</option><option>Insuficiente</option></select></td><td><input type="text" id="m10-comp5-obs"></td></tr>
+        <tr><td>Alinhamento Cultural</td><td><select id="m10-comp6"><option>Excelente</option><option>Muito Bom</option><option>Bom</option><option>Regular</option><option>Insuficiente</option></select></td><td><input type="text" id="m10-comp6-obs"></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Parecer: apenas consultora -->
+  <div class="section consultant-only">
+    <div class="section-title">Parecer da Consultoria (uso interno)</div>
+    <div class="field"><label>Pontos fortes do candidato</label><textarea id="m10-pontos_fortes" rows="3"></textarea></div>
+    <div class="field"><label>Pontos de desenvolvimento / atenção</label><textarea id="m10-pontos_dev" rows="3"></textarea></div>
+    <div class="field"><label>Compatibilidade com a vaga</label><div class="radio-group"><label class="radio-item"><input type="radio" name="m10-compatibilidade" value="Alta"> Alta</label><label class="radio-item"><input type="radio" name="m10-compatibilidade" value="Média"> Média</label><label class="radio-item"><input type="radio" name="m10-compatibilidade" value="Baixa"> Baixa</label></div></div>
+    <div class="field"><label>Recomendação</label><div class="radio-group"><label class="radio-item"><input type="radio" name="m10-recomendacao" value="Recomendamos fortemente"> Recomendamos fortemente</label><label class="radio-item"><input type="radio" name="m10-recomendacao" value="Recomendamos com ressalvas"> Com ressalvas</label><label class="radio-item"><input type="radio" name="m10-recomendacao" value="Não recomendamos"> Não recomendamos</label></div></div>
+    <div class="field"><label>Parecer completo</label><textarea id="m10-parecer" rows="5"></textarea></div>
+  </div>
+
+  <div class="submit-row"><button class="btn-save" onclick="saveModule(10)">Salvar Módulo 10</button><button class="btn-print" onclick="window.print()">Imprimir</button></div>
+</div>
+
+<!-- ====== M11 (consultora only) ====== -->
+<div id="m11" class="mod-panel">
+  <div class="mod-title">Módulo 11 · Apresentação dos Finalistas ao Cliente</div>
+  <div class="mod-subtitle">Comparativo e decisão final entre os candidatos aprovados</div>
+  <div class="lock-notice">
+    <div class="lock-notice-icon">🔒</div>
+    <p class="lock-notice-text">Este módulo é de acesso exclusivo da consultora.</p>
+    <button class="lock-notice-btn" onclick="openAuthModal()">Entrar como consultora →</button>
+  </div>
+  <div class="consultant-only">
+    <div class="section">
+      <div class="section-title">Identificação</div>
+      <div class="row2"><div class="field"><label>Empresa</label><input type="text" id="m11-empresa"></div><div class="field"><label>Vaga</label><input type="text" id="m11-vaga"></div></div>
+      <div class="row2"><div class="field"><label>Data da apresentação</label><input type="date" id="m11-data"></div><div class="field"><label>Participantes (empresa)</label><input type="text" id="m11-participantes"></div></div>
+    </div>
+    <div class="section">
+      <div class="section-title">Finalistas</div>
+      <div class="row3"><div class="field"><label>Finalista 1 — Nome</label><input type="text" id="m11-f1-nome"></div><div class="field"><label>Finalista 2 — Nome</label><input type="text" id="m11-f2-nome"></div><div class="field"><label>Finalista 3 — Nome</label><input type="text" id="m11-f3-nome"></div></div>
+      <div class="row3"><div class="field"><label>Pretensão F1</label><input type="text" id="m11-f1-pretensao"></div><div class="field"><label>Pretensão F2</label><input type="text" id="m11-f2-pretensao"></div><div class="field"><label>Pretensão F3</label><input type="text" id="m11-f3-pretensao"></div></div>
+    </div>
+    <div class="section">
+      <div class="section-title">Quadro Comparativo</div>
+      <table class="table-eval">
+        <thead><tr><th>Critério</th><th>F1</th><th>F2</th><th>F3</th></tr></thead>
+        <tbody>
+          <tr><td>Competência Técnica</td><td><select id="m11-c1-f1"><option>Excelente</option><option>MB</option><option>Bom</option><option>Regular</option></select></td><td><select id="m11-c1-f2"><option>Excelente</option><option>MB</option><option>Bom</option><option>Regular</option></select></td><td><select id="m11-c1-f3"><option>Excelente</option><option>MB</option><option>Bom</option><option>Regular</option></select></td></tr>
+          <tr><td>Comunicação</td><td><select id="m11-c2-f1"><option>Excelente</option><option>MB</option><option>Bom</option><option>Regular</option></select></td><td><select id="m11-c2-f2"><option>Excelente</option><option>MB</option><option>Bom</option><option>Regular</option></select></td><td><select id="m11-c2-f3"><option>Excelente</option><option>MB</option><option>Bom</option><option>Regular</option></select></td></tr>
+          <tr><td>Foco em resultados</td><td><select id="m11-c3-f1"><option>Excelente</option><option>MB</option><option>Bom</option><option>Regular</option></select></td><td><select id="m11-c3-f2"><option>Excelente</option><option>MB</option><option>Bom</option><option>Regular</option></select></td><td><select id="m11-c3-f3"><option>Excelente</option><option>MB</option><option>Bom</option><option>Regular</option></select></td></tr>
+          <tr><td>Alinhamento Cultural</td><td><select id="m11-c4-f1"><option>Excelente</option><option>MB</option><option>Bom</option><option>Regular</option></select></td><td><select id="m11-c4-f2"><option>Excelente</option><option>MB</option><option>Bom</option><option>Regular</option></select></td><td><select id="m11-c4-f3"><option>Excelente</option><option>MB</option><option>Bom</option><option>Regular</option></select></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="section">
+      <div class="section-title">Resumo e Decisão</div>
+      <div class="field"><label>Resumo Finalista 1</label><textarea id="m11-f1-resumo"></textarea></div>
+      <div class="field"><label>Resumo Finalista 2</label><textarea id="m11-f2-resumo"></textarea></div>
+      <div class="field"><label>Resumo Finalista 3</label><textarea id="m11-f3-resumo"></textarea></div>
+      <div class="field"><label>Decisão da empresa</label><textarea id="m11-decisao"></textarea></div>
+      <div class="field"><label>Plano de ação pós-decisão</label><textarea id="m11-plano_acao"></textarea></div>
+    </div>
+    <div class="submit-row"><button class="btn-save" onclick="saveModule(11)">Salvar Módulo 11</button><button class="btn-print" onclick="window.print()">Imprimir</button></div>
+  </div>
+</div>
+
+<!-- ====== M12 (consultora only) ====== -->
+<div id="m12" class="mod-panel">
+  <div class="mod-title">Módulo 12 · Contratação e Formalização</div>
+  <div class="mod-subtitle">Checklist de admissão e formalização do candidato aprovado</div>
+  <div class="lock-notice">
+    <div class="lock-notice-icon">🔒</div>
+    <p class="lock-notice-text">Este módulo é de acesso exclusivo da consultora.</p>
+    <button class="lock-notice-btn" onclick="openAuthModal()">Entrar como consultora →</button>
+  </div>
+  <div class="consultant-only">
+    <div class="section">
+      <div class="section-title">Identificação</div>
+      <div class="row2"><div class="field"><label>Empresa</label><input type="text" id="m12-empresa"></div><div class="field"><label>Vaga</label><input type="text" id="m12-vaga"></div></div>
+      <div class="row2"><div class="field"><label>Candidato aprovado</label><input type="text" id="m12-candidato"></div><div class="field"><label>Data de início</label><input type="date" id="m12-data_inicio"></div></div>
+      <div class="row2"><div class="field"><label>Responsável RH</label><input type="text" id="m12-resp_rh"></div><div class="field"><label>Gestor direto</label><input type="text" id="m12-gestor"></div></div>
+    </div>
+    <div class="section">
+      <div class="section-title">Aprovação e Proposta</div>
+      <div class="check-group"><label class="check-item"><input type="checkbox" name="m12-aprovacao" value="Candidato confirmou aceite"> Candidato confirmou aceite</label><label class="check-item"><input type="checkbox" name="m12-aprovacao" value="Salário negociado e aprovado"> Salário negociado e aprovado</label><label class="check-item"><input type="checkbox" name="m12-aprovacao" value="Proposta enviada"> Proposta enviada</label><label class="check-item"><input type="checkbox" name="m12-aprovacao" value="Proposta assinada recebida"> Proposta assinada recebida</label><label class="check-item"><input type="checkbox" name="m12-aprovacao" value="Data de início confirmada"> Data de início confirmada</label></div>
+      <div class="field" style="margin-top:12px"><label>Salário acordado</label><input type="text" id="m12-salario"></div>
+      <div class="field"><label>Benefícios acordados</label><textarea id="m12-beneficios" rows="3"></textarea></div>
+    </div>
+    <div class="section">
+      <div class="section-title">Documentação Admissional</div>
+      <div class="check-group"><label class="check-item"><input type="checkbox" name="m12-docs" value="RG / CNH"> RG / CNH</label><label class="check-item"><input type="checkbox" name="m12-docs" value="CPF"> CPF</label><label class="check-item"><input type="checkbox" name="m12-docs" value="CTPS"> CTPS</label><label class="check-item"><input type="checkbox" name="m12-docs" value="PIS/PASEP"> PIS/PASEP</label><label class="check-item"><input type="checkbox" name="m12-docs" value="Comprovante de residência"> Comprovante de residência</label><label class="check-item"><input type="checkbox" name="m12-docs" value="Comprovante de escolaridade"> Comprovante de escolaridade</label><label class="check-item"><input type="checkbox" name="m12-docs" value="Foto 3x4"> Foto 3x4</label><label class="check-item"><input type="checkbox" name="m12-docs" value="Certidão de nascimento/casamento"> Certidão de nascimento/casamento</label><label class="check-item"><input type="checkbox" name="m12-docs" value="Comprovante de conta bancária"> Comprovante de conta bancária</label></div>
+      <div class="field" style="margin-top:12px"><label>Pendências</label><input type="text" id="m12-pendencias_docs"></div>
+    </div>
+    <div class="section">
+      <div class="section-title">Exame e Integração</div>
+      <div class="check-group"><label class="check-item"><input type="checkbox" name="m12-exame" value="Agendado"> Exame agendado</label><label class="check-item"><input type="checkbox" name="m12-exame" value="Realizado"> Exame realizado</label><label class="check-item"><input type="checkbox" name="m12-exame" value="Apto"> Apto</label></div>
+      <div class="field" style="margin-top:12px"><label>Integração planejada</label><div class="check-group"><label class="check-item"><input type="checkbox" name="m12-integracao" value="Kit boas-vindas"> Kit boas-vindas</label><label class="check-item"><input type="checkbox" name="m12-integracao" value="Apresentação à equipe"> Apresentação à equipe</label><label class="check-item"><input type="checkbox" name="m12-integracao" value="Treinamentos iniciais"> Treinamentos iniciais</label><label class="check-item"><input type="checkbox" name="m12-integracao" value="Onboarding digital"> Onboarding digital</label><label class="check-item"><input type="checkbox" name="m12-integracao" value="Buddy / padrinho"> Buddy / padrinho</label></div></div>
+      <div class="field" style="margin-top:12px"><label>Observações finais</label><textarea id="m12-confirmacao" rows="3"></textarea></div>
+    </div>
+    <div class="submit-row"><button class="btn-save" onclick="saveModule(12)">Salvar Módulo 12</button><button class="btn-print" onclick="window.print()">Imprimir</button></div>
+  </div>
+</div>
+
+<!-- ====== M13 (misto: candidato / gestor / consultora) ====== -->
+<div id="m13" class="mod-panel">
+  <div class="mod-title">Módulo 13 · Integração e Acompanhamento (Onboarding)</div>
+  <div class="mod-subtitle">Monitoramento da adaptação do novo colaborador</div>
+  <div class="candidate-note">👤 Preencha as perguntas sobre sua adaptação abaixo.</div>
+
+  <!-- Identificação -->
+  <div class="section">
+    <div class="section-title">Identificação</div>
+    <div class="row2"><div class="field"><label>Colaborador</label><input type="text" id="m13-colaborador"></div><div class="field"><label>Cargo</label><input type="text" id="m13-cargo"></div></div>
+    <div class="consultant-only">
+      <div class="row2" style="margin-top:14px"><div class="field"><label>Empresa</label><input type="text" id="m13-empresa"></div><div class="field"><label>Gestor direto</label><input type="text" id="m13-gestor"></div></div>
+      <div class="row2"><div class="field"><label>Data de início</label><input type="date" id="m13-data_inicio"></div><div class="field"><label>Data deste acompanhamento</label><input type="date" id="m13-data_acompanhamento"></div></div>
+      <div class="field"><label>Período</label><div class="radio-group"><label class="radio-item"><input type="radio" name="m13-semana" value="1ª semana"> 1ª semana</label><label class="radio-item"><input type="radio" name="m13-semana" value="30 dias"> 30 dias</label><label class="radio-item"><input type="radio" name="m13-semana" value="60 dias"> 60 dias</label><label class="radio-item"><input type="radio" name="m13-semana" value="90 dias"> 90 dias</label></div></div>
+    </div>
+  </div>
+
+  <!-- Checklist primeiro dia -->
+  <div class="section">
+    <div class="section-title">Checklist — Primeiro Dia</div>
+    <div class="check-group"><label class="check-item"><input type="checkbox" name="m13-dia1" value="Boas-vindas pela equipe"> Boas-vindas pela equipe</label><label class="check-item"><input type="checkbox" name="m13-dia1" value="Local preparado"> Local preparado</label><label class="check-item"><input type="checkbox" name="m13-dia1" value="Acessos liberados"> Acessos liberados</label><label class="check-item"><input type="checkbox" name="m13-dia1" value="Processos e normas apresentados"> Processos e normas</label><label class="check-item"><input type="checkbox" name="m13-dia1" value="Equipe apresentada"> Equipe apresentada</label><label class="check-item"><input type="checkbox" name="m13-dia1" value="Tour pelas instalações"> Tour pelas instalações</label></div>
+  </div>
+
+  <!-- Acompanhamento Colaborador (candidato preenche) -->
+  <div class="section">
+    <div class="section-title">Acompanhamento com o Colaborador</div>
+    <div class="field"><label>1. Como você está se sentindo nessa primeira fase na empresa?</label><textarea id="m13-cq1" rows="2"></textarea></div>
+    <div class="field"><label>2. As expectativas que você tinha sobre a vaga estão sendo atendidas?</label><textarea id="m13-cq2" rows="2"></textarea></div>
+    <div class="field"><label>3. Você está com clareza sobre suas responsabilidades e prioridades?</label><textarea id="m13-cq3" rows="2"></textarea></div>
+    <div class="field"><label>4. Como está sendo sua relação com a equipe e o gestor?</label><textarea id="m13-cq4" rows="2"></textarea></div>
+    <div class="field"><label>5. Há algo que está dificultando sua adaptação ou trabalho?</label><textarea id="m13-cq5" rows="2"></textarea></div>
+    <div class="field"><label>6. O que você precisa para melhorar seu desempenho nesse início?</label><textarea id="m13-cq6" rows="2"></textarea></div>
+  </div>
+
+  <!-- Gestor lock -->
+  <div class="gestor-lock">
+    <p class="gestor-lock-text">🔒 Área de acesso do gestor responsável — questionário de acompanhamento.</p>
+    <button class="gestor-lock-btn" onclick="openAuthModal()">Entrar como gestor →</button>
+  </div>
+
+  <!-- Acompanhamento Gestor (gestor preenche) -->
+  <div class="section gestor-only">
+    <div class="section-title">Acompanhamento com o Gestor</div>
+    <div class="field"><label>1. Como você avalia a adaptação do colaborador até agora?</label><textarea id="m13-gq1" rows="2"></textarea></div>
+    <div class="field"><label>2. O colaborador está entregando o que era esperado para esse período?</label><textarea id="m13-gq2" rows="2"></textarea></div>
+    <div class="field"><label>3. Como está sendo sua relação com o colaborador e a equipe?</label><textarea id="m13-gq3" rows="2"></textarea></div>
+    <div class="field"><label>4. Há algum ponto de desenvolvimento que precisa de atenção já?</label><textarea id="m13-gq4" rows="2"></textarea></div>
+    <div class="field"><label>5. A contratação está atendendo às expectativas da área?</label><textarea id="m13-gq5" rows="2"></textarea></div>
+  </div>
+
+  <!-- Avaliação: apenas consultora -->
+  <div class="lock-notice">
+    <div class="lock-notice-icon">🔒</div>
+    <p class="lock-notice-text">Avaliação de adaptação — acesso exclusivo da consultora.</p>
+    <button class="lock-notice-btn" onclick="openAuthModal()">Entrar como consultora →</button>
+  </div>
+  <div class="section consultant-only">
+    <div class="section-title">Avaliação de Adaptação e Próximos Passos (uso interno)</div>
+    <div class="field"><label>Avaliação geral da adaptação</label><div class="radio-group"><label class="radio-item"><input type="radio" name="m13-adaptacao" value="Ótima"> Ótima</label><label class="radio-item"><input type="radio" name="m13-adaptacao" value="Boa"> Boa</label><label class="radio-item"><input type="radio" name="m13-adaptacao" value="Regular — requer atenção"> Regular — requer atenção</label><label class="radio-item"><input type="radio" name="m13-adaptacao" value="Crítica"> Crítica</label></div></div>
+    <div class="field"><label>Plano de ação</label><textarea id="m13-plano_acao" rows="4"></textarea></div>
+    <div class="field"><label>Data do próximo acompanhamento</label><input type="date" id="m13-proximo_acomp"></div>
+    <div class="field"><label>Observações adicionais</label><textarea id="m13-obs" rows="3"></textarea></div>
+  </div>
+
+  <div class="submit-row"><button class="btn-save" onclick="saveModule(13)">Salvar Módulo 13</button><button class="btn-print" onclick="window.print()">Imprimir</button></div>
+</div>
+
+</div><!-- .content -->
+
+<!-- ====== AUTH MODAL ====== -->
+<div class="modal-backdrop" id="auth-modal" onclick="if(event.target===this)closeAuthModal()">
+  <div class="modal">
+    <div class="modal-title">🔐 Acesso Restrito</div>
+    <p class="modal-desc">Consultora: senha do painel admin.<br>Gestor: senha fornecida pela consultora.</p>
+    <input type="password" id="auth-pass" placeholder="Digite a senha…" onkeydown="if(event.key==='Enter')doLogin()">
+    <div class="modal-btns">
+      <button class="modal-btn-primary" onclick="doLogin()">Entrar</button>
+      <button class="modal-btn-cancel" onclick="closeAuthModal()">Cancelar</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const SB_URL = 'https://jngyyterkatblntpsjbm.supabase.co';
+const SB_KEY = 'sb_publishable_30rUV3wLjGCDd4DggNYePQ_CwkdB1br';
+const PASS_CONSULTORA = 'admin';
+const PASS_GESTOR = 'gestor';
+let rsRole = sessionStorage.getItem('rs_role') || null;
+
+async function sbInsert(payload) {
+  const resp = await fetch(SB_URL + '/rest/v1/responses', {
+    method: 'POST',
+    headers: {
+      'apikey': SB_KEY,
+      'Authorization': 'Bearer ' + SB_KEY,
+      'Content-Type': 'application/json',
+      'Prefer': 'return=minimal'
+    },
+    body: JSON.stringify(payload)
+  });
+  if (!resp.ok) {
+    const txt = await resp.text().catch(() => resp.status);
+    throw new Error('HTTP ' + resp.status + ': ' + txt);
+  }
+}
+
+/* ── AUTH ── */
+function initRole() {
+  if (rsRole) {
+    document.body.classList.add('role-' + rsRole);
+    updateAuthUI();
+  }
+}
+
+function openAuthModal() {
+  document.getElementById('auth-modal').classList.add('open');
+  document.getElementById('auth-pass').value = '';
+  setTimeout(() => document.getElementById('auth-pass').focus(), 80);
+}
+
+function closeAuthModal() {
+  document.getElementById('auth-modal').classList.remove('open');
+}
+
+function doLogin() {
+  const pass = document.getElementById('auth-pass').value;
+  let role = null;
+  if (pass === PASS_CONSULTORA) role = 'consultora';
+  else if (pass === PASS_GESTOR) role = 'gestor';
+  else { showToast('❌ Senha incorreta.'); return; }
+
+  rsRole = role;
+  sessionStorage.setItem('rs_role', role);
+  document.body.classList.remove('role-consultora', 'role-gestor');
+  document.body.classList.add('role-' + role);
+  updateAuthUI();
+  closeAuthModal();
+  showToast('✅ Acesso de ' + (role === 'consultora' ? 'consultora' : 'gestor') + ' ativado.');
+}
+
+function doLogout() {
+  rsRole = null;
+  sessionStorage.removeItem('rs_role');
+  document.body.classList.remove('role-consultora', 'role-gestor');
+  updateAuthUI();
+  showToast('Sessão encerrada.');
+}
+
+function updateAuthUI() {
+  const status = document.getElementById('auth-status');
+  const loginBtn = document.getElementById('login-btn');
+  const logoutBtn = document.getElementById('logout-btn');
+  if (!rsRole) {
+    status.textContent = '🌐 Acesso público';
+    loginBtn.style.display = '';
+    logoutBtn.style.display = 'none';
+  } else if (rsRole === 'consultora') {
+    status.textContent = '🔓 Consultora';
+    loginBtn.style.display = 'none';
+    logoutBtn.style.display = '';
+  } else {
+    status.textContent = '👔 Gestor';
+    loginBtn.style.display = 'none';
+    logoutBtn.style.display = '';
+  }
+}
+
+/* ── TABS ── */
+function showMod(n, btn) {
+  document.querySelectorAll('.mod-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  const panel = document.getElementById('m' + n);
+  if (panel) panel.classList.add('active');
+  if (btn) btn.classList.add('active');
+}
+
+/* ── TOAST ── */
+function showToast(msg, ms) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), ms || 3500);
+}
+
+/* ── COLLECT ── */
+function collectPanel(panelId) {
+  const panel = document.getElementById(panelId);
+  const data = {};
+  panel.querySelectorAll('input:not([type=radio]):not([type=checkbox]), select, textarea').forEach(el => {
+    if (el.id) data[el.id] = el.value;
+  });
+  const radioNames = new Set();
+  panel.querySelectorAll('input[type=radio]').forEach(el => radioNames.add(el.name));
+  radioNames.forEach(name => {
+    const checked = panel.querySelector(`input[type=radio][name="${name}"]:checked`);
+    data[name] = checked ? checked.value : '';
+  });
+  const cbNames = new Set();
+  panel.querySelectorAll('input[type=checkbox]').forEach(el => cbNames.add(el.name));
+  cbNames.forEach(name => {
+    data[name] = Array.from(panel.querySelectorAll(`input[type=checkbox][name="${name}"]:checked`)).map(e => e.value).join(', ');
+  });
+  return data;
+}
+
+/* ── EMAIL ── */
+async function sendEmail(w3fKey, n, data, empresa) {
+  try {
+    const body = Object.entries(data).map(([k, v]) => v ? `${k}: ${v}` : '').filter(Boolean).join('\n');
+    await fetch('https://api.web3forms.com/submit', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+      body: JSON.stringify({ access_key: w3fKey, subject: `R&S Módulo ${n} — ${empresa}`, message: body, from_name: 'RH Hub R&S' })
+    });
+  } catch (e) { /* non-critical */ }
+}
+
+/* ── SAVE ── */
+async function saveModule(n) {
+  const data = collectPanel('m' + n);
+  const empresa = data[`m${n}-empresa`] || '-';
+  const nome = data[`m${n}-candidato`] || data[`m${n}-colaborador`] || data[`m${n}-responsavel`] || '-';
+  const cargo = data[`m${n}-cargo`] || data[`m${n}-nome_vaga`] || data[`m${n}-vaga`] || '';
+  const btn = event && event.target;
+  if (btn) { btn.disabled = true; btn.textContent = '⏳ Salvando…'; }
+  try {
+    await sbInsert({
+      section: `rs_m${n}`,
+      company: empresa,
+      nome,
+      cargo_setor: cargo,
+      data_resposta: new Date().toISOString().split('T')[0],
+      r1: JSON.stringify(data)
+    });
+    showToast('✅ Módulo ' + n + ' salvo com sucesso!');
+    if (btn) { btn.disabled = false; btn.textContent = 'Salvar Módulo ' + n; }
+    const w3fKey = localStorage.getItem('w3f_key');
+    if (w3fKey) sendEmail(w3fKey, n, data, empresa);
+  } catch (e) {
+    if (btn) { btn.disabled = false; btn.textContent = 'Salvar Módulo ' + n; }
+    showToast('❌ ' + (e.message || String(e)), 6000);
+  }
+}
+
+/* ── MODULE LINKS ── */
+const MODULOS_INFO = [
+  { n:1,  label:'M1 · Briefing Inicial' },
+  { n:2,  label:'M2 · Reunião com Gestor' },
+  { n:3,  label:'M3 · Perfil do Cargo' },
+  { n:4,  label:'M4 · Proposta Comercial' },
+  { n:5,  label:'M5 · Divulgação' },
+  { n:6,  label:'M6 · Triagem' },
+  { n:7,  label:'M7 · Pré-Entrevista' },
+  { n:8,  label:'M8 · Competências' },
+  { n:10, label:'M10 · Relatório do Candidato' },
+  { n:11, label:'M11 · Finalistas' },
+  { n:12, label:'M12 · Contratação' },
+  { n:13, label:'M13 · Integração' },
+];
+
+function getModuleUrl(n) {
+  return window.location.origin + window.location.pathname + '?m=' + n;
+}
+
+function buildLinksGrid() {
+  const grid = document.getElementById('links-grid');
+  if (!grid || grid.children.length) return;
+  MODULOS_INFO.forEach(({ n, label }) => {
+    const card = document.createElement('div');
+    card.className = 'link-card';
+    card.innerHTML = `
+      <span class="link-card-label">${label}</span>
+      <div class="link-card-btns">
+        <button class="link-open-btn" onclick="window.open('${getModuleUrl(n)}','_blank')">Abrir</button>
+        <button class="link-copy-btn" onclick="copyLink(${n})">Copiar link</button>
+      </div>`;
+    grid.appendChild(card);
+  });
+}
+
+function toggleLinksPanel() {
+  const wrap = document.getElementById('links-grid-wrap');
+  const toggle = document.getElementById('links-toggle');
+  const open = wrap.style.display === 'none';
+  wrap.style.display = open ? 'block' : 'none';
+  toggle.textContent = open ? '▲ recolher' : '▼ expandir';
+  if (open) buildLinksGrid();
+}
+
+function copyLink(n) {
+  const url = getModuleUrl(n);
+  if (navigator.clipboard) {
+    navigator.clipboard.writeText(url)
+      .then(() => showToast('✅ Link M' + n + ' copiado!'))
+      .catch(() => prompt('Copie o link abaixo:', url));
+  } else {
+    prompt('Copie o link abaixo:', url);
+  }
+}
+
+/* ── SINGLE MODULE ROUTING ── */
+function initModule() {
+  const params = new URLSearchParams(window.location.search);
+  const m = params.get('m');
+  if (!m) return;
+  const n = parseInt(m);
+  if (!n) return;
+  document.body.classList.add('single-mod');
+  // Update title
+  const info = MODULOS_INFO.find(x => x.n === n);
+  if (info) document.title = info.label + ' — R&S';
+  showMod(n, null);
+}
+
+initRole();
+initModule();
+</script>
+</body>
+</html>
