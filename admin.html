@@ -69,7 +69,7 @@
     #resp-viewer{display:none;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:16px;overflow:hidden}
     .rv-topbar{display:flex;align-items:center;justify-content:space-between;padding:16px 20px;border-bottom:1px solid rgba(255,255,255,.08);flex-wrap:wrap;gap:12px}
     .rv-title{font-size:14px;font-weight:700;color:white}
-    .rv-nav{display:flex;align-items:center;gap:10px}
+    .rv-nav{display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:flex-end}
     .rv-count{font-size:13px;color:rgba(255,255,255,.4);min-width:80px;text-align:center}
     .rv-btn{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);color:white;padding:6px 14px;border-radius:8px;cursor:pointer;font-size:13px;transition:all .2s}
     .rv-btn:hover:not(:disabled){background:rgba(200,155,60,.2);border-color:rgba(200,155,60,.3)}
@@ -171,6 +171,16 @@
       .hero,.viewer-wrap,.report-banner,.mapa-wrap{padding-left:16px;padding-right:16px}
     }
     @media(max-width:380px){.section-grid{grid-template-columns:1fr}}
+    @media(max-width:600px){
+      .viewer-wrap{padding:0 12px}
+      .rv-topbar{padding:12px 14px;gap:8px}
+      .rv-title{font-size:12px;width:100%}
+      .rv-nav{width:100%;gap:6px}
+      .rv-btn{padding:5px 10px;font-size:11px}
+      .rv-count{min-width:56px;font-size:11px}
+      .rv-body{padding:14px}
+      .rv-respondent{padding:10px 12px}
+    }
   </style>
 </head>
 <body>

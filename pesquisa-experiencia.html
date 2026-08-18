@@ -73,10 +73,10 @@ body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); co
 .scale-btn.selected .scale-num { color: var(--green); }
 
 /* NPS 0-10 */
-.nps-row { display: flex; gap: 5px; flex-wrap: nowrap; }
+.nps-row { display: flex; gap: 5px; }
 .nps-btn { flex: 1; min-width: 0; padding: 11px 4px; border: 1.5px solid var(--border); border-radius: 8px; background: #fff; cursor: pointer; text-align: center; font-size: .92rem; font-weight: 700; color: var(--muted); transition: all .15s; font-family: inherit; }
 .nps-btn:hover { border-color: var(--green); }
-.nps-labels { display: flex; justify-content: space-between; margin-top: 9px; font-size: .7rem; color: var(--muted); }
+.nps-labels { display: flex; justify-content: space-between; margin-top: 9px; font-size: .7rem; color: var(--muted); gap: 4px; }
 
 .nps-btn.sel-detractor { border-color: #b03030; background: #fdf3f2; color: #b03030; }
 .nps-btn.sel-passive   { border-color: #c07a10; background: #fef8ec; color: #c07a10; }
@@ -109,11 +109,22 @@ body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); co
 .toast { position: fixed; bottom: 22px; right: 22px; background: var(--green); color: #fff; padding: 13px 20px; border-radius: 10px; font-weight: 600; font-size: .88rem; z-index: 9999; opacity: 0; transform: translateY(16px); transition: all .3s; pointer-events: none; max-width: 320px; }
 .toast.show { opacity: 1; transform: translateY(0); }
 
-@media(max-width:520px) {
-  .form-wrap { padding: 24px 14px 48px; }
-  .q-card, .id-card { padding: 18px; }
-  .nps-btn { font-size: .78rem; padding: 9px 2px; }
-  .scale-btn { padding: 11px 4px; }
+@media(max-width:560px) {
+  .form-wrap { padding: 20px 12px 48px; }
+  .q-card, .id-card { padding: 16px; }
+  .q-text { font-size: .92rem; }
+  /* NPS: botões menores para caber na linha */
+  .nps-row { gap: 3px; }
+  .nps-btn { font-size: .72rem; font-weight: 700; padding: 9px 1px; border-radius: 6px; border-width: 1px; }
+  .nps-labels { font-size: .6rem; }
+  /* Scale: esconde label e ajusta padding */
+  .scale-btn { padding: 10px 4px; }
+  .scale-lbl { display: none; }
+  /* Botão de envio */
+  .btn-submit { padding: 14px 24px; width: 100%; }
+  /* Hero */
+  .hero { padding: 40px 16px 36px; }
+  .hero-badge { font-size: .72rem; padding: 6px 14px; }
 }
 </style>
 </head>
