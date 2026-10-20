@@ -1,13 +1,12 @@
 // ═══════════════════════════════════════════════════
-// RH com Propósito — login da administradora (Supabase Auth)
+// RH com Propósito — login da consultora (Supabase Auth)
 // Requer supabase-js, js/config.js e js/api.js.
-//
-// A tela de login usa estes ids: login-screen, login-email,
-// login-senha, login-btn, login-erro. O conteúdo protegido fica em
-// um elemento que começa oculto e é exibido por onEntrar().
+// O acesso aos dados é garantido no banco (RLS + is_admin());
+// estas funções só cuidam da experiência de login.
 // ═══════════════════════════════════════════════════
 (function () {
   const RH = window.RH;
+  const ENTRADA = '/';
 
   async function verificarAdmin() {
     const { data, error } = await RH.supabase().rpc('is_admin');
@@ -33,38 +32,31 @@
 
     async sair() {
       await RH.supabase().auth.signOut();
-      location.reload();
+      location.href = ENTRADA;
     },
 
-    // Liga a tela de login; chama onEntrar(session) quando houver acesso.
-    async protegerPagina(onEntrar) {
-      const tela = document.getElementById('login-screen');
-      const email = document.getElementById('login-email');
-      const senha = document.getElementById('login-senha');
-      const btn = document.getElementById('login-btn');
-      const erro = document.getElementById('login-erro');
+    // Para páginas internas: sem login, volta para a entrada.
+    async exigirLogin() {
+      const s = await RH.auth.sessaoAdmin().catch(() => null);
+      if (s) return s;
+      location.replace(ENTRADA + '?volta=' + encodeURIComponent(location.pathname + location.search + location.hash));
+      return new Promise(() => {});
+    },
 
-      const liberar = session => { tela.style.display = 'none'; onEntrar(session); };
+    async enviarRedefinicao(email) {
+      const { error } = await RH.supabase().auth.resetPasswordForEmail(email.trim(), { redirectTo: location.origin + ENTRADA + '?redefinir=1' });
+      if (error) throw new Error('Não foi possível enviar o e-mail agora. Tente de novo em alguns minutos.');
+    },
 
-      const session = await RH.auth.sessaoAdmin().catch(() => null);
-      if (session) return liberar(session);
-      tela.style.display = '';
+    async trocarSenha(nova) {
+      if (!nova || nova.length < 8) throw new Error('A senha precisa ter pelo menos 8 caracteres.');
+      const { error } = await RH.supabase().auth.updateUser({ password: nova });
+      if (error) throw new Error('Não foi possível trocar a senha: ' + error.message);
+    },
 
-      async function tentar() {
-        erro.textContent = '';
-        btn.disabled = true;
-        try {
-          await RH.auth.entrar(email.value, senha.value);
-          liberar(await RH.auth.sessaoAdmin());
-        } catch (e) {
-          erro.textContent = e.message;
-          senha.value = '';
-        } finally {
-          btn.disabled = false;
-        }
-      }
-      btn.addEventListener('click', tentar);
-      [email, senha].forEach(el => el.addEventListener('keydown', e => { if (e.key === 'Enter') tentar(); }));
+    async email() {
+      const { data: { session } } = await RH.supabase().auth.getSession();
+      return session ? session.user.email : '';
     }
   };
 })();

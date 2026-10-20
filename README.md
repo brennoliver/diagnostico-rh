@@ -1,75 +1,82 @@
-# RH com Propósito — Portal de Ferramentas
+# RH com Propósito — sistema da Cristiele
 
-Site estático (HTML + JS puro, sem build) publicado na Vercel. As respostas de todos os formulários vão para a tabela `responses` do Supabase; uma cópia segue por e-mail via Web3Forms.
+Site estático (HTML + JavaScript puro, sem build) publicado na Vercel. Os dados ficam no Supabase.
+
+- **Entrada (`/`)**: login da consultora. Tudo de gestão fica atrás desse login.
+- **Formulários compartilhados**: abrem sem senha, pelo link que a Cristiele envia. Só conseguem *enviar* respostas.
+- **Materiais para participantes** (apostila e "Líderes que Inspiram"): abertos por link.
 
 ## Estrutura
 
 ```
-index.html                 Portal (cards para todas as ferramentas)
-admin/
-  index.html               Painel geral: todas as respostas, Mapa de Condução, Manual   (login)
-  programa.html            Painel do Programa por empresa: Seção 4, relatório,
-                           cartilha e progresso                                       (login)
-programa/                  Programa Construindo Juntos
-  index.html               Capa, sub-seleção do diagnóstico e telas das etapas
-  questionario.html        ?secao=direcao|gestores|colaboradores                      (senha)
-  identidade.html          Seção 4 — Identidade Organizacional                         (senha)
-  cartilha.html            Seção 5 — Cartilha de Cultura                               (senha)
-  pre-diagnostico.html     Formulário enviado antes das entrevistas
-  questionarios-rhcp.html  Questionários RHCP (direção, gestores, colaboradores)
-  acesso.js / programa.css Identificação da empresa + senha; estilos do Programa
-eventos/                   confirmacao, pre-palestra-executivo, pesquisa-experiencia,
-                           questionario (Questionário de Palestra)
-ferramentas/               pdi, recrutamento, apostila
-apresentacoes/             lideres, *-slides
+index.html                Login (com "esqueci minha senha")
+app/                      Área da consultora (login obrigatório)
+  index.html  core.js  telas.js
+                          Início · Clientes · Formulários · Respostas · Satisfação ·
+                          Programa · Materiais · Minha conta
+  guia.html               Guia do consultor: mapa de condução, manual e checklists
+f/index.html              Página única que exibe qualquer formulário: f/?f=<id>&empresa=<nome>
+r/<id>.html               Links curtos enviados ao cliente (prévia no WhatsApp) → f/
 direcao.html, gestores.html, colaboradores.html
-                           Links curtos enviados aos clientes (prévia no WhatsApp) que
-                           redirecionam para programa/questionario.html
-js/config.js               URL e chave do Supabase, chave do Web3Forms, lista de seções
-js/api.js                  RH.salvarResposta, RH.enviarEmail, RH.verificarCodigo, RH.esc…
-js/auth.js                 Login da consultora (Supabase Auth)
-js/cartilha.js             Gerador da Cartilha de Cultura
-css/base.css               Cores da marca (--rh-*)
-supabase/001_seguranca.sql Políticas de acesso, tabelas e views (não é publicado)
-vercel.json                Redirecionamentos das URLs antigas + cabeçalhos
+                          Links curtos antigos, já enviados a clientes → f/
+materiais/                Apostila e material de leitura (públicos)
+apresentacoes/            Slides (login obrigatório)
+js/config.js              Chaves públicas, nome da consultora, lista de materiais
+js/formularios.js         Catálogo de formulários (perguntas, opções, textos)
+js/formularios-rs.js      Módulos de Recrutamento & Seleção
+js/form-engine.js         Desenha os formulários, valida, grava e resume respostas
+js/api.js  js/auth.js     Acesso ao Supabase e login
+js/cartilha.js            Gera a Cartilha de Cultura em HTML para imprimir
+css/rh.css                Visual do sistema (claro, verde e dourado da marca)
+css/base.css              Cores da marca usadas pelos materiais e slides
+supabase/*.sql            Migrações do banco (não são publicadas)
+tools/gerar-atalhos.mjs   Recria os links curtos em r/
 ```
 
-## Segurança
+## Formulários
 
-- O navegador **só consegue inserir** respostas. Ler, editar e apagar exige login de um e-mail listado em `admin_users`. Isso é garantido pelo RLS do Supabase, não pelo código das páginas.
-- As senhas dos questionários ficam na tabela `codigos_acesso`, conferidas pela função `verificar_codigo`. Não ficam no código.
-- A chave do Supabase e a do Web3Forms em `js/config.js` são públicas por natureza.
+Cada formulário é um objeto em `js/formularios.js`. O mesmo objeto define o que o cliente vê, como a resposta é gravada e como o painel mostra e resume os dados.
 
-## Implantação (nesta ordem)
+**Criar ou mudar um formulário**
+1. Edite `js/formularios.js` (veja o comentário no topo do arquivo com os tipos de campo).
+2. Rode `node tools/gerar-atalhos.mjs` para criar o link curto em `r/`.
+3. Publique. O formulário aparece em **Formulários** e as respostas em **Respostas**, com gráficos automáticos para perguntas de múltipla escolha, escalas e NPS.
 
-1. **Supabase → Authentication → Users → Add user**: crie o usuário da consultora (e-mail + senha).
-2. **Supabase → Authentication → Sign In / Providers**: desative "Allow new users to sign up".
-3. Edite `supabase/001_seguranca.sql` só no SQL Editor (não faça commit dos valores): coloque o e-mail da consultora no bloco `admin_users` e rode o arquivo inteiro.
-4. Ainda no SQL Editor, defina as senhas que serão passadas aos clientes:
-   ```sql
-   update codigos_acesso set codigo = 'nova-senha' where chave = 'direcao';
-   -- chaves: direcao, gestores, colaboradores, identidade, cartilha, rs_gestor
-   ```
-5. Só então publique o site (merge/push → Vercel).
+Não renomeie o `id` de um formulário nem de um campo que já tenha respostas: é por ele que as respostas antigas são encontradas.
 
-Se o site for publicado antes do passo 3, os questionários com senha e o login do admin não funcionam até o SQL ser aplicado.
+**Partes internas.** Seções ou campos com `interno: true` só aparecem quando a Cristiele abre o formulário logada (botão *Preencher*). Formulários inteiros com `interno: true` não podem ser enviados a clientes.
 
-## Adicionar um formulário novo
+## Banco de dados (Supabase)
 
-1. Grave com `RH.salvarResposta({ section: 'minha_secao', company, nome, cargo_setor, r1: { ...dados } })`. O `r1` pode ser um objeto: ele é salvo como JSON.
-2. Acrescente `{ id: 'minha_secao', icone, grupo, titulo }` em `RH_CONFIG.secoes` (`js/config.js`). O card e a contagem aparecem no admin automaticamente.
-3. O nome da seção deve seguir `^[a-z0-9_]{1,40}$` (exigência da política de inserção).
+- `responses`: todas as respostas. O público só insere; ler, editar e apagar exige login de um e-mail em `admin_users` (RLS).
+- `clientes`: cadastro de clientes. As respostas são ligadas ao cliente pelo nome da empresa e pelas *outras grafias* cadastradas (sem diferenciar maiúsculas e acentos).
+- `programa_dados`: progresso do Programa e avaliação da comunicação, por cliente.
+- `empresas`, `contagem_secoes`, `respostas_detalhadas`: views para relatórios em SQL.
 
-## Relatórios em SQL
+Migrações em `supabase/` (rodar em ordem no SQL Editor; podem ser repetidas):
+1. `001_seguranca.sql`: políticas de acesso, administradoras, views.
+2. `002_clientes.sql`: tabela de clientes.
 
-```sql
-select * from empresas order by ultima_resposta desc;
-select nome, dados ->> 'q8_nps' as nps from respostas_detalhadas where section = 'pesquisa_experiencia';
+**Administradora nova**: crie o usuário em Authentication → Users e rode
+`insert into admin_users (email) values ('email@exemplo.com');`
+
+**Esqueci minha senha**: em Authentication → URL Configuration, o *Site URL* precisa ser o endereço do site, para o link do e-mail voltar para cá.
+
+## Publicar
+
+A Vercel não publica sozinha a partir do GitHub neste projeto. Depois do merge:
+
 ```
+git checkout master && git pull
+vercel --prod
+```
+
+Os endereços antigos (`admin.html`, `diagnostico.html?dl=…`, `eventos/…`, `ferramentas/…`) são redirecionados pelo `vercel.json`.
 
 ## Rodar localmente
 
 ```
 python -m http.server 8000
 ```
-Abra http://localhost:8000. Os redirecionamentos do `vercel.json` só funcionam na Vercel.
+
+Abra http://localhost:8000. A cópia local usa o Supabase de verdade: respostas enviadas localmente são gravadas no banco real. Os redirecionamentos do `vercel.json` só funcionam na Vercel.

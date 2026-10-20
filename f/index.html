@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#1A5C45">
+<title>Formulário — RH com Propósito</title>
+<meta property="og:site_name" content="RH com Propósito">
+<meta property="og:title" content="Formulário — RH com Propósito">
+<meta property="og:description" content="Suas respostas são confidenciais e nos ajudam a construir um trabalho sob medida para a sua empresa.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700;900&family=Playfair+Display:ital,wght@0,600;0,700;1,600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/rh.css">
+</head>
+<body>
+
+<header class="pf-top no-print">
+  <span class="brand"><span class="brand-mark">RH</span><span class="brand-text"><strong>RH com Propósito</strong><span>Cristiele Rodrigues</span></span></span>
+</header>
+
+<main class="pf" id="pf">
+  <div class="loading"><div class="spinner"></div>Carregando…</div>
+</main>
+
+<footer class="pf-foot"><strong>RH com Propósito</strong> · Cristiele Rodrigues<br>Porque todo resultado começa com pessoas.</footer>
+
+<script src="../js/config.js"></script>
+<script src="../js/api.js"></script>
+<script src="../js/cartilha.js"></script>
+<script src="../js/formularios.js"></script>
+<script src="../js/formularios-rs.js"></script>
+<script src="../js/form-engine.js"></script>
+<script>
+(async function () {
+  const raiz = document.getElementById('pf');
+  const p = new URLSearchParams(location.search);
+  const form = RHF.get(p.get('f'));
+  const empresa = p.get('empresa') || '';
+
+  if (!form) {
+    raiz.innerHTML = '<div class="pf-end"><div class="pf-end-ico">🔎</div><h1>Formulário não encontrado</h1><p>Confira o link recebido ou fale com a consultora.</p></div>';
+    return;
+  }
+  document.title = (form.tituloPublico || form.titulo) + ' — RH com Propósito';
+
+  // Partes internas só aparecem para a consultora logada
+  let interno = false;
+  if (RHF.temInterno(form)) {
+    try {
+      await carregar('https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js');
+      await carregar('../js/auth.js');
+      interno = !!(await RH.auth.sessaoAdmin());
+    } catch { interno = false; }
+  }
+  if (form.interno && !interno) {
+    raiz.innerHTML = `<div class="pf-end"><div class="pf-end-ico">🔒</div><h1>Formulário de uso interno</h1>
+      <p>Este formulário é preenchido pela consultora.</p>
+      <a class="btn btn-lg" href="../?volta=${encodeURIComponent(location.pathname + location.search)}">Entrar</a></div>`;
+    return;
+  }
+  RHF.renderizar(raiz, form, { empresa, interno });
+
+  function carregar(src) {
+    return new Promise((ok, erro) => {
+      const s = document.createElement('script');
+      s.src = src; s.onload = ok; s.onerror = erro;
+      document.head.appendChild(s);
+    });
+  }
+})();
+</script>
+</body>
+</html>

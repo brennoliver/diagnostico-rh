@@ -87,9 +87,8 @@
     return _sb;
   };
 
-  RH.secao = id => C.secoes.find(s => s.id === id);
   RH.rotuloSecao = id => {
-    const s = RH.secao(id);
-    return s ? `${s.icone} ${s.titulo}` : id;
+    const f = (window.RH_FORMULARIOS || []).find(x => x.id === id);
+    return f ? `${f.icone} ${f.titulo}` : id;
   };
 })();

@@ -1,0 +1,1158 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<script src="../js/somente-consultora.js"></script>
+<title>Guia do Consultor — RH com Propósito</title>
+<link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700;900&family=Playfair+Display:ital,wght@0,600;0,700;1,600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/rh.css">
+<style>
+.guia-tabs{margin-bottom:22px}
+.mapa-header{display:none}
+.mapa-block{margin-bottom:28px}
+.mapa-block-title{font-size:13px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:var(--muted);margin:0 0 12px}
+.etapa-card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);margin-bottom:10px;box-shadow:var(--shadow-1);overflow:hidden}
+.etapa-header{display:flex;align-items:center;gap:14px;padding:16px 18px;cursor:pointer;user-select:none}
+.etapa-header:hover{background:var(--surface-2)}
+.etapa-num{width:32px;height:32px;border-radius:50%;background:var(--green-soft);color:var(--green);display:grid;place-items:center;font-weight:800;font-size:14px;flex-shrink:0}
+.etapa-title-group{flex:1;min-width:0}
+.etapa-label{font-size:11.5px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:var(--gold-ink)}
+.etapa-name{font-weight:800;font-size:16px;color:var(--ink)}
+.etapa-chevron{color:var(--muted);transition:transform .2s;font-size:12px}
+.etapa-card.open .etapa-chevron{transform:rotate(90deg)}
+.etapa-body{display:none;padding:4px 20px 20px 66px}
+@media(max-width:640px){.etapa-body{padding:4px 16px 18px}}
+.etapa-card.open .etapa-body{display:block}
+.etapa-objetivo{font-style:italic;color:var(--ink-2);margin-bottom:12px}
+.etapa-steps{margin:0 0 12px;padding-left:20px;color:var(--ink-2)}
+.etapa-steps li{margin-bottom:6px}
+.etapa-entrega{padding:10px 14px;border-radius:10px;background:var(--gold-soft);color:#5C430F;font-size:14px}
+.mod-tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px}
+.mod-tab{padding:7px 13px;border-radius:999px;border:1px solid var(--line);background:var(--surface);font-weight:700;font-size:13px;color:var(--ink-2);cursor:pointer}
+.mod-tab.active{background:var(--green);border-color:var(--green);color:#fff}
+.mod-panel{display:none;background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:22px;box-shadow:var(--shadow-1)}
+.mod-panel.active{display:block}
+.mod-heading{font-family:var(--serif);font-size:22px;font-weight:700;margin-bottom:8px}
+.mod-sub-heading{font-weight:800;font-size:15px;margin:16px 0 8px}
+.mod-objective{color:var(--ink-2);margin-bottom:18px;padding-left:12px;border-left:3px solid var(--gold)}
+.mod-cols{display:grid;gap:18px;grid-template-columns:1fr}
+@media(min-width:760px){.mod-cols{grid-template-columns:1fr 1fr}}
+.mod-section{margin-bottom:16px}
+.mod-section-title{font-size:12.5px;font-weight:800;letter-spacing:.8px;text-transform:uppercase;color:var(--green);margin-bottom:8px}
+.mod-list{margin:0;padding-left:20px;color:var(--ink-2)}
+.mod-list li{margin-bottom:5px}
+.fala-box{padding:14px 16px;border-radius:10px;background:var(--green-soft-2);border:1px solid #D3E7DB;font-style:italic;color:var(--ink-2)}
+.dica-box{padding:14px 16px;border-radius:10px;background:var(--gold-soft);margin:16px 0}
+.dica-label{font-size:12px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:var(--gold-ink);margin-bottom:4px}
+.dica-text{color:#4A3A16}
+.checklist-box{border:1px solid var(--line);border-radius:12px;padding:14px 16px;margin-top:16px;background:var(--surface-2)}
+.checklist-box-title{font-weight:800;margin-bottom:8px}
+.mapa-checklist{display:grid;gap:2px;grid-template-columns:1fr}
+@media(min-width:640px){.mapa-checklist{grid-template-columns:1fr 1fr}}
+.check-item{display:flex;gap:10px;align-items:flex-start;padding:6px 0;cursor:pointer;font-size:14.5px}
+.check-item input{width:18px;height:18px;accent-color:var(--green);margin-top:2px;flex-shrink:0}
+.check-item input:checked + span{color:var(--muted);text-decoration:line-through}
+.cl-reset{margin-top:8px;background:none;border:0;color:var(--muted);font-weight:700;font-size:13px;cursor:pointer;padding:0}
+.cl-reset:hover{color:var(--danger)}
+</style>
+</head>
+<body>
+<header class="pf-top"><a class="brand" href="./#/materiais"><span class="brand-mark">RH</span><span class="brand-text"><strong>RH com Propósito</strong><span>Guia do consultor</span></span></a>
+  <a class="btn btn-sec btn-sm" href="./#/materiais">← Voltar</a></header>
+<main class="main"><div class="page" style="max-width:980px">
+  <div class="page-head"><div><div class="eyebrow">Método RH com Propósito®</div><h1>Guia do Consultor</h1>
+    <p>As etapas do Programa Construindo Juntos, o guia de campo, roteiros de fala e checklists. Os checklists ficam salvos neste aparelho.</p></div></div>
+  <div class="tabs guia-tabs"><button class="tab active" data-aba="mapa">Mapa de condução</button><button class="tab" data-aba="manual">Manual — 8 capítulos</button></div>
+  <section id="aba-mapa">
+<!-- HEADER -->
+<div class="mapa-header">
+<div class="mapa-header-badge">Método RH com Propósito®</div>
+<h2>Mapa de Condução</h2>
+<p>Guia completo do Programa Construindo Juntos — todas as etapas, roteiros de entrevista, módulos do consultor e checklists de acompanhamento reunidos em um só lugar.</p>
+</div>
+<!-- ─── BLOCO 1: PLANO DE EXECUÇÃO — 6 ETAPAS ─── -->
+<div class="mapa-block">
+<div class="mapa-block-title">Plano de Execução — 6 Etapas</div>
+<!-- Etapa 1 -->
+<div class="etapa-card" id="etapa-1">
+<div class="etapa-header" onclick="toggleEtapa(1)">
+<div class="etapa-num">1</div>
+<div class="etapa-title-group">
+<div class="etapa-label">Etapa 1</div>
+<div class="etapa-name">Diagnóstico Organizacional</div>
+</div>
+<span class="etapa-chevron">▶</span>
+</div>
+<div class="etapa-body">
+<div class="etapa-objetivo">Entender a realidade da empresa antes de propor qualquer ação.</div>
+<ol class="etapa-steps">
+<li>Reunião inicial com a diretoria</li>
+<li>Alinhamento das expectativas do projeto</li>
+<li>Identificação das principais dores da empresa</li>
+<li>Entrevistas individuais com gestores</li>
+<li>Observação da rotina e dos processos</li>
+<li>Análise da comunicação, liderança, clima e processos</li>
+<li>Levantamento de pontos fortes e oportunidades de melhoria</li>
+<li>Organização das informações coletadas</li>
+<li>Elaboração do relatório diagnóstico</li>
+<li>Apresentação da devolutiva para a diretoria</li>
+</ol>
+<div class="etapa-entrega"><strong>Entrega:</strong> Relatório de Diagnóstico Organizacional com plano inicial de ação</div>
+</div>
+</div>
+<!-- Etapa 2 -->
+<div class="etapa-card" id="etapa-2">
+<div class="etapa-header" onclick="toggleEtapa(2)">
+<div class="etapa-num">2</div>
+<div class="etapa-title-group">
+<div class="etapa-label">Etapa 2</div>
+<div class="etapa-name">Estruturação da Gestão de Pessoas</div>
+</div>
+<span class="etapa-chevron">▶</span>
+</div>
+<div class="etapa-body">
+<div class="etapa-objetivo">Organizar os principais processos de RH.</div>
+<ol class="etapa-steps">
+<li>Definição dos processos prioritários</li>
+<li>Estruturação do fluxo de admissão</li>
+<li>Revisão do processo de integração</li>
+<li>Organização do acompanhamento dos colaboradores</li>
+<li>Criação de formulários de controle</li>
+<li>Construção do calendário anual de RH</li>
+<li>Definição das responsabilidades dos gestores</li>
+<li>Estruturação de orientações para feedback e comunicação</li>
+<li>Validação dos materiais com a diretoria</li>
+<li>Ajustes finais</li>
+</ol>
+<div class="etapa-entrega"><strong>Entrega:</strong> Manual de processos, calendário anual e modelos de acompanhamento</div>
+</div>
+</div>
+<!-- Etapa 3 -->
+<div class="etapa-card" id="etapa-3">
+<div class="etapa-header" onclick="toggleEtapa(3)">
+<div class="etapa-num">3</div>
+<div class="etapa-title-group">
+<div class="etapa-label">Etapa 3</div>
+<div class="etapa-name">Fortalecimento da Cultura Organizacional</div>
+</div>
+<span class="etapa-chevron">▶</span>
+</div>
+<div class="etapa-body">
+<div class="etapa-objetivo">Consolidar a identidade e os comportamentos esperados.</div>
+<ol class="etapa-steps">
+<li>Análise da missão, visão e valores existentes</li>
+<li>Revisão ou construção da missão, visão e valores</li>
+<li>Definição dos comportamentos esperados</li>
+<li>Construção dos princípios da cultura</li>
+<li>Elaboração de mensagens de comunicação interna</li>
+<li>Preparação do material da cultura</li>
+<li>Validação com a diretoria</li>
+<li>Planejamento da apresentação para a equipe</li>
+<li>Definição das ações de implantação</li>
+<li>Organização dos materiais finais</li>
+</ol>
+<div class="etapa-entrega"><strong>Entrega:</strong> Documento da Cultura Organizacional e guia de comportamentos</div>
+</div>
+</div>
+<!-- Etapa 4 -->
+<div class="etapa-card" id="etapa-4">
+<div class="etapa-header" onclick="toggleEtapa(4)">
+<div class="etapa-num">4</div>
+<div class="etapa-title-group">
+<div class="etapa-label">Etapa 4</div>
+<div class="etapa-name">Desenvolvimento da Liderança</div>
+</div>
+<span class="etapa-chevron">▶</span>
+</div>
+<div class="etapa-body">
+<div class="etapa-objetivo">Capacitar gestores para liderarem pessoas com eficiência.</div>
+<ol class="etapa-steps">
+<li>Levantamento das necessidades dos líderes</li>
+<li>Definição do conteúdo do treinamento</li>
+<li>Preparação do material</li>
+<li>Aplicação do treinamento</li>
+<li>Comunicação assertiva</li>
+<li>Feedback e gestão de conflitos</li>
+<li>Dinâmicas práticas</li>
+<li>Discussão de casos reais</li>
+<li>Construção do plano de ação dos líderes</li>
+<li>Registro dos pontos de desenvolvimento</li>
+</ol>
+<div class="etapa-entrega"><strong>Entrega:</strong> Treinamento, material de apoio, certificados e plano de ação</div>
+</div>
+</div>
+<!-- Etapa 5 -->
+<div class="etapa-card" id="etapa-5">
+<div class="etapa-header" onclick="toggleEtapa(5)">
+<div class="etapa-num">5</div>
+<div class="etapa-title-group">
+<div class="etapa-label">Etapa 5</div>
+<div class="etapa-name">Desenvolvimento da Equipe</div>
+</div>
+<span class="etapa-chevron">▶</span>
+</div>
+<div class="etapa-body">
+<div class="etapa-objetivo">Engajar os colaboradores e fortalecer a cultura.</div>
+<ol class="etapa-steps">
+<li>Definição do tema do encontro</li>
+<li>Preparação da palestra ou oficina</li>
+<li>Apresentação da cultura organizacional</li>
+<li>Trabalho sobre comportamento e responsabilidade</li>
+<li>Dinâmicas práticas</li>
+<li>Reflexão sobre atitudes</li>
+<li>Fortalecimento do trabalho em equipe</li>
+<li>Construção do compromisso coletivo</li>
+<li>Avaliação do encontro</li>
+<li>Registro das percepções</li>
+</ol>
+<div class="etapa-entrega"><strong>Entrega:</strong> Treinamento da equipe, certificados e plano de compromisso</div>
+</div>
+</div>
+<!-- Etapa 6 -->
+<div class="etapa-card" id="etapa-6">
+<div class="etapa-header" onclick="toggleEtapa(6)">
+<div class="etapa-num">6</div>
+<div class="etapa-title-group">
+<div class="etapa-label">Etapa 6</div>
+<div class="etapa-name">Acompanhamento e Consolidação</div>
+</div>
+<span class="etapa-chevron">▶</span>
+</div>
+<div class="etapa-body">
+<div class="etapa-objetivo">Avaliar resultados e orientar a continuidade.</div>
+<ol class="etapa-steps">
+<li>Reunião de encerramento com a diretoria</li>
+<li>Avaliação das ações implementadas</li>
+<li>Análise dos avanços</li>
+<li>Identificação de oportunidades futuras</li>
+<li>Apresentação do relatório final</li>
+<li>Entrega do plano de continuidade</li>
+<li>Recomendações estratégicas</li>
+<li>Orientações para manutenção das ações</li>
+<li>Esclarecimento de dúvidas</li>
+<li>Encerramento oficial do projeto</li>
+</ol>
+<div class="etapa-entrega"><strong>Entrega:</strong> Relatório Final e Plano de Continuidade</div>
+</div>
+</div>
+</div><!-- /etapas -->
+<!-- ─── BLOCO 2: GUIA DE CAMPO ─── -->
+<div class="mapa-block">
+<div class="mapa-block-title">Guia de Campo do Consultor — 8 Módulos</div>
+<div class="mod-tabs">
+<button class="mod-tab active" onclick="switchMod(1)">Módulo 1</button>
+<button class="mod-tab" onclick="switchMod(2)">Módulo 2</button>
+<button class="mod-tab" onclick="switchMod(3)">Módulo 3</button>
+<button class="mod-tab" onclick="switchMod(4)">Módulo 4</button>
+<button class="mod-tab" onclick="switchMod(5)">Módulo 5</button>
+<button class="mod-tab" onclick="switchMod(6)">Módulo 6</button>
+<button class="mod-tab" onclick="switchMod(7)">Módulo 7</button>
+<button class="mod-tab" onclick="switchMod(8)">Módulo 8</button>
+</div>
+<!-- MOD 1 -->
+<div class="mod-panel active" id="mod-1">
+<div class="mod-heading">Módulo 1 — Diagnóstico Organizacional</div>
+<div class="mod-objective">O Diagnóstico Organizacional é a etapa mais importante do Método RH com Propósito®. Antes de propor qualquer solução, o consultor deve compreender a história da empresa, sua cultura, seus processos, sua liderança e as relações existentes entre as pessoas.</div>
+<div class="mod-cols">
+<div>
+<div class="mod-section">
+<div class="mod-section-title">Objetivos do Diagnóstico</div>
+<ul class="mod-list">
+<li>Conhecer a empresa de forma sistêmica</li>
+<li>Identificar oportunidades de melhoria</li>
+<li>Mapear riscos e potencialidades</li>
+<li>Compreender a percepção da diretoria, gestores e colaboradores</li>
+<li>Gerar informações para o plano de ação</li>
+</ul>
+</div>
+<div class="mod-section">
+<div class="mod-section-title">Perfil Esperado do Consultor</div>
+<ul class="mod-list">
+<li>Escuta ativa</li>
+<li>Postura ética e imparcial</li>
+<li>Boa comunicação</li>
+<li>Organização</li>
+<li>Capacidade analítica</li>
+<li>Empatia</li>
+<li>Discrição e confidencialidade</li>
+</ul>
+</div>
+</div>
+<div>
+<div class="mod-section">
+<div class="mod-section-title">Antes da Primeira Visita</div>
+<ul class="mod-list">
+<li>Estudar o segmento de atuação</li>
+<li>Revisar a proposta comercial e o contrato</li>
+<li>Ler documentos enviados previamente</li>
+<li>Preparar cronograma da visita</li>
+<li>Separar formulários e materiais</li>
+<li>Confirmar data, horário e participantes</li>
+</ul>
+</div>
+<div class="mod-section">
+<div class="mod-section-title">O Que Observar Durante a Visita</div>
+<ul class="mod-list">
+<li>Ambiente físico e organização</li>
+<li>Relacionamento entre os colaboradores</li>
+<li>Postura das lideranças</li>
+<li>Comunicação entre os setores</li>
+<li>Clima organizacional</li>
+<li>Fluxo dos processos</li>
+<li>Pontos que demonstram a cultura da empresa</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="mod-section">
+<div class="mod-section-title">Erros que Devem ser Evitados</div>
+<ul class="mod-list">
+<li>Apresentar soluções antes de concluir o diagnóstico</li>
+<li>Comparar a empresa com outros clientes</li>
+<li>Interromper constantemente os entrevistados</li>
+<li>Emitir opiniões precipitadas</li>
+<li>Desconsiderar a história e a cultura da organização</li>
+</ul>
+</div>
+<div class="mod-section">
+<div class="mod-section-title">Sugestão de Fala — Abertura da Reunião</div>
+<div class="fala-box">"Gostaria de agradecer pela confiança depositada no RH com Propósito. Hoje iniciaremos uma etapa muito importante, que tem como objetivo compreender a realidade da empresa. Nossa intenção é ouvir, observar e conhecer a organização para construir soluções que façam sentido para a equipe e para a liderança."</div>
+</div>
+<div class="dica-box">
+<div class="dica-label">Dica da Fundadora</div>
+<div class="dica-text">O primeiro problema apresentado pela empresa nem sempre é o problema principal. Escute com atenção, observe os comportamentos e procure compreender o contexto antes de formular qualquer conclusão. O diagnóstico de qualidade nasce da escuta, da observação e da confiança construída com o cliente.</div>
+</div>
+<div class="checklist-box">
+<div class="checklist-box-title">Checklist do Consultor</div>
+<div class="mapa-checklist" id="cl-mod1">
+<label class="check-item"><input onchange="saveCl('mod1',this)" type="checkbox"/><span>Notebook carregado</span></label>
+<label class="check-item"><input onchange="saveCl('mod1',this)" type="checkbox"/><span>Carregador</span></label>
+<label class="check-item"><input onchange="saveCl('mod1',this)" type="checkbox"/><span>Bloco de anotações e canetas</span></label>
+<label class="check-item"><input onchange="saveCl('mod1',this)" type="checkbox"/><span>Questionários impressos</span></label>
+<label class="check-item"><input onchange="saveCl('mod1',this)" type="checkbox"/><span>Cronograma da visita</span></label>
+<label class="check-item"><input onchange="saveCl('mod1',this)" type="checkbox"/><span>Cartão de visitas</span></label>
+<label class="check-item"><input onchange="saveCl('mod1',this)" type="checkbox"/><span>Pasta do cliente</span></label>
+<label class="check-item"><input onchange="saveCl('mod1',this)" type="checkbox"/><span>Celular carregado</span></label>
+</div>
+<button class="cl-reset" onclick="resetCl('mod1')">Limpar checklist</button>
+</div>
+</div><!-- /mod-1 -->
+<!-- MOD 2 -->
+<div class="mod-panel" id="mod-2">
+<div class="mod-heading">Módulo 2 — Condução da Reunião de Abertura</div>
+<div class="mod-objective">Padronizar a condução da primeira reunião da consultoria, criando um ambiente de confiança, alinhando expectativas e apresentando a metodologia do RH com Propósito.</div>
+<div class="mod-cols">
+<div>
+<div class="mod-section">
+<div class="mod-section-title">Antes da Reunião</div>
+<ul class="mod-list">
+<li>Chegue com antecedência mínima de 20 minutos</li>
+<li>Conheça o nome e a função dos participantes</li>
+<li>Organize os materiais e teste os equipamentos</li>
+<li>Observe discretamente o ambiente antes do início</li>
+</ul>
+</div>
+<div class="mod-section">
+<div class="mod-section-title">Postura do Consultor</div>
+<ul class="mod-list">
+<li>Escute sem interromper</li>
+<li>Faça perguntas abertas</li>
+<li>Evite julgamentos</li>
+<li>Anote frases importantes</li>
+<li>Não prometa soluções imediatas</li>
+</ul>
+</div>
+</div>
+<div>
+<div class="mod-section">
+<div class="mod-section-title">Roteiro da Reunião</div>
+<ul class="mod-list">
+<li><strong>1. Acolhimento</strong> — Cumprimente cada participante pelo nome</li>
+<li><strong>2. Apresentação</strong> — Conte sua trajetória e a proposta do RH com Propósito</li>
+<li><strong>3. Metodologia</strong> — Explique etapas, responsabilidades e cronograma</li>
+</ul>
+</div>
+<div class="mod-section">
+<div class="mod-section-title">O Que Observar</div>
+<ul class="mod-list">
+<li>Quem fala mais durante a reunião</li>
+<li>Como as decisões são tomadas</li>
+<li>Nível de abertura entre os participantes</li>
+<li>Convergências e divergências nas respostas</li>
+<li>Comportamentos que revelam a cultura da empresa</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="mod-section">
+<div class="mod-section-title">Perguntas para Iniciar a Conversa</div>
+<ul class="mod-list">
+<li>Como surgiu a empresa?</li>
+<li>O que motivou a contratação da consultoria?</li>
+<li>Quais são os maiores desafios hoje?</li>
+<li>Quais resultados esperam alcançar ao final do projeto?</li>
+<li>O que vocês não gostariam que acontecesse durante a consultoria?</li>
+</ul>
+</div>
+<div class="dica-box">
+<div class="dica-label">Dica da Fundadora</div>
+<div class="dica-text">A reunião de abertura define o tom de toda a consultoria. Quando a liderança percebe organização, escuta e respeito, tende a se comprometer mais com o projeto. Valorize esse momento e construa uma relação de parceria desde o primeiro encontro.</div>
+</div>
+<div class="checklist-box">
+<div class="checklist-box-title">Checklist de Encerramento</div>
+<div class="mapa-checklist" id="cl-mod2">
+<label class="check-item"><input onchange="saveCl('mod2',this)" type="checkbox"/><span>Objetivos apresentados</span></label>
+<label class="check-item"><input onchange="saveCl('mod2',this)" type="checkbox"/><span>Expectativas alinhadas</span></label>
+<label class="check-item"><input onchange="saveCl('mod2',this)" type="checkbox"/><span>Cronograma explicado</span></label>
+<label class="check-item"><input onchange="saveCl('mod2',this)" type="checkbox"/><span>Participantes identificados</span></label>
+<label class="check-item"><input onchange="saveCl('mod2',this)" type="checkbox"/><span>Próxima visita agendada</span></label>
+<label class="check-item"><input onchange="saveCl('mod2',this)" type="checkbox"/><span>Anotações organizadas</span></label>
+</div>
+<button class="cl-reset" onclick="resetCl('mod2')">Limpar checklist</button>
+</div>
+</div><!-- /mod-2 -->
+<!-- MOD 3 -->
+<div class="mod-panel" id="mod-3">
+<div class="mod-heading">Módulo 3 — Entrevista Estratégica com a Diretoria</div>
+<div class="mod-objective">Conduzir entrevistas estratégicas com a diretoria para compreender a essência da organização, sua história, desafios, expectativas e visão de futuro.</div>
+<div class="mod-cols">
+<div>
+<div class="mod-section">
+<div class="mod-section-title">Antes da Entrevista</div>
+<ul class="mod-list">
+<li>Reserve um ambiente silencioso e sem interrupções</li>
+<li>Explique que a conversa é confidencial</li>
+<li>Reforce que não existem respostas certas ou erradas</li>
+<li>Mantenha um clima leve e acolhedor</li>
+</ul>
+</div>
+<div class="mod-section">
+<div class="mod-section-title">Postura do Consultor</div>
+<ul class="mod-list">
+<li>Ouça atentamente antes de formular novas perguntas</li>
+<li>Permita que o entrevistado conclua seu raciocínio</li>
+<li>Evite emitir opiniões durante a entrevista</li>
+<li>Anote palavras e frases que revelem a cultura da empresa</li>
+<li>Observe também a linguagem não verbal</li>
+</ul>
+</div>
+<div class="mod-section">
+<div class="mod-section-title">O Que Observar</div>
+<ul class="mod-list">
+<li>Assuntos que geram emoção ou preocupação</li>
+<li>Contradições entre respostas</li>
+<li>Alinhamento entre os diretores</li>
+<li>Facilidade ou dificuldade para falar sobre pessoas</li>
+<li>Coerência entre discurso e prática</li>
+</ul>
+</div>
+</div>
+<div>
+<div class="mod-section">
+<div class="mod-section-title">Roteiro da Entrevista</div>
+<div class="mod-sub-heading">1. História da empresa</div>
+<ul class="mod-list">
+<li>Como surgiu a empresa?</li>
+<li>Quais foram os momentos mais marcantes da trajetória?</li>
+<li>Do que vocês mais se orgulham?</li>
+</ul>
+<div class="mod-sub-heading">2. Momento atual</div>
+<ul class="mod-list">
+<li>Como você define a empresa hoje?</li>
+<li>Quais são os maiores desafios enfrentados atualmente?</li>
+<li>O que mais preocupa a diretoria?</li>
+</ul>
+<div class="mod-sub-heading">3. Pessoas e liderança</div>
+<ul class="mod-list">
+<li>Como você descreve sua equipe?</li>
+<li>Quais comportamentos mais admira nos colaboradores?</li>
+<li>Quais comportamentos precisam ser desenvolvidos?</li>
+<li>Como avalia a atuação das lideranças?</li>
+</ul>
+<div class="mod-sub-heading">4. Cultura organizacional</div>
+<ul class="mod-list">
+<li>Se a empresa fosse uma pessoa, como ela seria?</li>
+<li>Quais valores nunca podem ser perdidos?</li>
+<li>Quais comportamentos não são aceitos?</li>
+</ul>
+<div class="mod-sub-heading">5. Comunicação</div>
+<ul class="mod-list">
+<li>Como as informações circulam na empresa?</li>
+<li>Há conflitos frequentes entre setores?</li>
+<li>Os colaboradores compreendem os objetivos da organização?</li>
+</ul>
+<div class="mod-sub-heading">6. Futuro</div>
+<ul class="mod-list">
+<li>Onde a empresa pretende chegar nos próximos cinco anos?</li>
+<li>Como você gostaria que sua equipe fosse reconhecida?</li>
+<li>Qual legado deseja deixar?</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="dica-box">
+<div class="dica-label">Dica da Fundadora</div>
+<div class="dica-text">As melhores respostas normalmente aparecem quando o entrevistado percebe que está sendo ouvido com respeito. Permita momentos de silêncio, incentive exemplos práticos e faça perguntas complementares. Muitas vezes, a verdadeira necessidade da empresa está nas entrelinhas da conversa.</div>
+</div>
+<div class="checklist-box">
+<div class="checklist-box-title">Checklist Final</div>
+<div class="mapa-checklist" id="cl-mod3">
+<label class="check-item"><input onchange="saveCl('mod3',this)" type="checkbox"/><span>História da empresa compreendida</span></label>
+<label class="check-item"><input onchange="saveCl('mod3',this)" type="checkbox"/><span>Desafios identificados</span></label>
+<label class="check-item"><input onchange="saveCl('mod3',this)" type="checkbox"/><span>Expectativas registradas</span></label>
+<label class="check-item"><input onchange="saveCl('mod3',this)" type="checkbox"/><span>Informações sobre cultura coletadas</span></label>
+<label class="check-item"><input onchange="saveCl('mod3',this)" type="checkbox"/><span>Percepções registradas logo após a entrevista</span></label>
+</div>
+<button class="cl-reset" onclick="resetCl('mod3')">Limpar checklist</button>
+</div>
+</div><!-- /mod-3 -->
+<!-- MOD 4 -->
+<div class="mod-panel" id="mod-4">
+<div class="mod-heading">Módulo 4 — Entrevista com Gestores e Lideranças</div>
+<div class="mod-objective">Compreender como a gestão acontece na prática, identificar desafios enfrentados pelas lideranças e levantar informações que auxiliem na construção de um plano de desenvolvimento consistente.</div>
+<div class="mod-cols">
+<div>
+<div class="mod-section">
+<div class="mod-section-title">Preparação</div>
+<ul class="mod-list">
+<li>Agende entrevistas individuais</li>
+<li>Reserve um ambiente tranquilo</li>
+<li>Explique que o objetivo é compreender a realidade e não avaliar o desempenho do gestor</li>
+<li>Garanta confidencialidade</li>
+</ul>
+</div>
+<div class="mod-section">
+<div class="mod-section-title">Competências do Consultor</div>
+<ul class="mod-list">
+<li>Escuta ativa</li>
+<li>Empatia</li>
+<li>Neutralidade</li>
+<li>Capacidade investigativa</li>
+<li>Boa comunicação</li>
+</ul>
+</div>
+<div class="mod-section">
+<div class="mod-section-title">Perguntas de Aprofundamento</div>
+<ul class="mod-list">
+<li>Pode me dar um exemplo dessa situação?</li>
+<li>Como isso impacta os resultados?</li>
+<li>O que você já tentou fazer para resolver?</li>
+<li>De que forma a consultoria pode contribuir?</li>
+</ul>
+</div>
+</div>
+<div>
+<div class="mod-section">
+<div class="mod-section-title">Roteiro da Entrevista</div>
+<div class="mod-sub-heading">1. Papel do gestor</div>
+<ul class="mod-list">
+<li>Há quanto tempo você lidera esta equipe?</li>
+<li>Quais são suas principais responsabilidades?</li>
+<li>O que considera mais desafiador na função?</li>
+</ul>
+<div class="mod-sub-heading">2. Equipe</div>
+<ul class="mod-list">
+<li>Como você descreveria sua equipe?</li>
+<li>Quais são os principais pontos fortes?</li>
+<li>Quais comportamentos precisam ser desenvolvidos?</li>
+</ul>
+<div class="mod-sub-heading">3. Comunicação</div>
+<ul class="mod-list">
+<li>As informações chegam com clareza?</li>
+<li>Como ocorrem os alinhamentos com a equipe?</li>
+<li>Quais dificuldades de comunicação você percebe?</li>
+</ul>
+<div class="mod-sub-heading">4. Desenvolvimento</div>
+<ul class="mod-list">
+<li>Quais treinamentos seriam importantes?</li>
+<li>Como você realiza feedback?</li>
+<li>Com que frequência conversa sobre desenvolvimento com a equipe?</li>
+</ul>
+<div class="mod-sub-heading">5. Processos</div>
+<ul class="mod-list">
+<li>Há atividades sem padronização?</li>
+<li>Existem retrabalhos frequentes?</li>
+<li>O que poderia tornar a rotina mais eficiente?</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="dica-box">
+<div class="dica-label">Dica da Fundadora</div>
+<div class="dica-text">O gestor conhece detalhes da operação que muitas vezes não chegam à diretoria. Escute atentamente, valide as informações com outras fontes e procure compreender o contexto antes de elaborar qualquer conclusão.</div>
+</div>
+<div class="checklist-box">
+<div class="checklist-box-title">Checklist Final</div>
+<div class="mapa-checklist" id="cl-mod4">
+<label class="check-item"><input onchange="saveCl('mod4',this)" type="checkbox"/><span>Entrevistas realizadas</span></label>
+<label class="check-item"><input onchange="saveCl('mod4',this)" type="checkbox"/><span>Necessidades de treinamento identificadas</span></label>
+<label class="check-item"><input onchange="saveCl('mod4',this)" type="checkbox"/><span>Gargalos de comunicação registrados</span></label>
+<label class="check-item"><input onchange="saveCl('mod4',this)" type="checkbox"/><span>Boas práticas mapeadas</span></label>
+<label class="check-item"><input onchange="saveCl('mod4',this)" type="checkbox"/><span>Anotações organizadas para o relatório</span></label>
+</div>
+<button class="cl-reset" onclick="resetCl('mod4')">Limpar checklist</button>
+</div>
+</div><!-- /mod-4 -->
+<!-- MOD 5 -->
+<div class="mod-panel" id="mod-5">
+<div class="mod-heading">Módulo 5 — Entrevista com Colaboradores</div>
+<div class="mod-objective">Ouvir os colaboradores para compreender como eles percebem a empresa, a liderança, a comunicação, o ambiente de trabalho e os processos. Essa etapa complementa a visão da diretoria e dos gestores, tornando o diagnóstico mais completo e imparcial.</div>
+<div class="mod-cols">
+<div>
+<div class="mod-section">
+<div class="mod-section-title">Preparação</div>
+<ul class="mod-list">
+<li>Escolha um ambiente reservado e tranquilo</li>
+<li>Explique que a entrevista é confidencial</li>
+<li>Esclareça que não há respostas certas ou erradas</li>
+<li>Crie um clima de confiança antes de iniciar as perguntas</li>
+</ul>
+</div>
+<div class="mod-section">
+<div class="mod-section-title">Postura do Consultor</div>
+<ul class="mod-list">
+<li>Escute com atenção</li>
+<li>Demonstre respeito e empatia</li>
+<li>Evite expressões que indiquem julgamento</li>
+<li>Não interrompa o colaborador</li>
+<li>Agradeça a sinceridade ao final da conversa</li>
+</ul>
+</div>
+<div class="mod-section">
+<div class="mod-section-title">Cuidados Importantes</div>
+<ul class="mod-list">
+<li>Nunca exponha a identidade de um colaborador no relatório</li>
+<li>Apresente resultados de forma consolidada</li>
+<li>Evite criar expectativas sobre mudanças imediatas</li>
+<li>Respeite o tempo de cada entrevistado</li>
+</ul>
+</div>
+</div>
+<div>
+<div class="mod-section">
+<div class="mod-section-title">Roteiro da Entrevista</div>
+<div class="mod-sub-heading">1. Integração</div>
+<ul class="mod-list">
+<li>Há quanto tempo você trabalha na empresa?</li>
+<li>Como foi sua integração quando entrou?</li>
+<li>Você recebeu orientações suficientes para iniciar suas atividades?</li>
+</ul>
+<div class="mod-sub-heading">2. Ambiente de trabalho</div>
+<ul class="mod-list">
+<li>Como você descreveria o ambiente da empresa?</li>
+<li>Como é o relacionamento entre os colegas?</li>
+<li>Você se sente respeitado no dia a dia?</li>
+</ul>
+<div class="mod-sub-heading">3. Liderança</div>
+<ul class="mod-list">
+<li>Seu líder oferece apoio quando necessário?</li>
+<li>Você recebe feedback sobre seu trabalho?</li>
+<li>Como é a comunicação com sua liderança?</li>
+</ul>
+<div class="mod-sub-heading">4. Comunicação</div>
+<ul class="mod-list">
+<li>As informações chegam de forma clara?</li>
+<li>Você sente que pode expressar suas ideias?</li>
+<li>Existe abertura para sugestões?</li>
+</ul>
+<div class="mod-sub-heading">5. Desenvolvimento</div>
+<ul class="mod-list">
+<li>Você acredita que a empresa investe no desenvolvimento dos colaboradores?</li>
+<li>Quais treinamentos considera importantes?</li>
+<li>O que você gostaria de aprender?</li>
+</ul>
+<div class="mod-sub-heading">6. Percepção geral</div>
+<ul class="mod-list">
+<li>O que mais gosta na empresa?</li>
+<li>O que poderia melhorar?</li>
+<li>Se pudesse mudar uma coisa hoje, qual seria?</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="dica-box">
+<div class="dica-label">Dica da Fundadora</div>
+<div class="dica-text">A confiança é construída nos primeiros minutos da conversa. Quando o colaborador percebe que será ouvido com respeito e que suas respostas serão tratadas com confidencialidade, tende a compartilhar informações valiosas para o diagnóstico.</div>
+</div>
+<div class="checklist-box">
+<div class="checklist-box-title">Checklist Final</div>
+<div class="mapa-checklist" id="cl-mod5">
+<label class="check-item"><input onchange="saveCl('mod5',this)" type="checkbox"/><span>Entrevistas concluídas</span></label>
+<label class="check-item"><input onchange="saveCl('mod5',this)" type="checkbox"/><span>Percepções registradas</span></label>
+<label class="check-item"><input onchange="saveCl('mod5',this)" type="checkbox"/><span>Pontos fortes identificados</span></label>
+<label class="check-item"><input onchange="saveCl('mod5',this)" type="checkbox"/><span>Oportunidades de melhoria registradas</span></label>
+<label class="check-item"><input onchange="saveCl('mod5',this)" type="checkbox"/><span>Informações organizadas para o relatório final</span></label>
+</div>
+<button class="cl-reset" onclick="resetCl('mod5')">Limpar checklist</button>
+</div>
+</div><!-- /mod-5 -->
+<!-- MOD 6 -->
+<div class="mod-panel" id="mod-6">
+<div class="mod-heading">Módulo 6 — Observação em Campo e Coleta de Evidências</div>
+<div class="mod-objective">Orientar o consultor na observação sistemática do ambiente organizacional, coletando evidências que complementem as entrevistas e permitam um diagnóstico baseado em fatos. Nem tudo o que acontece na empresa é verbalizado.</div>
+<div class="mod-cols">
+<div>
+<div class="mod-section">
+<div class="mod-section-title">O Que Observar</div>
+<div class="mod-sub-heading">Ambiente físico</div>
+<ul class="mod-list">
+<li>Organização dos setores</li>
+<li>Limpeza e sinalização</li>
+<li>Condições de segurança</li>
+<li>Ergonomia dos postos de trabalho</li>
+</ul>
+<div class="mod-sub-heading">Pessoas</div>
+<ul class="mod-list">
+<li>Relacionamento entre colaboradores</li>
+<li>Integração entre equipes</li>
+<li>Respeito e cordialidade</li>
+<li>Postura das lideranças</li>
+<li>Engajamento durante as atividades</li>
+</ul>
+<div class="mod-sub-heading">Processos</div>
+<ul class="mod-list">
+<li>Fluxo de trabalho</li>
+<li>Retrabalhos</li>
+<li>Padronização das atividades</li>
+<li>Distribuição de responsabilidades</li>
+<li>Comunicação entre setores</li>
+</ul>
+</div>
+</div>
+<div>
+<div class="mod-section">
+<div class="mod-section-title">Registro das Evidências</div>
+<ul class="mod-list">
+<li>Anote apenas fatos observados</li>
+<li>Separe fatos de interpretações</li>
+<li>Registre exemplos concretos</li>
+<li>Utilize linguagem objetiva e profissional</li>
+<li>Organize as evidências por tema</li>
+</ul>
+</div>
+<div class="mod-section">
+<div class="mod-section-title">Sinais de Alerta</div>
+<ul class="mod-list">
+<li>Comunicação falha entre setores</li>
+<li>Conflitos frequentes</li>
+<li>Falta de padronização</li>
+<li>Desmotivação visível</li>
+<li>Excesso de centralização das decisões</li>
+<li>Baixa participação da liderança</li>
+</ul>
+</div>
+<div class="mod-section">
+<div class="mod-section-title">Boas Práticas</div>
+<ul class="mod-list">
+<li>Solicite autorização antes de registrar fotos</li>
+<li>Mantenha postura discreta</li>
+<li>Observe sem interferir na rotina</li>
+<li>Confirme informações importantes com diferentes fontes</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="dica-box">
+<div class="dica-label">Dica da Fundadora</div>
+<div class="dica-text">O olhar do consultor deve ser curioso, respeitoso e imparcial. Muitas vezes, pequenos detalhes observados durante uma visita ajudam a compreender problemas que não apareceram nas entrevistas. O diagnóstico ganha qualidade quando diferentes fontes de informação são analisadas em conjunto.</div>
+</div>
+<div class="checklist-box">
+<div class="checklist-box-title">Checklist Final</div>
+<div class="mapa-checklist" id="cl-mod6">
+<label class="check-item"><input onchange="saveCl('mod6',this)" type="checkbox"/><span>Ambiente observado</span></label>
+<label class="check-item"><input onchange="saveCl('mod6',this)" type="checkbox"/><span>Pessoas observadas</span></label>
+<label class="check-item"><input onchange="saveCl('mod6',this)" type="checkbox"/><span>Processos analisados</span></label>
+<label class="check-item"><input onchange="saveCl('mod6',this)" type="checkbox"/><span>Evidências registradas</span></label>
+<label class="check-item"><input onchange="saveCl('mod6',this)" type="checkbox"/><span>Informações organizadas para o relatório</span></label>
+</div>
+<button class="cl-reset" onclick="resetCl('mod6')">Limpar checklist</button>
+</div>
+</div><!-- /mod-6 -->
+<!-- MOD 7 -->
+<div class="mod-panel" id="mod-7">
+<div class="mod-heading">Módulo 7 — Construção do Relatório de Diagnóstico</div>
+<div class="mod-objective">Padronizar a elaboração do Relatório de Diagnóstico Organizacional, transformando as informações coletadas em análises claras, técnicas e úteis para a tomada de decisão da empresa.</div>
+<div class="mod-cols">
+<div>
+<div class="mod-section">
+<div class="mod-section-title">Princípios do Relatório</div>
+<ul class="mod-list">
+<li>Basear todas as conclusões em evidências</li>
+<li>Utilizar linguagem clara, objetiva e respeitosa</li>
+<li>Valorizar os pontos fortes antes de apresentar oportunidades de melhoria</li>
+<li>Apresentar recomendações viáveis para a realidade da empresa</li>
+</ul>
+</div>
+<div class="mod-section">
+<div class="mod-section-title">Ferramentas Recomendadas</div>
+<ul class="mod-list">
+<li>Análise SWOT — forças, fraquezas, oportunidades e ameaças</li>
+<li>Matriz GUT — priorização</li>
+<li>5W2H — estruturação do plano de ação</li>
+<li>Indicadores de RH — acompanhamento</li>
+</ul>
+</div>
+<div class="mod-section">
+<div class="mod-section-title">Cuidados na Elaboração</div>
+<ul class="mod-list">
+<li>Evite opiniões sem evidências</li>
+<li>Não exponha nomes de colaboradores</li>
+<li>Utilize dados consolidados</li>
+<li>Apresente oportunidades de melhoria com foco construtivo</li>
+</ul>
+</div>
+</div>
+<div>
+<div class="mod-section">
+<div class="mod-section-title">Estrutura do Relatório</div>
+<ul class="mod-list">
+<li><strong>1. Identificação do Projeto</strong> — Nome da empresa, segmento, data, consultor, período</li>
+<li><strong>2. Objetivo do Diagnóstico</strong> — Finalidade da consultoria</li>
+<li><strong>3. Metodologia Aplicada</strong> — Reuniões, entrevistas, observação, análise documental</li>
+<li><strong>4. Principais Evidências</strong> — Pontos fortes, pontos de atenção, riscos, oportunidades</li>
+<li><strong>5. Análise por Dimensão</strong> — Cultura, liderança, comunicação, processos, T&amp;D, clima</li>
+<li><strong>6. Plano Inicial de Recomendações</strong> — Ações prioritárias, responsáveis, prazo, impacto</li>
+<li><strong>7. Conclusão</strong> — Resumo dos achados e próximos passos</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="dica-box">
+<div class="dica-label">Dica da Fundadora</div>
+<div class="dica-text">Um bom relatório não é aquele que aponta mais problemas, mas aquele que ajuda a empresa a enxergar caminhos. O cliente deve terminar a leitura entendendo onde está, para onde pode ir e quais são os primeiros passos para alcançar esse objetivo.</div>
+</div>
+<div class="checklist-box">
+<div class="checklist-box-title">Checklist Final</div>
+<div class="mapa-checklist" id="cl-mod7">
+<label class="check-item"><input onchange="saveCl('mod7',this)" type="checkbox"/><span>Todas as evidências organizadas</span></label>
+<label class="check-item"><input onchange="saveCl('mod7',this)" type="checkbox"/><span>Relatório revisado</span></label>
+<label class="check-item"><input onchange="saveCl('mod7',this)" type="checkbox"/><span>Linguagem objetiva</span></label>
+<label class="check-item"><input onchange="saveCl('mod7',this)" type="checkbox"/><span>Recomendações priorizadas</span></label>
+<label class="check-item"><input onchange="saveCl('mod7',this)" type="checkbox"/><span>Material pronto para devolutiva</span></label>
+</div>
+<button class="cl-reset" onclick="resetCl('mod7')">Limpar checklist</button>
+</div>
+</div><!-- /mod-7 -->
+<!-- MOD 8 -->
+<div class="mod-panel" id="mod-8">
+<div class="mod-heading">Módulo 8 — Devolutiva Estratégica para a Diretoria</div>
+<div class="mod-objective">Padronizar a reunião de devolutiva do Diagnóstico Organizacional, apresentando os resultados de forma clara, respeitosa e estratégica, fortalecendo a confiança da diretoria e conduzindo a empresa para a próxima etapa da consultoria.</div>
+<div class="mod-cols">
+<div>
+<div class="mod-section">
+<div class="mod-section-title">Preparação da Reunião</div>
+<ul class="mod-list">
+<li>Agendar a reunião com antecedência</li>
+<li>Garantir a presença dos principais tomadores de decisão</li>
+<li>Revisar todo o relatório antes da apresentação</li>
+<li>Preparar apresentação em slides e materiais de apoio</li>
+<li>Organizar um ambiente confortável e reservado</li>
+</ul>
+</div>
+<div class="mod-section">
+<div class="mod-section-title">Estrutura da Apresentação</div>
+<ul class="mod-list">
+<li><strong>1. Abertura</strong> — Agradecer pela confiança, relembrar o objetivo</li>
+<li><strong>2. Pontos fortes</strong> — Apresentar potencialidades, reconhecer boas práticas</li>
+<li><strong>3. Oportunidades de melhoria</strong> — Com objetividade, sem linguagem acusatória</li>
+<li><strong>4. Recomendações</strong> — Prioridades e impacto esperado</li>
+<li><strong>5. Próximos passos</strong> — Cronograma, responsabilidades, compromisso</li>
+</ul>
+</div>
+</div>
+<div>
+<div class="mod-section">
+<div class="mod-section-title">Como Conduzir Conversas Difíceis</div>
+<ul class="mod-list">
+<li>Foque nos fatos e evidências</li>
+<li>Evite personalizar problemas</li>
+<li>Reconheça os esforços da empresa</li>
+<li>Conduza a conversa para soluções</li>
+<li>Escute atentamente as reações da diretoria</li>
+</ul>
+</div>
+<div class="mod-section">
+<div class="mod-section-title">Possíveis Objeções e Como Responder</div>
+<ul class="mod-list">
+<li><em>"Não imaginávamos que esse problema existia."</em> → Explique quais evidências sustentam a análise</li>
+<li><em>"Isso sempre foi feito dessa forma."</em> → Mostre os impactos atuais e as oportunidades de melhoria</li>
+<li><em>"Não temos recursos para tudo agora."</em> → Auxilie na priorização das ações</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="dica-box">
+<div class="dica-label">Dica da Fundadora</div>
+<div class="dica-text">A devolutiva não deve gerar desconforto, mas consciência. O cliente precisa sair da reunião acreditando que é possível evoluir. Sempre apresente desafios acompanhados de caminhos viáveis para solucioná-los.</div>
+</div>
+<div class="checklist-box">
+<div class="checklist-box-title">Checklist Final</div>
+<div class="mapa-checklist" id="cl-mod8">
+<label class="check-item"><input onchange="saveCl('mod8',this)" type="checkbox"/><span>Relatório apresentado</span></label>
+<label class="check-item"><input onchange="saveCl('mod8',this)" type="checkbox"/><span>Pontos fortes valorizados</span></label>
+<label class="check-item"><input onchange="saveCl('mod8',this)" type="checkbox"/><span>Oportunidades de melhoria compreendidas</span></label>
+<label class="check-item"><input onchange="saveCl('mod8',this)" type="checkbox"/><span>Plano de ação validado</span></label>
+<label class="check-item"><input onchange="saveCl('mod8',this)" type="checkbox"/><span>Próxima etapa aprovada</span></label>
+</div>
+<button class="cl-reset" onclick="resetCl('mod8')">Limpar checklist</button>
+</div>
+</div><!-- /mod-8 -->
+</div><!-- /bloco guia de campo -->
+<!-- ─── BLOCO 3: MANUAL DA CONSULTORA ─── -->
+<div class="mapa-block">
+<div class="mapa-block-title">Manual da Consultora — Checklists por Etapa</div>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+<div class="checklist-box">
+<div class="checklist-box-title">1. Diagnóstico Organizacional</div>
+<div class="mapa-checklist" id="cl-man1">
+<label class="check-item"><input onchange="saveCl('man1',this)" type="checkbox"/><span>Agendar reunião de abertura</span></label>
+<label class="check-item"><input onchange="saveCl('man1',this)" type="checkbox"/><span>Apresentar cronograma</span></label>
+<label class="check-item"><input onchange="saveCl('man1',this)" type="checkbox"/><span>Realizar entrevista com a diretoria</span></label>
+<label class="check-item"><input onchange="saveCl('man1',this)" type="checkbox"/><span>Entrevistar gestores</span></label>
+<label class="check-item"><input onchange="saveCl('man1',this)" type="checkbox"/><span>Observar a rotina</span></label>
+<label class="check-item"><input onchange="saveCl('man1',this)" type="checkbox"/><span>Registrar evidências</span></label>
+<label class="check-item"><input onchange="saveCl('man1',this)" type="checkbox"/><span>Fotografar materiais (quando autorizado)</span></label>
+<label class="check-item"><input onchange="saveCl('man1',this)" type="checkbox"/><span>Identificar prioridades</span></label>
+<label class="check-item"><input onchange="saveCl('man1',this)" type="checkbox"/><span>Consolidar informações</span></label>
+<label class="check-item"><input onchange="saveCl('man1',this)" type="checkbox"/><span>Preparar devolutiva</span></label>
+</div>
+<button class="cl-reset" onclick="resetCl('man1')">Limpar</button>
+</div>
+<div class="checklist-box">
+<div class="checklist-box-title">2. Estruturação da Gestão de Pessoas</div>
+<div class="mapa-checklist" id="cl-man2">
+<label class="check-item"><input onchange="saveCl('man2',this)" type="checkbox"/><span>Mapear processos existentes</span></label>
+<label class="check-item"><input onchange="saveCl('man2',this)" type="checkbox"/><span>Levantar documentos</span></label>
+<label class="check-item"><input onchange="saveCl('man2',this)" type="checkbox"/><span>Identificar lacunas</span></label>
+<label class="check-item"><input onchange="saveCl('man2',this)" type="checkbox"/><span>Criar modelos necessários</span></label>
+<label class="check-item"><input onchange="saveCl('man2',this)" type="checkbox"/><span>Definir calendário anual</span></label>
+<label class="check-item"><input onchange="saveCl('man2',this)" type="checkbox"/><span>Validar com a direção</span></label>
+<label class="check-item"><input onchange="saveCl('man2',this)" type="checkbox"/><span>Ajustar documentos</span></label>
+<label class="check-item"><input onchange="saveCl('man2',this)" type="checkbox"/><span>Preparar implantação</span></label>
+</div>
+<button class="cl-reset" onclick="resetCl('man2')">Limpar</button>
+</div>
+<div class="checklist-box">
+<div class="checklist-box-title">3. Cultura Organizacional</div>
+<div class="mapa-checklist" id="cl-man3">
+<label class="check-item"><input onchange="saveCl('man3',this)" type="checkbox"/><span>Validar missão, visão e valores</span></label>
+<label class="check-item"><input onchange="saveCl('man3',this)" type="checkbox"/><span>Definir comportamentos esperados</span></label>
+<label class="check-item"><input onchange="saveCl('man3',this)" type="checkbox"/><span>Criar princípios da cultura</span></label>
+<label class="check-item"><input onchange="saveCl('man3',this)" type="checkbox"/><span>Planejar comunicação</span></label>
+<label class="check-item"><input onchange="saveCl('man3',this)" type="checkbox"/><span>Produzir materiais de apoio</span></label>
+<label class="check-item"><input onchange="saveCl('man3',this)" type="checkbox"/><span>Apresentar à diretoria</span></label>
+</div>
+<button class="cl-reset" onclick="resetCl('man3')">Limpar</button>
+</div>
+<div class="checklist-box">
+<div class="checklist-box-title">4. Desenvolvimento da Liderança</div>
+<div class="mapa-checklist" id="cl-man4">
+<label class="check-item"><input onchange="saveCl('man4',this)" type="checkbox"/><span>Definir conteúdo conforme diagnóstico</span></label>
+<label class="check-item"><input onchange="saveCl('man4',this)" type="checkbox"/><span>Preparar apresentação</span></label>
+<label class="check-item"><input onchange="saveCl('man4',this)" type="checkbox"/><span>Aplicar treinamento</span></label>
+<label class="check-item"><input onchange="saveCl('man4',this)" type="checkbox"/><span>Conduzir dinâmicas</span></label>
+<label class="check-item"><input onchange="saveCl('man4',this)" type="checkbox"/><span>Estimular plano de ação individual</span></label>
+</div>
+<button class="cl-reset" onclick="resetCl('man4')">Limpar</button>
+</div>
+<div class="checklist-box">
+<div class="checklist-box-title">5. Desenvolvimento da Equipe</div>
+<div class="mapa-checklist" id="cl-man5">
+<label class="check-item"><input onchange="saveCl('man5',this)" type="checkbox"/><span>Preparar palestra</span></label>
+<label class="check-item"><input onchange="saveCl('man5',this)" type="checkbox"/><span>Aplicar dinâmica</span></label>
+<label class="check-item"><input onchange="saveCl('man5',this)" type="checkbox"/><span>Apresentar cultura</span></label>
+<label class="check-item"><input onchange="saveCl('man5',this)" type="checkbox"/><span>Construir compromisso coletivo</span></label>
+<label class="check-item"><input onchange="saveCl('man5',this)" type="checkbox"/><span>Aplicar avaliação</span></label>
+</div>
+<button class="cl-reset" onclick="resetCl('man5')">Limpar</button>
+</div>
+<div class="checklist-box">
+<div class="checklist-box-title">6. Consolidação</div>
+<div class="mapa-checklist" id="cl-man6">
+<label class="check-item"><input onchange="saveCl('man6',this)" type="checkbox"/><span>Revisar todas as entregas</span></label>
+<label class="check-item"><input onchange="saveCl('man6',this)" type="checkbox"/><span>Reunir evidências</span></label>
+<label class="check-item"><input onchange="saveCl('man6',this)" type="checkbox"/><span>Comparar cenário inicial e final</span></label>
+<label class="check-item"><input onchange="saveCl('man6',this)" type="checkbox"/><span>Apresentar resultados</span></label>
+<label class="check-item"><input onchange="saveCl('man6',this)" type="checkbox"/><span>Entregar relatório final</span></label>
+<label class="check-item"><input onchange="saveCl('man6',this)" type="checkbox"/><span>Sugerir próximos passos</span></label>
+</div>
+<button class="cl-reset" onclick="resetCl('man6')">Limpar</button>
+</div>
+</div><!-- /grid manual -->
+<div style="margin-top:20px;padding:14px 18px;background:rgba(200,155,60,.06);border-radius:12px;border:1px solid rgba(200,155,60,.15)">
+<div style="font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,.3);margin-bottom:8px">Indicadores para Acompanhar</div>
+<div style="display:flex;flex-wrap:wrap;gap:8px">
+<span style="font-size:12px;color:rgba(255,255,255,.5);background:rgba(255,255,255,.06);padding:4px 12px;border-radius:20px">Engajamento da liderança</span>
+<span style="font-size:12px;color:rgba(255,255,255,.5);background:rgba(255,255,255,.06);padding:4px 12px;border-radius:20px">Participação da equipe</span>
+<span style="font-size:12px;color:rgba(255,255,255,.5);background:rgba(255,255,255,.06);padding:4px 12px;border-radius:20px">Cumprimento do cronograma</span>
+<span style="font-size:12px;color:rgba(255,255,255,.5);background:rgba(255,255,255,.06);padding:4px 12px;border-radius:20px">Implantação das ações</span>
+<span style="font-size:12px;color:rgba(255,255,255,.5);background:rgba(255,255,255,.06);padding:4px 12px;border-radius:20px">Feedback da diretoria</span>
+<span style="font-size:12px;color:rgba(255,255,255,.5);background:rgba(255,255,255,.06);padding:4px 12px;border-radius:20px">Percepção de melhoria da comunicação</span>
+</div>
+</div>
+</div><!-- /bloco manual -->
+</section>
+  <section id="aba-manual" class="hidden">
+<div class="mapa-header">
+<div class="mapa-header-badge">Manual de Consultoria Organizacional</div>
+<h2>RH com Propósito® — 8 Capítulos</h2>
+<p>Fundamentos, procedimentos, ferramentas e boas práticas de toda a metodologia.</p>
+</div>
+<!-- CAP 1 -->
+<div class="etapa-card" id="cap-1"><div class="etapa-header" onclick="toggleCap(1)"><div class="etapa-num">1</div><div class="etapa-title-group"><div class="etapa-label">Capítulo 1</div><div class="etapa-name">A Metodologia RH com Propósito</div></div><span class="etapa-chevron">▶</span></div>
+<div class="etapa-body">
+<div class="mod-section"><div class="mod-section-title">Missão</div><p style="font-size:13px;color:rgba(255,255,255,.6);line-height:1.7">Desenvolver pessoas e fortalecer organizações por meio de uma gestão humanizada, estratégica e orientada para resultados.</p></div>
+<div class="mod-section"><div class="mod-section-title">Visão</div><p style="font-size:13px;color:rgba(255,255,255,.6);line-height:1.7">Ser referência em consultoria organizacional, reconhecida pela transformação de culturas, desenvolvimento de lideranças e valorização das pessoas.</p></div>
+<div class="mod-section"><div class="mod-section-title">Valores</div><ul class="mod-list"><li>Respeito às pessoas</li><li>Ética</li><li>Humanização</li><li>Comprometimento</li><li>Desenvolvimento contínuo</li><li>Excelência</li><li>Propósito</li></ul></div>
+<div class="mod-section"><div class="mod-section-title">Os 6 Pilares da Metodologia</div><ul class="mod-list"><li>Diagnosticar</li><li>Estruturar</li><li>Fortalecer</li><li>Desenvolver Líderes</li><li>Desenvolver Equipes</li><li>Consolidar Resultados</li></ul></div>
+<div class="dica-box"><div class="dica-label">Filosofia</div><div class="dica-text">"Transformar empresas é consequência de desenvolver pessoas. Antes de processos, existem histórias. Antes de resultados, existem pessoas. E é nelas que começa toda transformação."</div></div>
+</div></div>
+<!-- CAP 2 -->
+<div class="etapa-card" id="cap-2"><div class="etapa-header" onclick="toggleCap(2)"><div class="etapa-num">2</div><div class="etapa-title-group"><div class="etapa-label">Capítulo 2</div><div class="etapa-name">Preparação da Consultoria</div></div><span class="etapa-chevron">▶</span></div>
+<div class="etapa-body">
+<div class="mod-cols">
+<div>
+<div class="mod-section"><div class="mod-section-title">2.1 Aprovação da Proposta</div><ul class="mod-list"><li>Confirmar aprovação formal</li><li>Definir responsável pelo projeto</li><li>Confirmar canais de comunicação</li><li>Definir previsão de início</li></ul></div>
+<div class="mod-section"><div class="mod-section-title">2.2 Formalização Contratual</div><ul class="mod-list"><li>Dados das partes</li><li>Escopo do projeto</li><li>Prazo de execução</li><li>Forma de pagamento</li><li>Cláusula de confidencialidade</li></ul></div>
+<div class="mod-section"><div class="mod-section-title">2.3 Cadastro do Cliente</div><ul class="mod-list"><li>Razão Social, CNPJ, Endereço</li><li>Segmento e nº de colaboradores</li><li>Data de início e prazo previsto</li><li>Consultor responsável</li></ul></div>
+</div>
+<div>
+<div class="mod-section"><div class="mod-section-title">2.4 Pasta do Projeto</div><ul class="mod-list"><li><strong>Física:</strong> Contrato, Proposta, Cronograma, Questionários, Anotações, Relatórios, Plano de Ação</li><li><strong>Digital:</strong> 01 Contrato / 02 Diagnóstico / 03 Cultura / 04 Liderança / 05 Treinamentos / 06 Relatórios / 07 Indicadores / 08 Fotos / 09 Documentos da Empresa</li></ul></div>
+<div class="mod-section"><div class="mod-section-title">2.5 Documentos a Solicitar</div><ul class="mod-list"><li>Organograma</li><li>Regulamento Interno</li><li>Descrição de Cargos</li><li>Missão, Visão e Valores</li><li>Lista de Colaboradores</li><li>Escala de Trabalho</li><li>Indicadores</li></ul></div>
+<div class="mod-section"><div class="mod-section-title">2.10 Critérios para Iniciar</div><ul class="mod-list"><li>Contrato assinado</li><li>Cronograma aprovado</li><li>Empresa cadastrada</li><li>Documentação mínima recebida</li><li>Materiais preparados</li><li>Agenda confirmada</li></ul></div>
+</div>
+</div>
+<div class="fala-box">"Olá! Passando para confirmar nossa reunião de abertura da consultoria no dia XX/XX, às XXh. Será um prazer iniciar este projeto ao lado da equipe. Qualquer necessidade de ajuste, permaneço à disposição."</div>
+</div></div>
+<!-- CAP 3 -->
+<div class="etapa-card" id="cap-3"><div class="etapa-header" onclick="toggleCap(3)"><div class="etapa-num">3</div><div class="etapa-title-group"><div class="etapa-label">Capítulo 3</div><div class="etapa-name">Diagnóstico Organizacional</div></div><span class="etapa-chevron">▶</span></div>
+<div class="etapa-body">
+<div class="mod-cols">
+<div>
+<div class="mod-section"><div class="mod-section-title">3.1 Objetivos do Diagnóstico</div><ul class="mod-list"><li>Compreender a história da empresa</li><li>Conhecer a visão da diretoria</li><li>Identificar desafios organizacionais</li><li>Avaliar processos de gestão de pessoas</li><li>Observar o ambiente organizacional</li><li>Levantar informações para o plano de ação</li></ul></div>
+<div class="mod-section"><div class="mod-section-title">3.3 Postura do Consultor</div><ul class="mod-list"><li>Ser pontual</li><li>Ouvir mais do que falar</li><li>Evitar julgamentos</li><li>Não apresentar soluções precipitadas</li><li>Manter postura imparcial</li><li>Garantir confidencialidade</li></ul></div>
+<div class="mod-section"><div class="mod-section-title">3.7 Entrevista com Gestores</div><ul class="mod-list"><li>Como você descreve sua equipe?</li><li>Quais são as maiores dificuldades?</li><li>Como ocorre a comunicação?</li><li>Como acompanha os resultados?</li><li>Como realiza feedback?</li><li>Quais treinamentos considera necessários?</li></ul></div>
+</div>
+<div>
+<div class="mod-section"><div class="mod-section-title">3.5 Entrevista com a Diretoria</div><ul class="mod-list"><li>História da empresa</li><li>Momento atual</li><li>Principais desafios</li><li>Liderança</li><li>Comunicação</li><li>Equipe</li><li>Objetivos futuros</li><li>Expectativas quanto ao projeto</li></ul></div>
+<div class="mod-section"><div class="mod-section-title">3.8 Conversa com Colaboradores</div><ul class="mod-list"><li>O que mais gosta no trabalho?</li><li>Quais dificuldades encontra?</li><li>Sente-se ouvido?</li><li>Como avalia a comunicação?</li><li>O que mudaria na empresa?</li></ul></div>
+<div class="mod-section"><div class="mod-section-title">3.11 Elaboração do Relatório</div><ul class="mod-list"><li>Resumo executivo</li><li>Objetivo do diagnóstico</li><li>Metodologia</li><li>Principais evidências</li><li>Pontos fortes</li><li>Oportunidades de melhoria</li><li>Plano inicial de ação</li></ul></div>
+</div>
+</div>
+<div class="mod-section"><div class="mod-section-title">3.13 Critérios para Encerramento</div><ul class="mod-list" style="display:flex;flex-wrap:wrap;gap:8px 20px"><li>Entrevistas concluídas</li><li>Observações registradas</li><li>Documentos analisados</li><li>Relatório finalizado</li><li>Devolutiva realizada</li><li>Diagnóstico validado pela diretoria</li></ul></div>
+</div></div>
+<!-- CAP 4 -->
+<div class="etapa-card" id="cap-4"><div class="etapa-header" onclick="toggleCap(4)"><div class="etapa-num">4</div><div class="etapa-title-group"><div class="etapa-label">Capítulo 4</div><div class="etapa-name">Estruturação do Recursos Humanos</div></div><span class="etapa-chevron">▶</span></div>
+<div class="etapa-body">
+<div class="mod-cols">
+<div>
+<div class="mod-section"><div class="mod-section-title">4.3 Organização dos Processos</div><ul class="mod-list"><li>Recrutamento e Seleção</li><li>Integração de novos colaboradores</li><li>Treinamento e Desenvolvimento</li><li>Avaliação de Desempenho</li><li>Feedback</li><li>Comunicação Interna</li><li>Desligamento</li></ul></div>
+<div class="mod-section"><div class="mod-section-title">4.4 Padronização de Documentos</div><ul class="mod-list"><li>Descrição de Cargos</li><li>Organograma</li><li>Políticas Internas</li><li>Procedimentos Operacionais</li><li>Formulários e Checklists</li></ul></div>
+</div>
+<div>
+<div class="mod-section"><div class="mod-section-title">4.5 Indicadores de RH</div><ul class="mod-list"><li>Rotatividade</li><li>Absenteísmo</li><li>Treinamentos realizados</li><li>Tempo de contratação</li><li>Avaliações concluídas</li><li>Engajamento da equipe</li></ul></div>
+<div class="mod-section"><div class="mod-section-title">4.7 Critérios para Encerramento</div><ul class="mod-list"><li>Processos estruturados</li><li>Documentos padronizados</li><li>Responsáveis definidos</li><li>Indicadores implantados</li><li>Plano validado pela diretoria</li></ul></div>
+</div>
+</div>
+</div></div>
+<!-- CAP 5 -->
+<div class="etapa-card" id="cap-5"><div class="etapa-header" onclick="toggleCap(5)"><div class="etapa-num">5</div><div class="etapa-title-group"><div class="etapa-label">Capítulo 5</div><div class="etapa-name">Fortalecimento da Cultura Organizacional</div></div><span class="etapa-chevron">▶</span></div>
+<div class="etapa-body">
+<div class="mod-cols">
+<div>
+<div class="mod-section"><div class="mod-section-title">5.1 Compreendendo a Cultura Atual</div><ul class="mod-list"><li>Identificar comportamentos predominantes</li><li>Mapear crenças, hábitos e práticas</li><li>Reconhecer pontos fortes existentes</li><li>Identificar comportamentos que dificultam resultados</li></ul></div>
+<div class="mod-section"><div class="mod-section-title">5.2 Construção da Identidade</div><ul class="mod-list"><li>Revisar ou construir a Missão</li><li>Revisar ou construir a Visão</li><li>Definir os Valores</li><li>Registrar o propósito da organização</li></ul></div>
+<div class="mod-section"><div class="mod-section-title">5.3 Comportamentos Esperados</div><ul class="mod-list"><li>Definir regras de convivência</li><li>Construir os compromissos da equipe</li><li>Estabelecer padrões de atendimento</li><li>Alinhar responsabilidades individuais</li></ul></div>
+</div>
+<div>
+<div class="mod-section"><div class="mod-section-title">5.5 Comunicação da Cultura</div><ul class="mod-list"><li>Produzir cartilha da cultura</li><li>Fixar MVV em locais estratégicos</li><li>Apresentar a cultura aos novos colaboradores</li><li>Utilizar campanhas internas de reforço</li></ul></div>
+<div class="mod-section"><div class="mod-section-title">Boas Práticas</div><ul class="mod-list"><li>Respeitar a história antes de propor mudanças</li><li>Construir a cultura junto com a liderança</li><li>Envolver os colaboradores no processo</li><li>Transformar MVV em atitudes do dia a dia</li><li>Reforçar continuamente por meio de exemplos</li></ul></div>
+</div>
+</div>
+<div class="dica-box"><div class="dica-label">Princípio</div><div class="dica-text">Cultura não é um quadro na parede, mas um comportamento vivido diariamente.</div></div>
+</div></div>
+<!-- CAP 6 -->
+<div class="etapa-card" id="cap-6"><div class="etapa-header" onclick="toggleCap(6)"><div class="etapa-num">6</div><div class="etapa-title-group"><div class="etapa-label">Capítulo 6</div><div class="etapa-name">Desenvolvimento da Liderança</div></div><span class="etapa-chevron">▶</span></div>
+<div class="etapa-body">
+<div class="mod-cols">
+<div>
+<div class="mod-section"><div class="mod-section-title">6.2 Competências Essenciais</div><ul class="mod-list"><li>Comunicação clara</li><li>Escuta ativa</li><li>Inteligência emocional</li><li>Tomada de decisão</li><li>Delegação</li><li>Gestão de conflitos</li><li>Feedback construtivo</li><li>Desenvolvimento de pessoas</li></ul></div>
+<div class="mod-section"><div class="mod-section-title">6.4 Temas de Treinamento</div><ul class="mod-list"><li>Liderança com propósito</li><li>Comunicação e feedback</li><li>Gestão do tempo</li><li>Formação de equipes</li><li>Engajamento e motivação</li><li>Tomada de decisão</li></ul></div>
+</div>
+<div>
+<div class="mod-section"><div class="mod-section-title">6.3 PDI — Plano de Desenvolvimento</div><ul class="mod-list"><li>Definir objetivos individuais</li><li>Estabelecer competências prioritárias</li><li>Criar cronograma de acompanhamento</li></ul></div>
+<div class="mod-section"><div class="mod-section-title">6.6 Indicadores</div><ul class="mod-list"><li>Engajamento da equipe</li><li>Redução de conflitos</li><li>Cumprimento de metas</li><li>Participação em treinamentos</li><li>Percepção dos colaboradores</li></ul></div>
+<div class="mod-section"><div class="mod-section-title">Princípios da Liderança</div><ul class="mod-list"><li>Liderar pelo exemplo</li><li>Desenvolver pessoas continuamente</li><li>Construir relações de confiança</li><li>Comunicar com clareza e respeito</li><li>Valorizar resultados sem perder foco nas pessoas</li></ul></div>
+</div>
+</div>
+</div></div>
+<!-- CAP 7 -->
+<div class="etapa-card" id="cap-7"><div class="etapa-header" onclick="toggleCap(7)"><div class="etapa-num">7</div><div class="etapa-title-group"><div class="etapa-label">Capítulo 7</div><div class="etapa-name">Desenvolvimento da Equipe</div></div><span class="etapa-chevron">▶</span></div>
+<div class="etapa-body">
+<div class="mod-cols">
+<div>
+<div class="mod-section"><div class="mod-section-title">7.2 Integração e Acolhimento</div><ul class="mod-list"><li>Padronizar processo de integração</li><li>Apresentar MVV e cultura</li><li>Esclarecer regras, responsabilidades e expectativas</li></ul></div>
+<div class="mod-section"><div class="mod-section-title">7.3 Desenvolvimento Comportamental</div><ul class="mod-list"><li>Comunicação interpessoal</li><li>Trabalho em equipe</li><li>Protagonismo</li><li>Inteligência emocional</li><li>Ética e responsabilidade</li><li>Atendimento ao cliente</li></ul></div>
+</div>
+<div>
+<div class="mod-section"><div class="mod-section-title">7.5 Engajamento da Equipe</div><ul class="mod-list"><li>Promover campanhas internas</li><li>Realizar dinâmicas de integração</li><li>Reconhecer boas práticas</li><li>Estimular sugestões de melhoria</li></ul></div>
+<div class="mod-section"><div class="mod-section-title">7.7 Indicadores</div><ul class="mod-list"><li>Participação em treinamentos</li><li>Engajamento da equipe</li><li>Redução do absenteísmo</li><li>Redução da rotatividade</li><li>Satisfação dos colaboradores</li></ul></div>
+</div>
+</div>
+<div class="dica-box"><div class="dica-label">Princípio</div><div class="dica-text">Equipes fortes constroem empresas fortes.</div></div>
+</div></div>
+<!-- CAP 8 -->
+<div class="etapa-card" id="cap-8"><div class="etapa-header" onclick="toggleCap(8)"><div class="etapa-num">8</div><div class="etapa-title-group"><div class="etapa-label">Capítulo 8</div><div class="etapa-name">Acompanhamento, Indicadores e Consolidação</div></div><span class="etapa-chevron">▶</span></div>
+<div class="etapa-body">
+<div class="mod-cols">
+<div>
+<div class="mod-section"><div class="mod-section-title">8.3 Indicadores de Desempenho</div><ul class="mod-list"><li>Rotatividade</li><li>Absenteísmo</li><li>Engajamento</li><li>Participação em treinamentos</li><li>Cumprimento dos planos de ação</li><li>Resultados específicos definidos pela empresa</li></ul></div>
+<div class="mod-section"><div class="mod-section-title">8.4 Avaliação dos Resultados</div><ul class="mod-list"><li>Comparar cenário inicial e atual</li><li>Identificar melhorias alcançadas</li><li>Registrar desafios ainda existentes</li><li>Apresentar recomendações para continuidade</li></ul></div>
+</div>
+<div>
+<div class="mod-section"><div class="mod-section-title">8.6 Relatório Final</div><ul class="mod-list"><li>Resumo das ações executadas</li><li>Resultados alcançados</li><li>Indicadores comparativos</li><li>Recomendações futuras</li><li>Plano de continuidade</li></ul></div>
+<div class="mod-section"><div class="mod-section-title">8.7 Encerramento da Consultoria</div><ul class="mod-list"><li>Apresentação do relatório final</li><li>Validação junto à diretoria</li><li>Entrega dos materiais produzidos</li><li>Avaliação da satisfação do cliente</li></ul></div>
+</div>
+</div>
+<div class="dica-box"><div class="dica-label">Mensagem Final</div><div class="dica-text">O verdadeiro sucesso da consultoria é percebido quando a empresa continua evoluindo mesmo após o encerramento do projeto.</div></div>
+</div></div>
+</section>
+</div></main>
+<script>
+function toggleEtapa(n) { document.getElementById('etapa-' + n).classList.toggle('open'); }
+function toggleCap(n) { document.getElementById('cap-' + n).classList.toggle('open'); }
+let currentMod = 1;
+function switchMod(n) {
+  document.getElementById('mod-' + currentMod).classList.remove('active');
+  document.querySelectorAll('.mod-tab')[currentMod - 1].classList.remove('active');
+  currentMod = n;
+  document.getElementById('mod-' + n).classList.add('active');
+  document.querySelectorAll('.mod-tab')[n - 1].classList.add('active');
+}
+// mesma chave do painel antigo: os checklists já marcados continuam aqui
+const CL_KEY = 'rh_admin_checklists';
+const lerCl = () => { try { return JSON.parse(localStorage.getItem(CL_KEY) || '{}'); } catch { return {}; } };
+function saveCl(key) {
+  const el = document.getElementById('cl-' + key);
+  const data = lerCl();
+  data[key] = [...el.querySelectorAll('input[type=checkbox]')].map(b => b.checked);
+  try { localStorage.setItem(CL_KEY, JSON.stringify(data)); } catch {}
+}
+function resetCl(key) {
+  document.getElementById('cl-' + key).querySelectorAll('input[type=checkbox]').forEach(b => b.checked = false);
+  const data = lerCl(); delete data[key];
+  try { localStorage.setItem(CL_KEY, JSON.stringify(data)); } catch {}
+}
+Object.entries(lerCl()).forEach(([key, states]) => {
+  const el = document.getElementById('cl-' + key);
+  if (el) el.querySelectorAll('input[type=checkbox]').forEach((b, i) => { b.checked = !!states[i]; });
+});
+document.querySelectorAll('[data-aba]').forEach(t => t.addEventListener('click', () => {
+  document.querySelectorAll('[data-aba]').forEach(x => x.classList.toggle('active', x === t));
+  ['mapa', 'manual'].forEach(a => document.getElementById('aba-' + a).classList.toggle('hidden', a !== t.dataset.aba));
+}));
+</script>
+</body>
+</html>

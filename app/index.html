@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#1A5C45">
+<title>RH com Propósito</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700;900&family=Playfair+Display:ital,wght@0,600;0,700;1,600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/rh.css">
+</head>
+<body>
+<div class="app hidden" id="app">
+  <aside class="side" aria-label="Menu principal">
+    <a class="brand" href="#/"><span class="brand-mark">RH</span><span class="brand-text"><strong>RH com Propósito</strong><span>Área da consultora</span></span></a>
+    <nav class="nav">
+      <a href="#/" data-nav="/"><span class="nav-ico">🏠</span>Início</a>
+      <a href="#/clientes" data-nav="/clientes"><span class="nav-ico">🏢</span>Clientes</a>
+      <a href="#/formularios" data-nav="/formularios"><span class="nav-ico">📝</span>Formulários</a>
+      <a href="#/respostas" data-nav="/respostas"><span class="nav-ico">📥</span>Respostas</a>
+      <a href="#/satisfacao" data-nav="/satisfacao"><span class="nav-ico">⭐</span>Satisfação</a>
+      <div class="nav-sep"></div>
+      <a href="#/programa" data-nav="/programa"><span class="nav-ico">🌱</span>Programa</a>
+      <a href="#/materiais" data-nav="/materiais"><span class="nav-ico">📚</span>Materiais</a>
+    </nav>
+    <div class="side-foot">
+      <button class="btn btn-block" data-enviar style="margin-bottom:14px">Enviar formulário</button>
+      <a href="#/conta" style="text-decoration:none;color:inherit"><strong>Cristiele Rodrigues</strong><span data-email></span></a>
+      <div style="margin-top:8px"><button class="btn btn-ghost btn-sm" data-sair style="padding:0">Sair</button></div>
+    </div>
+  </aside>
+
+  <header class="topbar">
+    <a class="brand" href="#/"><span class="brand-mark">RH</span><span class="brand-text"><strong>RH com Propósito</strong></span></a>
+    <button class="btn btn-sm" data-enviar>Enviar</button>
+  </header>
+
+  <main class="main" id="main"></main>
+
+  <nav class="bottom-nav" aria-label="Menu">
+    <a href="#/" data-nav="/"><span class="nav-ico">🏠</span>Início</a>
+    <a href="#/clientes" data-nav="/clientes"><span class="nav-ico">🏢</span>Clientes</a>
+    <a href="#/formularios" data-nav="/formularios"><span class="nav-ico">📝</span>Formulários</a>
+    <a href="#/respostas" data-nav="/respostas"><span class="nav-ico">📥</span>Respostas</a>
+    <a href="#/mais" data-nav="/mais"><span class="nav-ico">☰</span>Mais</a>
+  </nav>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
+<script src="../js/config.js"></script>
+<script src="../js/api.js"></script>
+<script src="../js/auth.js"></script>
+<script src="../js/cartilha.js"></script>
+<script src="../js/formularios.js"></script>
+<script src="../js/formularios-rs.js"></script>
+<script src="../js/form-engine.js"></script>
+<script src="core.js"></script>
+<script src="telas.js"></script>
+<script>App.iniciar();</script>
+</body>
+</html>
