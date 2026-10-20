@@ -3,15 +3,17 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>PDI — Plano de Desenvolvimento Individual | RH com Propósito</title>
+<meta name="robots" content="noindex, nofollow">
+<title>PDI — Plano de Desenvolvimento Individual — RH com Propósito</title>
 <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700;900&family=Playfair+Display:ital,wght@0,700;1,400&display=swap" rel="stylesheet">
 
+<link rel="stylesheet" href="../css/base.css">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
-  --g-dark:#1A5C45;--g-mid:#2E7D58;--g-light:#7DB89A;--g-pale:#F2FAF6;
-  --gold:#C89B3C;--gold-light:#F0E0A8;
-  --white:#FFFFFF;--off:#FAFAF7;--gray:#5A5A5A;--gray-light:#9A9A9A;
+  --g-dark:var(--rh-green);--g-mid:var(--rh-green-mid);--g-light:#7DB89A;--g-pale:#F2FAF6;
+  --gold:var(--rh-gold);--gold-light:#F0E0A8;
+  --white:#FFFFFF;--off:var(--rh-off);--gray:#5A5A5A;--gray-light:#9A9A9A;
   --r:12px;--shadow:0 8px 40px rgba(26,92,69,.10);
 }
 html{scroll-behavior:smooth}
@@ -841,6 +843,8 @@ body::before{
 <div class="toast toast-success" id="toastSuccess"></div>
 <div class="toast toast-error" id="toastError"></div>
 
+<script src="../js/config.js"></script>
+<script src="../js/api.js"></script>
 <script>
 // ─── CONFIG ──────────────────────────────
 const DEST_EMAIL = 'eu@brennooliver.com.br';
@@ -1160,35 +1164,29 @@ function buildPlainText() {
 }
 
 async function openMailto() {
-  const key = localStorage.getItem('w3f_key');
   const subject = `[RH com Propósito] PDI — ${answers.nome||'Colaborador'}`;
   const body = buildPlainText();
-
-  if (!key) {
-    // fallback: open email client
-    window.open(`mailto:${DEST_EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`);
-    return;
-  }
 
   const btn = document.querySelector('button[onclick="openMailto()"]');
   if (btn) { btn.disabled = true; btn.textContent = '⏳  Enviando…'; }
 
-  try {
-    const res = await fetch('https://api.web3forms.com/submit', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-      body: JSON.stringify({ access_key: key, subject, message: body, from_name: 'PDI — RH com Propósito' })
-    });
-    const data = await res.json();
-    if (data.success) {
-      showToast('success', '✅ PDI enviado com sucesso!');
-      if (btn) { btn.textContent = '✅  Enviado!'; }
-    } else {
-      throw new Error(data.message || 'Erro desconhecido');
-    }
-  } catch (err) {
-    showToast('error', `❌ Falha ao enviar: ${err.message}`);
+  // Grava no banco (aparece no painel admin) e manda cópia por e-mail
+  const salvo = await RH.salvarResposta({
+    section: 'pdi',
+    nome: answers.nome || '',
+    cargo_setor: [answers.cargo, answers.setor].filter(Boolean).join(' — '),
+    data_resposta: answers.data || RH.hoje(),
+    r1: answers
+  }).then(() => true, () => false);
+  const enviado = await RH.enviarEmail({ subject, message: body, from_name: 'PDI — RH com Propósito' });
+
+  if (salvo || enviado) {
+    showToast('success', '✅ PDI enviado com sucesso!');
+    if (btn) { btn.textContent = '✅  Enviado!'; }
+  } else {
+    showToast('error', '❌ Falha ao enviar. Use "Baixar" ou "Imprimir" como alternativa.');
     if (btn) { btn.disabled = false; btn.innerHTML = '📧 &nbsp;Enviar por email'; }
+    window.open(`mailto:${DEST_EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`);
   }
 }
 

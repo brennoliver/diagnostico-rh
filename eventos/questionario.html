@@ -3,36 +3,27 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
 <title>Questionário de Diagnóstico — RH com Propósito</title>
-<!-- ─── WEB3FORMS CONFIG ───────────────────────────────────────
-     Para ativar o envio de email:
-     1. Acesse https://web3forms.com
-     2. Digite: cristiele_rodrigues@yahoo.com.br  e clique em "Get Access Key"
-     3. Confirme o email que chegará na sua caixa
-     4. Copie a chave gerada e substitua "SUA_CHAVE_AQUI" abaixo
-─────────────────────────────────────────────────────────── -->
-<script>
-  const WEB3FORMS_KEY = 'SUA_CHAVE_AQUI'; // ← cole sua chave aqui
-</script>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,300;0,400;0,700;0,900;1,300;1,400&family=Playfair+Display:ital,wght@0,700;0,900;1,700&display=swap" rel="stylesheet">
 
+<link rel="stylesheet" href="../css/base.css">
 <style>
 /* ─── RESET ─────────────────────────────── */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 /* ─── VARIABLES ─────────────────────────── */
 :root {
-  --g-dark:   #1A5C45;
-  --g-mid:    #2E7D58;
+  --g-dark:   var(--rh-green);
+  --g-mid:    var(--rh-green-mid);
   --g-light:  #E8F5EE;
   --g-pale:   #F2FAF6;
-  --gold:     #C89B3C;
+  --gold:     var(--rh-gold);
   --gold-lt:  #F5E9C8;
   --gold-pale:#FDF8EC;
-  --cream:    #FAFAF7;
+  --cream:    var(--rh-off);
   --dark:     #1C1C1C;
   --gray:     #3D3D3D;
   --gray-lt:  #7A7A7A;
@@ -1356,12 +1347,12 @@ input[type="radio"], input[type="checkbox"] { display: none; }
 </div>
 
 
+<script src="../js/config.js"></script>
+<script src="../js/api.js"></script>
 <script>
 // ─── CONFIG ──────────────────────────────
 const DEST_EMAIL = 'cristiele_rodrigues@yahoo.com.br';
-let activeKey = (typeof WEB3FORMS_KEY !== 'undefined' && WEB3FORMS_KEY !== 'SUA_CHAVE_AQUI')
-  ? WEB3FORMS_KEY
-  : (localStorage.getItem('w3f_key') || '');
+let activeKey = RH_CONFIG.web3formsKey;
 
 // ─── STATE ───────────────────────────────
 const TOTAL = 16; // phases 0-15
@@ -1512,37 +1503,25 @@ function finish() {
 }
 
 // ─── EMAIL SEND ───────────────────────────
-const SB_URL_Q = 'https://jngyyterkatblntpsjbm.supabase.co';
-const SB_KEY_Q = 'sb_publishable_30rUV3wLjGCDd4DggNYePQ_CwkdB1br';
-function getSbQ() {
-  if (!window.supabase) return null;
-  return window.supabase.createClient(SB_URL_Q, SB_KEY_Q);
-}
+// Grava no banco antes do e-mail: a resposta não se perde se o e-mail falhar
 async function saveToSupabaseQ() {
   try {
-    const sb = getSbQ();
-    if (!sb) return;
-    await sb.from('responses').insert({
+    await RH.salvarResposta({
       section: 'questionario',
       company: '',
       nome: answers.nome || '',
       cargo_setor: answers.cargo || '',
-      data_resposta: answers.data || new Date().toISOString().split('T')[0],
-      r1: JSON.stringify(answers)
+      data_resposta: answers.data || RH.hoje(),
+      r1: answers
     });
-  } catch(_) {}
+    return true;
+  } catch (_) { return false; }
 }
 
 async function sendAndAdvance() {
-  if (!activeKey || activeKey === 'SUA_CHAVE_AQUI') {
-    // No key configured — save to Supabase and go to thank-you page
-    saveToSupabaseQ();
-    showPhase(15);
-    return;
-  }
-
   const overlay = document.getElementById('sendOverlay');
   overlay.classList.add('show');
+  const salvo = await saveToSupabaseQ();
 
   const dataFormatada = answers.data
     ? new Date(answers.data + 'T12:00:00').toLocaleDateString('pt-BR') : '—';
@@ -1601,7 +1580,6 @@ async function sendAndAdvance() {
     const json = await res.json();
     overlay.classList.remove('show');
     if (json.success) {
-      saveToSupabaseQ();
       showPhase(15);
       showToast('success', `✓ &nbsp;Respostas enviadas para ${DEST_EMAIL}`);
     } else {
@@ -1609,7 +1587,7 @@ async function sendAndAdvance() {
     }
   } catch (err) {
     overlay.classList.remove('show');
-    showToast('error', '✕ &nbsp;Falha no envio. Use o botão de email na próxima tela.');
+    showToast('error', salvo ? '✓ &nbsp;Respostas salvas. O e-mail de cópia falhou, mas a consultora já recebeu no painel.' : '✕ &nbsp;Falha no envio. Use o botão de email na próxima tela.');
     setTimeout(() => showPhase(15), 2000);
   }
 }

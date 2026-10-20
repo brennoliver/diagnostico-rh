@@ -1,18 +1,23 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow">
   <title>Painel Admin — RH com Propósito</title>
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
+  <script src="../js/config.js"></script>
+  <script src="../js/api.js"></script>
+  <script src="../js/auth.js"></script>
+  <link rel="stylesheet" href="../css/base.css">
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
   <style>
     *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-    :root{--gold:#C89B3C;--green:#1A5C45;--green2:#2E7D58;--dark:#070F09}
+    :root{--gold:var(--rh-gold);--green:var(--rh-green);--green2:var(--rh-green-mid);--dark:var(--rh-dark)}
     body{min-height:100vh;background:linear-gradient(145deg,var(--dark) 0%,#0F3D2A 60%,#0a2a1c 100%);font-family:'Lato',sans-serif;color:white}
 
     /* ── PASSWORD SCREEN ── */
-    #pw-screen{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;z-index:999;background:linear-gradient(145deg,var(--dark) 0%,#0F3D2A 60%)}
+    #login-screen{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;z-index:999;background:linear-gradient(145deg,var(--dark) 0%,#0F3D2A 60%)}
     .pw-box{width:100%;max-width:360px;text-align:center;padding:40px 32px;background:rgba(255,255,255,.04);border:1px solid rgba(200,155,60,.15);border-radius:16px}
     .pw-brand{font-size:10px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:rgba(255,255,255,.3);margin-bottom:24px}
     .pw-brand span{color:var(--gold)}
@@ -21,6 +26,7 @@
     .pw-sub{font-size:13px;color:rgba(255,255,255,.35);margin-bottom:28px}
     .pw-input{width:100%;padding:13px 16px;border-radius:10px;border:1.5px solid rgba(200,155,60,.25);background:rgba(255,255,255,.05);color:white;font-size:15px;font-family:'Lato',sans-serif;text-align:center;letter-spacing:4px;outline:none;transition:border-color .2s}
     .pw-input:focus{border-color:var(--gold)}
+    .pw-input + .pw-input{margin-top:10px}
     .pw-btn{width:100%;margin-top:14px;padding:13px;border-radius:10px;background:var(--gold);color:#0A1C12;font-weight:700;font-size:14px;border:none;cursor:pointer;transition:all .2s}
     .pw-btn:hover{background:#D4A84A}
     .pw-err{font-size:12px;color:#F87171;margin-top:10px;min-height:18px}
@@ -31,6 +37,7 @@
     .topbar-brand{font-size:10px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:rgba(255,255,255,.3)}
     .topbar-brand span{color:var(--gold)}
     .topbar-badge{background:rgba(200,155,60,.15);border:1px solid rgba(200,155,60,.3);color:var(--gold);font-size:11px;font-weight:700;letter-spacing:1px;padding:4px 12px;border-radius:20px}
+    .topbar-out{background:none;border:1px solid rgba(255,255,255,.15);color:rgba(255,255,255,.6);padding:6px 12px;border-radius:8px;cursor:pointer;font-size:12px;font-family:inherit;margin-left:10px}
     .topbar-link{font-size:12px;color:rgba(255,255,255,.35);text-decoration:none;transition:color .2s}
     .topbar-link:hover{color:var(--gold)}
 
@@ -185,16 +192,17 @@
 </head>
 <body>
 
-<!-- PASSWORD SCREEN -->
-<div id="pw-screen">
+<!-- LOGIN (Supabase Auth) -->
+<div id="login-screen" style="display:none">
   <div class="pw-box">
     <div class="pw-brand">RH <span>com Propósito</span></div>
     <div class="pw-icon">🔐</div>
     <h2 class="pw-title">Painel Admin</h2>
-    <p class="pw-sub">Acesso restrito a Cristiele Rodrigues</p>
-    <input type="password" class="pw-input" id="pwInput" placeholder="••••••••" autocomplete="current-password">
-    <button class="pw-btn" onclick="checkPw()">Entrar</button>
-    <div class="pw-err" id="pwErr"></div>
+    <p class="pw-sub">Acesso restrito à consultora</p>
+    <input type="email" class="pw-input" id="login-email" placeholder="E-mail" autocomplete="username">
+    <input type="password" class="pw-input" id="login-senha" placeholder="Senha" autocomplete="current-password">
+    <button class="pw-btn" id="login-btn">Entrar</button>
+    <div class="pw-err" id="login-erro"></div>
   </div>
 </div>
 
@@ -203,7 +211,7 @@
   <div class="topbar">
     <div class="topbar-brand">RH <span>com Propósito</span></div>
     <div class="topbar-badge">Painel Admin</div>
-    <a class="topbar-link" href="index.html">← Hub</a>
+    <div><a class="topbar-link" href="../index.html">← Hub</a><button class="topbar-out" onclick="RH.auth.sair()">Sair</button></div>
   </div>
 
   <!-- MAIN TAB NAV -->
@@ -225,153 +233,12 @@
       <p>Todas as respostas de todos os formulários, organizadas por tipo. Clique em qualquer seção para visualizar as respostas individualmente.</p>
     </div>
 
-    <div class="section-grid" id="section-grid">
-      <div class="sec-card" onclick="openViewer('pre_diagnostico')">
-        <div class="sec-card-icon">📋</div>
-        <div class="sec-card-label">Antes das entrevistas</div>
-        <div class="sec-card-title">Pré-Diagnóstico Organizacional</div>
-        <span class="sec-card-count loading" id="count-pre_diagnostico">carregando…</span>
-        <span class="sec-card-btn">Ver respostas →</span>
-      </div>
-      <div class="sec-card" onclick="openViewer('direcao')">
-        <div class="sec-card-icon">🏛️</div>
-        <div class="sec-card-label">Construindo Juntos — Seção 1</div>
-        <div class="sec-card-title">Diagnóstico — Direção</div>
-        <span class="sec-card-count loading" id="count-direcao">carregando…</span>
-        <span class="sec-card-btn">Ver respostas →</span>
-      </div>
-      <div class="sec-card" onclick="openViewer('gestores')">
-        <div class="sec-card-icon">👥</div>
-        <div class="sec-card-label">Construindo Juntos — Seção 2</div>
-        <div class="sec-card-title">Diagnóstico — Gestores</div>
-        <span class="sec-card-count loading" id="count-gestores">carregando…</span>
-        <span class="sec-card-btn">Ver respostas →</span>
-      </div>
-      <div class="sec-card" onclick="openViewer('colaboradores')">
-        <div class="sec-card-icon">💬</div>
-        <div class="sec-card-label">Construindo Juntos — Seção 3</div>
-        <div class="sec-card-title">Diagnóstico — Colaboradores</div>
-        <span class="sec-card-count loading" id="count-colaboradores">carregando…</span>
-        <span class="sec-card-btn">Ver respostas →</span>
-      </div>
-      <div class="sec-card" onclick="openViewer('questionario')">
-        <div class="sec-card-icon">📝</div>
-        <div class="sec-card-label">Palestra / Evento</div>
-        <div class="sec-card-title">Questionário de Diagnóstico</div>
-        <span class="sec-card-count loading" id="count-questionario">carregando…</span>
-        <span class="sec-card-btn">Ver respostas →</span>
-      </div>
-      <div class="sec-card" onclick="openViewer('rs_m1')">
-        <div class="sec-card-icon">🔍</div>
-        <div class="sec-card-label">R&amp;S — Módulo 1</div>
-        <div class="sec-card-title">Briefing Inicial da Vaga</div>
-        <span class="sec-card-count loading" id="count-rs_m1">carregando…</span>
-        <span class="sec-card-btn">Ver respostas →</span>
-      </div>
-      <div class="sec-card" onclick="openViewer('rs_m2')">
-        <div class="sec-card-icon">🔍</div>
-        <div class="sec-card-label">R&amp;S — Módulo 2</div>
-        <div class="sec-card-title">Reunião com o Gestor</div>
-        <span class="sec-card-count loading" id="count-rs_m2">carregando…</span>
-        <span class="sec-card-btn">Ver respostas →</span>
-      </div>
-      <div class="sec-card" onclick="openViewer('rs_m3')">
-        <div class="sec-card-icon">🔍</div>
-        <div class="sec-card-label">R&amp;S — Módulo 3</div>
-        <div class="sec-card-title">Perfil do Cargo / Persona</div>
-        <span class="sec-card-count loading" id="count-rs_m3">carregando…</span>
-        <span class="sec-card-btn">Ver respostas →</span>
-      </div>
-      <div class="sec-card" onclick="openViewer('rs_m4')">
-        <div class="sec-card-icon">🔍</div>
-        <div class="sec-card-label">R&amp;S — Módulo 4</div>
-        <div class="sec-card-title">Proposta Comercial</div>
-        <span class="sec-card-count loading" id="count-rs_m4">carregando…</span>
-        <span class="sec-card-btn">Ver respostas →</span>
-      </div>
-      <div class="sec-card" onclick="openViewer('rs_m5')">
-        <div class="sec-card-icon">🔍</div>
-        <div class="sec-card-label">R&amp;S — Módulo 5</div>
-        <div class="sec-card-title">Planejamento da Divulgação</div>
-        <span class="sec-card-count loading" id="count-rs_m5">carregando…</span>
-        <span class="sec-card-btn">Ver respostas →</span>
-      </div>
-      <div class="sec-card" onclick="openViewer('rs_m6')">
-        <div class="sec-card-icon">🔍</div>
-        <div class="sec-card-label">R&amp;S — Módulo 6</div>
-        <div class="sec-card-title">Triagem de Currículos</div>
-        <span class="sec-card-count loading" id="count-rs_m6">carregando…</span>
-        <span class="sec-card-btn">Ver respostas →</span>
-      </div>
-      <div class="sec-card" onclick="openViewer('rs_m7')">
-        <div class="sec-card-icon">🔍</div>
-        <div class="sec-card-label">R&amp;S — Módulo 7</div>
-        <div class="sec-card-title">Pré-Entrevista</div>
-        <span class="sec-card-count loading" id="count-rs_m7">carregando…</span>
-        <span class="sec-card-btn">Ver respostas →</span>
-      </div>
-      <div class="sec-card" onclick="openViewer('rs_m8')">
-        <div class="sec-card-icon">🔍</div>
-        <div class="sec-card-label">R&amp;S — Módulo 8</div>
-        <div class="sec-card-title">Entrevista por Competências</div>
-        <span class="sec-card-count loading" id="count-rs_m8">carregando…</span>
-        <span class="sec-card-btn">Ver respostas →</span>
-      </div>
-      <div class="sec-card" onclick="openViewer('rs_m10')">
-        <div class="sec-card-icon">🔍</div>
-        <div class="sec-card-label">R&amp;S — Módulo 10</div>
-        <div class="sec-card-title">Relatório do Candidato</div>
-        <span class="sec-card-count loading" id="count-rs_m10">carregando…</span>
-        <span class="sec-card-btn">Ver respostas →</span>
-      </div>
-      <div class="sec-card" onclick="openViewer('rs_m11')">
-        <div class="sec-card-icon">🔍</div>
-        <div class="sec-card-label">R&amp;S — Módulo 11</div>
-        <div class="sec-card-title">Apresentação dos Finalistas</div>
-        <span class="sec-card-count loading" id="count-rs_m11">carregando…</span>
-        <span class="sec-card-btn">Ver respostas →</span>
-      </div>
-      <div class="sec-card" onclick="openViewer('rs_m12')">
-        <div class="sec-card-icon">🔍</div>
-        <div class="sec-card-label">R&amp;S — Módulo 12</div>
-        <div class="sec-card-title">Contratação e Formalização</div>
-        <span class="sec-card-count loading" id="count-rs_m12">carregando…</span>
-        <span class="sec-card-btn">Ver respostas →</span>
-      </div>
-      <div class="sec-card" onclick="openViewer('rs_m13')">
-        <div class="sec-card-icon">🔍</div>
-        <div class="sec-card-label">R&amp;S — Módulo 13</div>
-        <div class="sec-card-title">Integração e Onboarding</div>
-        <span class="sec-card-count loading" id="count-rs_m13">carregando…</span>
-        <span class="sec-card-btn">Ver respostas →</span>
-      </div>
-      <div class="sec-card" onclick="openViewer('confirmacao_evento')">
-        <div class="sec-card-icon">🎉</div>
-        <div class="sec-card-label">Evento</div>
-        <div class="sec-card-title">Confirmações de Presença</div>
-        <span class="sec-card-count loading" id="count-confirmacao_evento">carregando…</span>
-        <span class="sec-card-btn">Ver respostas →</span>
-      </div>
-      <div class="sec-card" onclick="openViewer('pre_palestra_executivo')">
-        <div class="sec-card-icon">🎤</div>
-        <div class="sec-card-label">Pré-Palestra</div>
-        <div class="sec-card-title">Pré-Palestra Executivo</div>
-        <span class="sec-card-count loading" id="count-pre_palestra_executivo">carregando…</span>
-        <span class="sec-card-btn">Ver respostas →</span>
-      </div>
-      <div class="sec-card" onclick="openViewer('pesquisa_experiencia')">
-        <div class="sec-card-icon">📋</div>
-        <div class="sec-card-label">Avaliação Pós-Encontro</div>
-        <div class="sec-card-title">Pesquisa de Experiência</div>
-        <span class="sec-card-count loading" id="count-pesquisa_experiencia">carregando…</span>
-        <span class="sec-card-btn">Ver respostas →</span>
-      </div>
-    </div>
+    <div class="section-grid" id="section-grid"></div>
 
     <div class="report-banner">
       <div class="report-box">
-        <div class="report-box-text"><strong>Gerar Relatório com IA</strong><br>Para compilar as respostas e gerar o relatório final do Programa Construindo Juntos, acesse o painel completo.</div>
-        <a class="report-box-btn" href="diagnostico.html">Abrir painel completo →</a>
+        <div class="report-box-text"><strong>Painel do Programa Construindo Juntos</strong><br>Avaliação de comunicação, relatório compilado, cartilha e progresso — por empresa.</div>
+        <a class="report-box-btn" href="programa.html">Abrir painel do Programa →</a>
       </div>
     </div>
 
@@ -1544,7 +1411,7 @@
         <div class="mapa-block-title">Selecione o Questionário</div>
         <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:16px;margin-bottom:32px">
 
-          <a href="questionarios-rhcp.html?tipo=direcao" target="_blank" class="sec-card" style="text-decoration:none">
+          <a href="../programa/questionarios-rhcp.html?tipo=direcao" target="_blank" class="sec-card" style="text-decoration:none">
             <div class="sec-card-icon">🏛️</div>
             <div class="sec-card-label">Diagnóstico · 3.5</div>
             <div class="sec-card-title">Questionário — Direção</div>
@@ -1552,7 +1419,7 @@
             <span class="sec-card-btn">Abrir / Imprimir →</span>
           </a>
 
-          <a href="questionarios-rhcp.html?tipo=gestores" target="_blank" class="sec-card" style="text-decoration:none">
+          <a href="../programa/questionarios-rhcp.html?tipo=gestores" target="_blank" class="sec-card" style="text-decoration:none">
             <div class="sec-card-icon">👥</div>
             <div class="sec-card-label">Diagnóstico · 3.7</div>
             <div class="sec-card-title">Questionário — Gestores</div>
@@ -1560,7 +1427,7 @@
             <span class="sec-card-btn">Abrir / Imprimir →</span>
           </a>
 
-          <a href="questionarios-rhcp.html?tipo=colaboradores" target="_blank" class="sec-card" style="text-decoration:none">
+          <a href="../programa/questionarios-rhcp.html?tipo=colaboradores" target="_blank" class="sec-card" style="text-decoration:none">
             <div class="sec-card-icon">💬</div>
             <div class="sec-card-label">Diagnóstico · 3.8</div>
             <div class="sec-card-title">Questionário — Colaboradores</div>
@@ -1600,40 +1467,28 @@
 <div class="toast" id="toast"></div>
 
 <script>
-const ADMIN_PASS = 'admin';
-const SB_URL = 'https://jngyyterkatblntpsjbm.supabase.co';
-const SB_KEY = 'sb_publishable_30rUV3wLjGCDd4DggNYePQ_CwkdB1br';
-
-let sb = null;
+const sb = RH.supabase();
 let viewerRows = [], viewerIdx = 0, viewerSec = '', viewerFilterEmpresa = null;
 
-// ── AUTH ──────────────────────────────────────────
-function checkPw() {
-  const val = document.getElementById('pwInput').value;
-  if (val === ADMIN_PASS) {
-    document.getElementById('pw-screen').style.display = 'none';
-    document.getElementById('app').style.display = 'block';
-    init();
-  } else {
-    document.getElementById('pwErr').textContent = 'Senha incorreta.';
-    document.getElementById('pwInput').value = '';
-    setTimeout(() => document.getElementById('pwErr').textContent = '', 2500);
-  }
-}
-document.getElementById('pwInput').addEventListener('keydown', e => { if (e.key === 'Enter') checkPw(); });
-
 // ── INIT ──────────────────────────────────────────
-async function init() {
-  try {
-    sb = window.supabase.createClient(SB_URL, SB_KEY);
-  } catch(e) {
-    console.error('Supabase init error:', e);
-    showToast('Erro ao conectar ao banco de dados.');
-    return;
-  }
+function renderGrade() {
+  document.getElementById('section-grid').innerHTML = RH_CONFIG.secoes.filter(s => s.painel !== false).map(s => `
+      <div class="sec-card" onclick="openViewer('${s.id}')">
+        <div class="sec-card-icon">${s.icone}</div>
+        <div class="sec-card-label">${RH.esc(s.grupo)}</div>
+        <div class="sec-card-title">${RH.esc(s.titulo)}</div>
+        <span class="sec-card-count loading" id="count-${s.id}">carregando…</span>
+        <span class="sec-card-btn">Ver respostas →</span>
+      </div>`).join('');
+}
+
+function init() {
+  document.getElementById('app').style.display = 'block';
+  renderGrade();
   loadCounts();
   loadChecklist();
 }
+RH.auth.protegerPagina(init);
 
 // ── MAIN TABS ─────────────────────────────────────
 function switchMain(tab) {
@@ -1659,22 +1514,16 @@ function toggleCap(n) { document.getElementById('cap-' + n).classList.toggle('op
 
 // ── COUNTS ───────────────────────────────────────
 async function loadCounts() {
-  const sections = ['pre_diagnostico','direcao','gestores','colaboradores','questionario','rhcp_direcao','rhcp_gestores','rhcp_colaboradores','rs_m1','rs_m2','rs_m3','rs_m4','rs_m5','rs_m6','rs_m7','rs_m8','rs_m10','rs_m11','rs_m12','rs_m13','confirmacao_evento','pre_palestra_executivo','pesquisa_experiencia'];
-  await Promise.all(sections.map(async sec => {
-    try {
-      const { data, error } = await sb.from('responses').select('id').eq('section', sec);
-      if (error) throw error;
-      const n = data ? data.length : 0;
-      const el = document.getElementById('count-' + sec);
-      if (el) {
-        el.textContent = n === 1 ? '1 resposta' : `${n} respostas`;
-        el.classList.remove('loading');
-      }
-    } catch(e) {
-      const el = document.getElementById('count-' + sec);
-      if (el) { el.textContent = 'erro'; el.classList.remove('loading'); }
-    }
-  }));
+  const totais = {};
+  const { data, error } = await sb.from('contagem_secoes').select('*');
+  if (!error) (data || []).forEach(r => totais[r.section] = r.total);
+  RH_CONFIG.secoes.forEach(({ id }) => {
+    const el = document.getElementById('count-' + id);
+    if (!el) return;
+    const n = totais[id] || 0;
+    el.textContent = error ? 'erro' : el.classList.contains('sec-card-count') ? (n === 1 ? '1 resposta' : `${n} respostas`) : n;
+    el.classList.remove('loading');
+  });
 }
 
 // ── CHECKLIST PERSISTENCE ─────────────────────────
@@ -1709,32 +1558,8 @@ function resetCl(key) {
 }
 
 // ── VIEWER ───────────────────────────────────────
-const SECTION_LABELS = {
-  pre_diagnostico: '📋 Pré-Diagnóstico Organizacional',
-  direcao:         '🏛️ Diagnóstico — Direção',
-  gestores:        '👥 Diagnóstico — Gestores',
-  colaboradores:   '💬 Diagnóstico — Colaboradores',
-  questionario:    '📝 Questionário de Diagnóstico',
-  rhcp_direcao:    '🏛️ Questionário RHCP — Direção',
-  rhcp_gestores:   '👥 Questionário RHCP — Gestores',
-  rhcp_colaboradores: '💬 Questionário RHCP — Colaboradores',
-  rs_m1:  '🔍 R&S — M1 · Briefing Inicial da Vaga',
-  rs_m2:  '🔍 R&S — M2 · Reunião com o Gestor',
-  rs_m3:  '🔍 R&S — M3 · Perfil do Cargo / Persona',
-  rs_m4:  '🔍 R&S — M4 · Proposta Comercial',
-  rs_m5:  '🔍 R&S — M5 · Planejamento da Divulgação',
-  rs_m6:  '🔍 R&S — M6 · Triagem de Currículos',
-  rs_m7:  '🔍 R&S — M7 · Pré-Entrevista',
-  rs_m8:  '🔍 R&S — M8 · Entrevista por Competências',
-  rs_m10: '🔍 R&S — M10 · Relatório do Candidato',
-  rs_m11: '🔍 R&S — M11 · Apresentação dos Finalistas',
-  rs_m12: '🔍 R&S — M12 · Contratação e Formalização',
-  rs_m13: '🔍 R&S — M13 · Integração e Onboarding',
-  confirmacao_evento: '🎉 Confirmações de Presença — Evento',
-  pre_palestra_executivo: '🎤 Pré-Palestra Executivo',
-  pesquisa_experiencia: '📋 Pesquisa de Experiência'
-};
 const PERGUNTAS = {
+  identidade:   ['1. Nossa História','2. Cultura Organizacional','3. Missão','4. Visão','5. Valores','6. O Que Esperamos do Nosso Time','7. Nosso Compromisso'],
   direcao:      ['1. História da empresa','2. Principais objetivos para os próximos anos','3. Maiores desafios enfrentados','4. Comportamentos esperados dos colaboradores','5. O que precisa melhorar na equipe','6. Como gostaria que a empresa fosse reconhecida'],
   gestores:     ['1. Principal desafio da equipe','2. Conflitos mais frequentes','3. Como ocorre a comunicação entre setores','4. O que mais impacta os resultados','5. Que apoio precisa para liderar melhor'],
   colaboradores:['1. O que mais gosta de trabalhar nesta empresa','2. O que poderia melhorar','3. Se sente ouvido pela liderança','4. Avaliação da comunicação interna','5. O que faz uma pessoa ter sucesso aqui']
@@ -1753,7 +1578,6 @@ const PRE_DIAG_SECTIONS = [
 ];
 
 async function openViewer(section) {
-  if (!sb) { try { sb = window.supabase.createClient(SB_URL, SB_KEY); } catch(e) { showToast('Erro de conexão.'); return; } }
   viewerSec = section;
   viewerFilterEmpresa = null;
   showToast('Carregando respostas…');
@@ -1764,8 +1588,11 @@ async function openViewer(section) {
     allRows = data || [];
   } catch(e) { showToast('Erro ao carregar respostas: ' + (e.message || e)); return; }
   if (!allRows.length) { showToast('Nenhuma resposta encontrada para esta seção.'); document.getElementById('resp-viewer').style.display = 'none'; return; }
-  const empresas = [...new Set(allRows.map(r => (r.company || '').trim()).filter(Boolean))];
-  const hasBlank = allRows.some(r => !(r.company || '').trim());
+  // agrupa "Empresa X", "empresa x " etc. sob o primeiro nome encontrado
+  const empresasMap = new Map();
+  allRows.forEach(r => { const n = RH.normalizarEmpresa(r.company); if (n && !empresasMap.has(n.toLowerCase())) empresasMap.set(n.toLowerCase(), n); });
+  const empresas = [...empresasMap.keys()];
+  const hasBlank = allRows.some(r => !RH.normalizarEmpresa(r.company));
   const cfEl = document.getElementById('company-filter');
   const chips = document.getElementById('cf-chips');
   chips.innerHTML = '';
@@ -1779,11 +1606,11 @@ async function openViewer(section) {
       chips.appendChild(b);
     };
     mkChip('Todas', null);
-    empresas.forEach(e => mkChip(e, e));
+    empresas.forEach(e => mkChip(empresasMap.get(e), e));
     if (hasBlank) mkChip('Sem empresa', '');
   } else { cfEl.style.display = 'none'; }
   viewerRows = allRows;
-  document.getElementById('rv-title').textContent = SECTION_LABELS[section] || section;
+  document.getElementById('rv-title').textContent = RH.rotuloSecao(section);
   document.getElementById('resp-viewer').style.display = 'block';
   viewerIdx = 0;
   renderResp();
@@ -1794,7 +1621,7 @@ function applyFilter(allRows, empresa, activeBtn) {
   viewerFilterEmpresa = empresa;
   document.querySelectorAll('#cf-chips .cf-btn').forEach(b => b.classList.remove('active'));
   if (activeBtn) activeBtn.classList.add('active');
-  viewerRows = empresa === null ? allRows : allRows.filter(r => (r.company || '').trim() === empresa);
+  viewerRows = empresa === null ? allRows : allRows.filter(r => RH.normalizarEmpresa(r.company).toLowerCase() === empresa);
   viewerIdx = 0; renderResp();
 }
 
@@ -1818,6 +1645,16 @@ function buildCard(row, section) {
     PRE_DIAG_SECTIONS.forEach(sec => {
       html += `<div class="rv-section-sep">${esc(sec.title)}</div>`;
       sec.fields.forEach(([key, label]) => { const val = d[key]; if (val) html += `<div class="rv-q"><div class="rv-q-label">${esc(label)}</div><div class="rv-q-ans">${esc(String(val))}</div></div>`; });
+    });
+  } else if (section === 'identidade') {
+    const d = RH.lerJson(row.r1);
+    PERGUNTAS.identidade.forEach((label, i) => { const v = d['r' + (i + 1)]; if (v) html += `<div class="rv-q"><div class="rv-q-label">${esc(label)}</div><div class="rv-q-ans">${esc(v)}</div></div>`; });
+  } else if (section === 'cartilha' || section === 'pdi') {
+    const d = RH.lerJson(row.r1);
+    Object.entries(d).forEach(([key, val]) => {
+      if (val === '' || val == null || (Array.isArray(val) && !val.length)) return;
+      const txt = Array.isArray(val) ? val.map(v => typeof v === 'object' ? Object.values(v).filter(Boolean).join(' | ') : v).filter(Boolean).join('\n') : String(val);
+      if (txt) html += `<div class="rv-q"><div class="rv-q-label">${esc(key.replace(/_/g, ' '))}</div><div class="rv-q-ans">${esc(txt)}</div></div>`;
     });
   } else if (section === 'questionario') {
     let d = {}; try { d = JSON.parse(row.r1 || '{}'); } catch {}
@@ -1884,7 +1721,7 @@ function buildCard(row, section) {
 function gerarPDF() {
   const row = viewerRows[viewerIdx];
   if (!row) return;
-  const sectionLabel = (SECTION_LABELS[viewerSec] || viewerSec).replace(/[\u{1F300}-\u{1FFFF}]/gu, '').trim();
+  const sectionLabel = RH.rotuloSecao(viewerSec).replace(/[\u{1F300}-\u{1FFFF}]/gu, '').trim();
   const cardHtml = buildCard(row, viewerSec);
   const dataHoje = new Date().toLocaleDateString('pt-BR', { day: '2-digit', month: 'long', year: 'numeric' });
 
@@ -1944,7 +1781,7 @@ ${cardHtml}
 }
 
 function closeViewer() { document.getElementById('resp-viewer').style.display = 'none'; viewerRows = []; viewerIdx = 0; }
-function esc(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>'); }
+const esc = RH.escBr;
 function showToast(msg) { const t = document.getElementById('toast'); t.textContent = msg; t.classList.add('show'); setTimeout(() => t.classList.remove('show'), 2500); }
 </script>
 </body>

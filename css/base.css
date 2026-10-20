@@ -1,0 +1,24 @@
+/* ═══════════════════════════════════════════════════
+   RH com Propósito — tokens da marca
+   Cada página mapeia seus nomes locais (--gold, --green, --dark…)
+   para estes tokens no próprio :root. Para mudar uma cor da marca,
+   altere aqui.
+   ═══════════════════════════════════════════════════ */
+:root{
+  --rh-green:#1A5C45;
+  --rh-green-mid:#2E7D58;
+  --rh-green-light:#4A9A72;
+  --rh-green-pale:#F0F9F4;
+  --rh-green-xpale:#F8FDFB;
+  --rh-gold:#C89B3C;
+  --rh-gold-light:#E8C96A;
+  --rh-gold-pale:#FDF6E7;
+  --rh-dark:#0A1C12;
+  --rh-gray:#5A6A62;
+  --rh-off:#FAFAF7;
+  --rh-white:#FFFFFF;
+  --rh-bg:#F7F5F0;
+  --rh-text:#1A1A1A;
+  --rh-muted:#6B6B6B;
+  --rh-border:#E0DDD8;
+}

@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>Identidade Organizacional — RH com Propósito</title>
+<link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700;900&family=Playfair+Display:ital,wght@0,600;0,700;1,500;1,600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/base.css">
+<link rel="stylesheet" href="programa.css">
+</head>
+<body>
+
+<!-- Tela de identificação da empresa -->
+<div id="view-empresa" class="view">
+  <div class="cover">
+    <div class="cover-inner">
+      <div class="cover-eyebrow">Programa Construindo Juntos</div>
+      <h1 class="cover-title" id="empresa-titulo" style="font-size:clamp(24px,4vw,38px)"></h1>
+      <p class="cover-sub">Suas respostas são confidenciais e serão utilizadas exclusivamente para personalizar o programa de desenvolvimento da equipe.</p>
+      <div class="company-row">
+        <label>EMPRESA</label>
+        <input type="text" id="companyName" placeholder="Nome da empresa (obrigatório)" autocomplete="organization">
+      </div>
+      <button class="modal-btn" style="max-width:320px" onclick="confirmarEmpresa()">Acessar questionário →</button>
+      <p style="font-size:12px;color:rgba(255,255,255,.35);margin:24px auto 0;max-width:420px;line-height:1.5">Você precisará da senha fornecida pela consultora.</p>
+    </div>
+  </div>
+</div>
+
+<div id="view-identidade" class="view">
+  <div class="qshell">
+    <div class="q-topbar">
+      <svg class="q-topbar-logo" viewBox="0 0 900.76 921.01" xmlns="http://www.w3.org/2000/svg">
+        <path fill="#f8f1eb" d="M403.28,261.57c-.83.35-1.09.02-.54-.67,1.02-4.13,2.26-8.24,3.71-12.35,1.49-4.52,3.22-8.83,5.2-12.93l-.65-.82c.24-1.23,1.85-5.36,3.2-5.22,1.83-4.96,4.4-10.39,7.09-15.12.05-.1.24-.12.46-.12-.19-.15-.36-.3-.42-.49-.18-.55,3.92-7.53,4.61-8.5l1.13-.11c.27-1.56,1.75-3.76,2.97-4.7,1.01-3.45,2.81-6.64,5.42-9.57,2.3-3.73,5.11-6.83,8.43-9.31l.57-1.66c5.75-7.98,12.8-15.04,19.86-21.9,1.48-.74,2.91-1.62,4.27-2.64l-.18-1.03c6.17-4.51,11.89-9.55,17.19-15.13l7.72-10.09,1.12-.53c2.33-2.92,4.78-5.46,7.33-7.64l-.37-.95,23.24-24.44,1.02.04c.38-1.42-.45-1.1-1.51-.67.16.33.35.86.14,1-8.62,5.88-18.3,12.08-27.25,17.47l-.96-.48-1.34,1.34c-7.79,6.07-15.63,12.14-23.51,18.21l-1.8.76c-1.9,2.18-4.09,4.35-6.58,6.49.54.78,0,1.35-.79.85-1,1.48-2.17,2.91-3.51,4.29l-1.11-.2c-1.5,2.32-3.83,4.58-5.98,6.15-.4,1.05-.84,2.11-1.57,2.98-3.46,4.12-6.92,8.26-10.38,12.38-.73.87-1.7,1.49-2.67,2.07-.97,2.09-2.91,5.17-4.72,6.54l-.25,1.4c-3.76,5.69-7.39,11.48-10.89,17.37l-2.01,1.84c-.36,1.84-1.56,4.19-2.86,5.58,1.28.56.44,3.26-.94,3.18-1.85,2.98-3.46,6.13-4.82,9.45l-.42.14c-.16,1.24-.53,2.44-1.1,3.61.5.93-.19,2.16-1.36,1.96-.96,3.06-2.05,6.12-3.27,9.19-1.49,3.97-3.02,7.82-4.61,11.56-.89,4.01-2.53,8.89-4.36,12.67l.72.71c-1.55,5.13-3.8,11.29-5.84,16.27-.85,2.07-1.71,3.83-3.02,5.67-5.94,12.72-20.4,29.32-33.68,34.42-3.48,1.34-7.42.67-10.29-1.5-2.47-1.86-4.21-5.38-3.76-8.86.64-4.89,3.59-8.92,7.68-11.61,6.11-4.02,10.95-9.06,14.23-15.68,7.84-15.78,10.86-44.32,9.25-61.99l-2.72-29.94c-4.06-44.62,14.8-88.21,46.76-118.84,14.62-14.01,31.39-25.61,50.85-31.51,6.81-2.07,13.08-4.44,19.71-6.99,7.23-2.78,14.39-4.88,22.04-6.48,14.1-2.95,27.95-4.98,42.38-6l35.26-2.49c13.92-.98,27.51-1.73,41.2-4.2,6.4-1.16,9-5.09,11.66-3.44.76.47,1.82,1.64,2.02,2.93,1.02,6.42.97,12.63.95,19.24-.06,15.85-1.36,31.14-3.1,46.93-4.46,40.65-15.24,77.61-38.7,111.31-6.59,9.47-13.61,18.07-22.12,25.8-14.44,13.11-31.29,22.39-49.91,28.31-16.44,5.23-33.04,8.41-50.19,10.09l-28.18,2.77c-10.3,1.01-20,3.68-29.83,6.9-5.48,1.79-10.5,4.22-15.32,6.9Z"/>
+        <text style="font-family:Inter-Medium,Inter;font-size:104.57px;font-weight:500;fill:#f8f1eb" transform="translate(16.34 834.11)">COM PROPÓSITO</text>
+        <text style="font-family:MinionConceptRoman-Semibold,'Minion Variable Concept';font-size:620.66px;font-weight:600;fill:#f8f1eb" transform="translate(0 702.57)">RH</text>
+      </svg>
+      <div class="q-topbar-badge"><div class="q-topbar-dot"></div>Seção 4 — Identidade Organizacional</div>
+      <button class="q-back" onclick="backToCover()">← Início</button>
+    </div>
+
+    <div class="q-hero">
+      <div class="q-eyebrow">Construindo Juntos</div>
+      <h2 class="q-title">Identidade<br>Organizacional</h2>
+      <p class="q-sub">Registre a essência da empresa — sua história, propósito, valores e o que espera do seu time. Não há resposta errada; o que importa é a verdade de quem vocês são.</p>
+    </div>
+
+    <div class="q-form">
+      <div class="q-card">
+        <div class="id-row">
+          <div class="id-field"><label>RESPONSÁVEL</label><input type="text" id="id-nome" placeholder="Nome do responsável"></div>
+          <div class="id-field"><label>CARGO / SETOR</label><input type="text" id="id-setor" placeholder="Cargo ou setor"></div>
+        </div>
+        <div style="margin-top:14px" class="id-field">
+          <label>DATA</label>
+          <input type="date" id="id-data" style="max-width:200px">
+        </div>
+      </div>
+
+      <div class="q-card">
+        <div class="q-num">1. Nossa História</div>
+        <div class="q-label">Como surgiu a empresa? Qual é a trajetória até hoje?</div>
+        <div class="q-hint">Fale sobre a origem, os fundadores, os marcos importantes e a evolução ao longo do tempo.</div>
+        <textarea class="q-input" id="id1" placeholder="Conte a história da empresa..." rows="5"></textarea>
+      </div>
+
+      <div class="q-card">
+        <div class="q-num">2. Cultura Organizacional</div>
+        <div class="q-label">Como as coisas funcionam aqui? Como as pessoas se relacionam e trabalham?</div>
+        <div class="q-hint">Descreva os comportamentos, hábitos e formas de trabalhar que definem o ambiente da empresa.</div>
+        <textarea class="q-input" id="id2" placeholder="Descreva a cultura da empresa..." rows="4"></textarea>
+      </div>
+
+      <div class="q-card">
+        <div class="q-num">3. Missão</div>
+        <div class="q-label">Por que a empresa existe? Qual é o seu propósito central?</div>
+        <div class="q-hint">A missão responde "o que fazemos, para quem e por quê".</div>
+        <textarea class="q-input" id="id3" placeholder="Ex.: Oferecer soluções de qualidade que transformam a vida dos nossos clientes..." rows="3"></textarea>
+      </div>
+
+      <div class="q-card">
+        <div class="q-num">4. Visão</div>
+        <div class="q-label">Onde a empresa quer chegar? Qual é o futuro desejado?</div>
+        <div class="q-hint">A visão é a imagem do futuro que a empresa quer construir — ambiciosa e inspiradora.</div>
+        <textarea class="q-input" id="id4" placeholder="Ex.: Ser referência em excelência e inovação em nossa região até 2030..." rows="3"></textarea>
+      </div>
+
+      <div class="q-card">
+        <div class="q-num">5. Valores</div>
+        <div class="q-label">Quais são os princípios inegociáveis que guiam as decisões e o comportamento da empresa?</div>
+        <div class="q-hint">Liste os valores essenciais — um por linha. Ex.: Ética, Excelência, Respeito, Inovação...</div>
+        <textarea class="q-input" id="id5" placeholder="Liste os valores, um por linha..." rows="5"></textarea>
+      </div>
+
+      <div class="q-card">
+        <div class="q-num">6. O Que Esperamos do Nosso Time</div>
+        <div class="q-label">Quais comportamentos e atitudes a empresa espera de todos os colaboradores?</div>
+        <div class="q-hint">Descreva as expectativas de postura, comprometimento e conduta no dia a dia.</div>
+        <textarea class="q-input" id="id6" placeholder="Ex.: Agir com integridade, buscar a melhoria contínua, respeitar colegas e clientes..." rows="5"></textarea>
+      </div>
+
+      <div class="q-card">
+        <div class="q-num">7. Nosso Compromisso</div>
+        <div class="q-label">Qual é o compromisso da empresa com seus colaboradores, clientes e comunidade?</div>
+        <div class="q-hint">O que a empresa promete entregar e como se responsabiliza pelo impacto que gera.</div>
+        <textarea class="q-input" id="id7" placeholder="Descreva o compromisso da empresa..." rows="4"></textarea>
+      </div>
+
+      <div class="q-submit-area">
+        <button class="q-submit" id="id-submit" onclick="submitIdentidade()">Salvar Identidade Organizacional</button>
+        <div class="q-submit-note">As informações serão registradas e estarão disponíveis no painel admin para o relatório final.</div>
+      </div>
+
+      <div class="q-card" style="margin-top:12px;background:rgba(20,120,80,.08);border:1.5px solid rgba(26,92,69,.3);text-align:center;padding:28px 24px">
+        <div style="font-size:13px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--green-light);margin-bottom:8px">Seção 5</div>
+        <div style="font-size:20px;font-weight:700;color:white;margin-bottom:8px">Cartilha de Cultura</div>
+        <div style="font-size:13px;color:rgba(255,255,255,.5);margin-bottom:20px;line-height:1.6">Preencha as informações para gerar a Cartilha de Cultura Organizacional completa.</div>
+        <button class="q-submit" style="background:linear-gradient(135deg,#1A5C45,#2E7D58);width:auto;padding:14px 32px" onclick="location.href='cartilha.html'">Ir para Cartilha de Cultura →</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="view-thanks" class="view">
+  <div class="thanks-view">
+    <div class="thanks-box">
+      <div class="thanks-icon">✅</div>
+      <h2 class="thanks-title">Respostas enviadas!</h2>
+      <p class="thanks-sub">Obrigado pela sua participação. Suas respostas foram recebidas e contribuirão para o desenvolvimento da equipe.</p>
+      <button class="thanks-btn" onclick="backToCover()">← Voltar ao início</button>
+    </div>
+  </div>
+</div>
+
+<!-- PASSWORD MODAL -->
+<div class="modal-overlay" id="pwdModal">
+  <div class="modal-box">
+    <div class="modal-icon" id="modal-icon">🔒</div>
+    <h3 class="modal-title" id="modal-title">Acesso Restrito</h3>
+    <p class="modal-sub" id="modal-sub">Digite a senha fornecida pela consultora para acessar este questionário.</p>
+    <input type="password" class="modal-input" id="pwdInput" placeholder="••••••••"
+           onkeydown="if(event.key==='Enter')checkPassword()">
+    <div class="modal-error" id="modal-error">Senha incorreta. Tente novamente.</div>
+    <button class="modal-btn" onclick="checkPassword()">Acessar</button>
+    <button class="modal-cancel" onclick="closeModal()">Cancelar</button>
+  </div>
+</div>
+
+<script src="../js/config.js"></script>
+<script src="../js/api.js"></script>
+<script src="acesso.js"></script>
+<script>
+const val = id => (document.getElementById(id) || {}).value || '';
+const PERGUNTAS_ID = ['1. Nossa História','2. Cultura Organizacional','3. Missão','4. Visão','5. Valores','6. O Que Esperamos do Nosso Time','7. Nosso Compromisso'];
+
+function backToCover() { location.href = 'index.html'; }
+
+async function submitIdentidade() {
+  const btn = document.getElementById('id-submit');
+  btn.disabled = true; btn.textContent = 'Salvando...';
+  const empresa = Acesso.empresaAtual();
+  const nome  = val('id-nome') || 'Equipe';
+  const setor = val('id-setor');
+  const respostas = {};
+  for (let i = 1; i <= 7; i++) respostas['r' + i] = val('id' + i);
+
+  try {
+    await RH.salvarResposta({ section: 'identidade', company: empresa, nome, cargo_setor: setor, data_resposta: val('id-data'), r1: respostas });
+  } catch (e) {
+    btn.disabled = false; btn.textContent = 'Salvar Identidade Organizacional';
+    alert('Não foi possível salvar agora. Verifique sua conexão e tente de novo — o que você escreveu continua na tela.');
+    return;
+  }
+
+  let corpo = `IDENTIDADE ORGANIZACIONAL — ${empresa}\nResponsável: ${nome}${setor ? ' — ' + setor : ''}\n\n`;
+  PERGUNTAS_ID.forEach((q, i) => { corpo += `${q}\n${respostas['r' + (i + 1)] || '(não respondido)'}\n\n`; });
+  RH.enviarEmail({ subject: `[Construindo Juntos] Seção 4 — Identidade Organizacional | ${empresa}`, message: corpo, from_name: 'Programa Construindo Juntos — RH com Propósito' });
+
+  btn.disabled = false; btn.textContent = 'Salvar Identidade Organizacional';
+  showView('thanks');
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  Acesso.iniciar({
+    chave: 'identidade', icone: '🏢', titulo: 'Identidade Organizacional', sub: 'Seção 4 — Construindo a Identidade da Empresa',
+    onLiberado: () => {
+      const d = document.getElementById('id-data');
+      if (d && !d.value) d.value = RH.hoje();
+      showView('identidade');
+    }
+  });
+});
+</script>
+</body>
+</html>

@@ -3,17 +3,19 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
 <title>Pesquisa de Experiência — RH com Propósito</title>
+<link rel="stylesheet" href="../css/base.css">
 <style>
 :root {
-  --gold: #C89B3C;
-  --gold-l: #E8C96A;
-  --green: #1A5C45;
-  --dark: #0A1C12;
-  --bg: #F7F5F0;
-  --text: #1A1A1A;
-  --muted: #6B6B6B;
-  --border: #E0DDD8;
+  --gold: var(--rh-gold);
+  --gold-l: var(--rh-gold-light);
+  --green: var(--rh-green);
+  --dark: var(--rh-dark);
+  --bg: var(--rh-bg);
+  --text: var(--rh-text);
+  --muted: var(--rh-muted);
+  --border: var(--rh-border);
   --radius: 12px;
 }
 * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -332,10 +334,9 @@ body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); co
 
 <div class="toast" id="toast"></div>
 
+<script src="../js/config.js"></script>
+<script src="../js/api.js"></script>
 <script>
-const SB_URL = 'https://jngyyterkatblntpsjbm.supabase.co';
-const SB_KEY = 'sb_publishable_30rUV3wLjGCDd4DggNYePQ_CwkdB1br';
-const W3F_KEY = '1993f0e1-d865-477b-97bd-7a854f842224';
 
 let scaleValues = {};
 let npsValue = null;
@@ -421,11 +422,7 @@ async function salvar() {
     r1: JSON.stringify(data)
   };
 
-  const sbSave = fetch(SB_URL + '/rest/v1/responses', {
-    method: 'POST',
-    headers: { 'apikey': SB_KEY, 'Authorization': 'Bearer ' + SB_KEY, 'Content-Type': 'application/json', 'Prefer': 'return=minimal' },
-    body: JSON.stringify(payload)
-  }).then(async r => { if (!r.ok) { const t = await r.text().catch(() => ''); throw new Error('HTTP ' + r.status + ': ' + t); } return r; });
+  const sbSave = RH.salvarResposta(payload);
 
   const linhas = [
     `Empresa: ${data.empresa}`,
@@ -445,11 +442,7 @@ async function salvar() {
     `Q9 · Frase sobre a experiência: ${data.q9_frase || '—'}`,
   ].join('\n');
 
-  const emailSave = fetch('https://api.web3forms.com/submit', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-    body: JSON.stringify({ access_key: W3F_KEY, subject: `[Pesquisa] ${data.nome} — ${data.empresa}`, message: linhas, from_name: 'RH com Propósito · Pesquisa de Experiência' })
-  }).then(async r => { if (!r.ok) throw new Error('email-fail'); return r; });
+  const emailSave = RH.enviarEmail({ subject: `[Pesquisa] ${data.nome} — ${data.empresa}`, message: linhas, from_name: 'RH com Propósito · Pesquisa de Experiência' }).then(ok => { if (!ok) throw new Error('email-fail'); });
 
   const [sbResult, emailResult] = await Promise.allSettled([sbSave, emailSave]);
 

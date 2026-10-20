@@ -3,9 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Recrutamento & Seleção — RH Hub</title>
+<meta name="robots" content="noindex, nofollow">
+<title>Recrutamento &amp; Seleção — RH com Propósito</title>
+<link rel="stylesheet" href="../css/base.css">
 <style>
-:root{--gold:#C89B3C;--green:#1A5C45;--dark:#0A1C12;--bg:#F7F5F0;--text:#1A1A1A;--muted:#6B6B6B;--border:#E0DDD8;--radius:10px;}
+:root{--gold:var(--rh-gold);--green:var(--rh-green);--dark:var(--rh-dark);--bg:var(--rh-bg);--text:var(--rh-text);--muted:var(--rh-muted);--border:var(--rh-border);--radius:10px;}
 *{box-sizing:border-box;margin:0;padding:0;}
 body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
 
@@ -143,7 +145,7 @@ body.single-mod .links-panel{display:none!important;}
 <body>
 
 <header>
-  <a href="index.html">← Hub</a>
+  <a href="../index.html">← Hub</a>
   <span class="header-title">🔍 Recrutamento &amp; Seleção</span>
   <div class="auth-area">
     <span class="auth-status" id="auth-status">🌐 Acesso público</span>
@@ -722,8 +724,9 @@ body.single-mod .links-panel{display:none!important;}
 <div class="modal-backdrop" id="auth-modal" onclick="if(event.target===this)closeAuthModal()">
   <div class="modal">
     <div class="modal-title">🔐 Acesso Restrito</div>
-    <p class="modal-desc">Consultora: senha do painel admin.<br>Gestor: senha fornecida pela consultora.</p>
-    <input type="password" id="auth-pass" placeholder="Digite a senha…" onkeydown="if(event.key==='Enter')doLogin()">
+    <p class="modal-desc">Consultora: e-mail e senha do painel admin.<br>Gestor: deixe o e-mail em branco e digite a senha fornecida pela consultora.</p>
+    <input type="email" id="auth-email" placeholder="E-mail (só consultora)" autocomplete="username" style="margin-bottom:10px">
+    <input type="password" id="auth-pass" placeholder="Digite a senha…" autocomplete="current-password" onkeydown="if(event.key==='Enter')doLogin()">
     <div class="modal-btns">
       <button class="modal-btn-primary" onclick="doLogin()">Entrar</button>
       <button class="modal-btn-cancel" onclick="closeAuthModal()">Cancelar</button>
@@ -733,29 +736,14 @@ body.single-mod .links-panel{display:none!important;}
 
 <div class="toast" id="toast"></div>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
+<script src="../js/config.js"></script>
+<script src="../js/api.js"></script>
+<script src="../js/auth.js"></script>
 <script>
-const SB_URL = 'https://jngyyterkatblntpsjbm.supabase.co';
-const SB_KEY = 'sb_publishable_30rUV3wLjGCDd4DggNYePQ_CwkdB1br';
-const PASS_CONSULTORA = 'admin';
-const PASS_GESTOR = 'gestor';
 let rsRole = sessionStorage.getItem('rs_role') || null;
 
-async function sbInsert(payload) {
-  const resp = await fetch(SB_URL + '/rest/v1/responses', {
-    method: 'POST',
-    headers: {
-      'apikey': SB_KEY,
-      'Authorization': 'Bearer ' + SB_KEY,
-      'Content-Type': 'application/json',
-      'Prefer': 'return=minimal'
-    },
-    body: JSON.stringify(payload)
-  });
-  if (!resp.ok) {
-    const txt = await resp.text().catch(() => resp.status);
-    throw new Error('HTTP ' + resp.status + ': ' + txt);
-  }
-}
+const sbInsert = payload => RH.salvarResposta(payload);
 
 /* ── AUTH ── */
 function initRole() {
@@ -763,6 +751,8 @@ function initRole() {
     document.body.classList.add('role-' + rsRole);
     updateAuthUI();
   }
+  // perfil de consultora só vale com sessão real do Supabase
+  if (rsRole === 'consultora') RH.auth.sessaoAdmin().then(s => { if (!s) doLogout(); }).catch(() => doLogout());
 }
 
 function openAuthModal() {
@@ -775,12 +765,15 @@ function closeAuthModal() {
   document.getElementById('auth-modal').classList.remove('open');
 }
 
-function doLogin() {
+async function doLogin() {
+  const email = document.getElementById('auth-email').value.trim();
   const pass = document.getElementById('auth-pass').value;
   let role = null;
-  if (pass === PASS_CONSULTORA) role = 'consultora';
-  else if (pass === PASS_GESTOR) role = 'gestor';
-  else { showToast('❌ Senha incorreta.'); return; }
+  try {
+    if (email) { await RH.auth.entrar(email, pass); role = 'consultora'; }
+    else if (await RH.verificarCodigo('rs_gestor', pass)) role = 'gestor';
+  } catch (e) { showToast('❌ ' + e.message); return; }
+  if (!role) { showToast('❌ Senha incorreta.'); return; }
 
   rsRole = role;
   sessionStorage.setItem('rs_role', role);
@@ -792,6 +785,7 @@ function doLogin() {
 }
 
 function doLogout() {
+  if (rsRole === 'consultora') RH.supabase().auth.signOut();
   rsRole = null;
   sessionStorage.removeItem('rs_role');
   document.body.classList.remove('role-consultora', 'role-gestor');
@@ -857,15 +851,9 @@ function collectPanel(panelId) {
 }
 
 /* ── EMAIL ── */
-async function sendEmail(w3fKey, n, data, empresa) {
-  try {
-    const body = Object.entries(data).map(([k, v]) => v ? `${k}: ${v}` : '').filter(Boolean).join('\n');
-    await fetch('https://api.web3forms.com/submit', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-      body: JSON.stringify({ access_key: w3fKey, subject: `R&S Módulo ${n} — ${empresa}`, message: body, from_name: 'RH Hub R&S' })
-    });
-  } catch (e) { /* non-critical */ }
+function sendEmail(n, data, empresa) {
+  const body = Object.entries(data).map(([k, v]) => v ? `${k}: ${v}` : '').filter(Boolean).join('\n');
+  return RH.enviarEmail({ subject: `R&S Módulo ${n} — ${empresa}`, message: body, from_name: 'RH com Propósito · R&S' });
 }
 
 /* ── SAVE ── */
@@ -887,8 +875,7 @@ async function saveModule(n) {
     });
     showToast('✅ Módulo ' + n + ' salvo com sucesso!');
     if (btn) { btn.disabled = false; btn.textContent = 'Salvar Módulo ' + n; }
-    const w3fKey = localStorage.getItem('w3f_key');
-    if (w3fKey) sendEmail(w3fKey, n, data, empresa);
+    sendEmail(n, data, empresa);
   } catch (e) {
     if (btn) { btn.disabled = false; btn.textContent = 'Salvar Módulo ' + n; }
     showToast('❌ ' + (e.message || String(e)), 6000);
