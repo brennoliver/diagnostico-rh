@@ -64,12 +64,7 @@ Migrações em `supabase/` (rodar em ordem no SQL Editor; podem ser repetidas):
 
 ## Publicar
 
-A Vercel não publica sozinha a partir do GitHub neste projeto. Depois do merge:
-
-```
-git checkout master && git pull
-vercel --prod
-```
+A Vercel está ligada ao repositório no GitHub: tudo o que entra no branch `master` vai para o ar sozinho em cerca de um minuto. Outros branches geram só uma prévia.
 
 Os endereços antigos (`admin.html`, `diagnostico.html?dl=…`, `eventos/…`, `ferramentas/…`) são redirecionados pelo `vercel.json`.
 
