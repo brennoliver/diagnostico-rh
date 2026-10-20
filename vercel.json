@@ -1,18 +1,45 @@
 {
   "redirects": [
-    { "source": "/diagnostico.html", "destination": "/programa/", "permanent": false },
-    { "source": "/Diagnostico_Organizacional_RH.html", "destination": "/programa/", "permanent": false },
-    { "source": "/admin.html", "destination": "/admin/", "permanent": false },
-    { "source": "/pre-diagnostico.html", "destination": "/programa/pre-diagnostico.html", "permanent": false },
-    { "source": "/questionarios-rhcp.html", "destination": "/programa/questionarios-rhcp.html", "permanent": false },
-    { "source": "/confirmacao.html", "destination": "/eventos/confirmacao.html", "permanent": false },
-    { "source": "/pre-palestra-executivo.html", "destination": "/eventos/pre-palestra-executivo.html", "permanent": false },
-    { "source": "/pesquisa-experiencia.html", "destination": "/eventos/pesquisa-experiencia.html", "permanent": false },
-    { "source": "/questionario.html", "destination": "/eventos/questionario.html", "permanent": false },
-    { "source": "/pdi.html", "destination": "/ferramentas/pdi.html", "permanent": false },
-    { "source": "/recrutamento.html", "destination": "/ferramentas/recrutamento.html", "permanent": false },
-    { "source": "/apostila.html", "destination": "/ferramentas/apostila.html", "permanent": false },
-    { "source": "/lideres.html", "destination": "/apresentacoes/lideres.html", "permanent": false },
+    { "source": "/admin.html", "destination": "/app/", "permanent": false },
+    { "source": "/admin", "destination": "/app/", "permanent": false },
+    { "source": "/admin/:rest*", "destination": "/app/", "permanent": false },
+
+    { "source": "/programa/questionario.html", "has": [{ "type": "query", "key": "secao", "value": "(?<secao>direcao|gestores|colaboradores)" }], "destination": "/f/?f=:secao", "permanent": false },
+    { "source": "/programa/", "has": [{ "type": "query", "key": "dl", "value": "(?<dl>direcao|gestores|colaboradores)" }], "destination": "/f/?f=:dl", "permanent": false },
+    { "source": "/programa/index.html", "has": [{ "type": "query", "key": "dl", "value": "(?<dl>direcao|gestores|colaboradores)" }], "destination": "/f/?f=:dl", "permanent": false },
+    { "source": "/diagnostico.html", "has": [{ "type": "query", "key": "dl", "value": "(?<dl>direcao|gestores|colaboradores)" }], "destination": "/f/?f=:dl", "permanent": false },
+    { "source": "/programa/questionarios-rhcp.html", "has": [{ "type": "query", "key": "tipo", "value": "(?<tipo>direcao|gestores|colaboradores)" }], "destination": "/f/?f=rhcp_:tipo", "permanent": false },
+    { "source": "/questionarios-rhcp.html", "has": [{ "type": "query", "key": "tipo", "value": "(?<tipo>direcao|gestores|colaboradores)" }], "destination": "/f/?f=rhcp_:tipo", "permanent": false },
+    { "source": "/programa/questionarios-rhcp.html", "destination": "/f/?f=rhcp_direcao", "permanent": false },
+    { "source": "/questionarios-rhcp.html", "destination": "/f/?f=rhcp_direcao", "permanent": false },
+    { "source": "/programa/identidade.html", "destination": "/f/?f=identidade", "permanent": false },
+    { "source": "/programa/cartilha.html", "destination": "/f/?f=cartilha", "permanent": false },
+    { "source": "/programa/pre-diagnostico.html", "destination": "/f/?f=pre_diagnostico", "permanent": false },
+    { "source": "/pre-diagnostico.html", "destination": "/f/?f=pre_diagnostico", "permanent": false },
+    { "source": "/programa", "destination": "/", "permanent": false },
+    { "source": "/programa/:rest*", "destination": "/", "permanent": false },
+    { "source": "/diagnostico.html", "destination": "/", "permanent": false },
+    { "source": "/Diagnostico_Organizacional_RH.html", "destination": "/", "permanent": false },
+
+    { "source": "/eventos/confirmacao.html", "destination": "/f/?f=confirmacao_evento", "permanent": false },
+    { "source": "/confirmacao.html", "destination": "/f/?f=confirmacao_evento", "permanent": false },
+    { "source": "/eventos/pre-palestra-executivo.html", "destination": "/f/?f=pre_palestra_executivo", "permanent": false },
+    { "source": "/pre-palestra-executivo.html", "destination": "/f/?f=pre_palestra_executivo", "permanent": false },
+    { "source": "/eventos/pesquisa-experiencia.html", "destination": "/f/?f=pesquisa_experiencia", "permanent": false },
+    { "source": "/pesquisa-experiencia.html", "destination": "/f/?f=pesquisa_experiencia", "permanent": false },
+    { "source": "/eventos/questionario.html", "destination": "/f/?f=questionario", "permanent": false },
+    { "source": "/questionario.html", "destination": "/f/?f=questionario", "permanent": false },
+
+    { "source": "/ferramentas/pdi.html", "destination": "/f/?f=pdi", "permanent": false },
+    { "source": "/pdi.html", "destination": "/f/?f=pdi", "permanent": false },
+    { "source": "/ferramentas/recrutamento.html", "has": [{ "type": "query", "key": "m", "value": "(?<m>[0-9]+)" }], "destination": "/f/?f=rs_m:m", "permanent": false },
+    { "source": "/recrutamento.html", "has": [{ "type": "query", "key": "m", "value": "(?<m>[0-9]+)" }], "destination": "/f/?f=rs_m:m", "permanent": false },
+    { "source": "/ferramentas/recrutamento.html", "destination": "/app/", "permanent": false },
+    { "source": "/recrutamento.html", "destination": "/app/", "permanent": false },
+    { "source": "/ferramentas/apostila.html", "destination": "/materiais/apostila.html", "permanent": false },
+    { "source": "/apostila.html", "destination": "/materiais/apostila.html", "permanent": false },
+    { "source": "/apresentacoes/lideres.html", "destination": "/materiais/lideres.html", "permanent": false },
+    { "source": "/lideres.html", "destination": "/materiais/lideres.html", "permanent": false },
     { "source": "/lideres-slides.html", "destination": "/apresentacoes/lideres-slides.html", "permanent": false },
     { "source": "/pertencimento-slides.html", "destination": "/apresentacoes/pertencimento-slides.html", "permanent": false },
     { "source": "/treinamentos-slides.html", "destination": "/apresentacoes/treinamentos-slides.html", "permanent": false },
@@ -29,10 +56,12 @@
       ]
     },
     {
-      "source": "/admin/(.*)",
-      "headers": [
-        { "key": "X-Frame-Options", "value": "DENY" }
-      ]
+      "source": "/app/(.*)",
+      "headers": [{ "key": "X-Frame-Options", "value": "DENY" }]
+    },
+    {
+      "source": "/",
+      "headers": [{ "key": "X-Frame-Options", "value": "DENY" }]
     }
   ]
 }
