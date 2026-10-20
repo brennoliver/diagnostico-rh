@@ -1,0 +1,1171 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>Painel do Programa — RH com Propósito</title>
+<link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700;900&family=Playfair+Display:ital,wght@0,600;0,700;1,500;1,600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/base.css">
+<link rel="stylesheet" href="../programa/programa.css">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
+<style>
+.toast-admin{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);background:#0F2B1E;border:1px solid rgba(200,155,60,.4);color:#fff;padding:12px 22px;border-radius:10px;font-size:13px;z-index:1000;transition:transform .3s;max-width:calc(100% - 32px)}
+.toast-admin.show{transform:translateX(-50%) translateY(0)}
+</style>
+</head>
+<body>
+
+<!-- Login (Supabase Auth) -->
+<div id="login-screen" class="modal-overlay open" style="display:none">
+  <div class="modal-box">
+    <div class="modal-icon">🔐</div>
+    <h3 class="modal-title">Painel do Programa</h3>
+    <p class="modal-sub">Acesso restrito à consultora.</p>
+    <input type="email" class="modal-input" id="login-email" placeholder="E-mail" autocomplete="username" style="margin-bottom:10px">
+    <input type="password" class="modal-input" id="login-senha" placeholder="Senha" autocomplete="current-password">
+    <div class="modal-error" id="login-erro" style="display:block;min-height:16px"></div>
+    <button class="modal-btn" id="login-btn">Entrar</button>
+    <a class="modal-cancel" href="../index.html" style="display:block;text-decoration:none">← Voltar ao portal</a>
+  </div>
+</div>
+
+<div id="app" style="display:none">
+
+<div id="view-admin" class="view">
+  <div class="admin-shell">
+    <div class="admin-topbar">
+      <svg style="height:32px;width:auto" viewBox="0 0 900.76 921.01" xmlns="http://www.w3.org/2000/svg">
+        <path fill="#f8f1eb" d="M403.28,261.57c-.83.35-1.09.02-.54-.67,1.02-4.13,2.26-8.24,3.71-12.35,1.49-4.52,3.22-8.83,5.2-12.93l-.65-.82c.24-1.23,1.85-5.36,3.2-5.22,1.83-4.96,4.4-10.39,7.09-15.12.05-.1.24-.12.46-.12-.19-.15-.36-.3-.42-.49-.18-.55,3.92-7.53,4.61-8.5l1.13-.11c.27-1.56,1.75-3.76,2.97-4.7,1.01-3.45,2.81-6.64,5.42-9.57,2.3-3.73,5.11-6.83,8.43-9.31l.57-1.66c5.75-7.98,12.8-15.04,19.86-21.9,1.48-.74,2.91-1.62,4.27-2.64l-.18-1.03c6.17-4.51,11.89-9.55,17.19-15.13l7.72-10.09,1.12-.53c2.33-2.92,4.78-5.46,7.33-7.64l-.37-.95,23.24-24.44,1.02.04c.38-1.42-.45-1.1-1.51-.67.16.33.35.86.14,1-8.62,5.88-18.3,12.08-27.25,17.47l-.96-.48-1.34,1.34c-7.79,6.07-15.63,12.14-23.51,18.21l-1.8.76c-1.9,2.18-4.09,4.35-6.58,6.49.54.78,0,1.35-.79.85-1,1.48-2.17,2.91-3.51,4.29l-1.11-.2c-1.5,2.32-3.83,4.58-5.98,6.15-.4,1.05-.84,2.11-1.57,2.98-3.46,4.12-6.92,8.26-10.38,12.38-.73.87-1.7,1.49-2.67,2.07-.97,2.09-2.91,5.17-4.72,6.54l-.25,1.4c-3.76,5.69-7.39,11.48-10.89,17.37l-2.01,1.84c-.36,1.84-1.56,4.19-2.86,5.58,1.28.56.44,3.26-.94,3.18-1.85,2.98-3.46,6.13-4.82,9.45l-.42.14c-.16,1.24-.53,2.44-1.1,3.61.5.93-.19,2.16-1.36,1.96-.96,3.06-2.05,6.12-3.27,9.19-1.49,3.97-3.02,7.82-4.61,11.56-.89,4.01-2.53,8.89-4.36,12.67l.72.71c-1.55,5.13-3.8,11.29-5.84,16.27-.85,2.07-1.71,3.83-3.02,5.67-5.94,12.72-20.4,29.32-33.68,34.42-3.48,1.34-7.42.67-10.29-1.5-2.47-1.86-4.21-5.38-3.76-8.86.64-4.89,3.59-8.92,7.68-11.61,6.11-4.02,10.95-9.06,14.23-15.68,7.84-15.78,10.86-44.32,9.25-61.99l-2.72-29.94c-4.06-44.62,14.8-88.21,46.76-118.84,14.62-14.01,31.39-25.61,50.85-31.51,6.81-2.07,13.08-4.44,19.71-6.99,7.23-2.78,14.39-4.88,22.04-6.48,14.1-2.95,27.95-4.98,42.38-6l35.26-2.49c13.92-.98,27.51-1.73,41.2-4.2,6.4-1.16,9-5.09,11.66-3.44.76.47,1.82,1.64,2.02,2.93,1.02,6.42.97,12.63.95,19.24-.06,15.85-1.36,31.14-3.1,46.93-4.46,40.65-15.24,77.61-38.7,111.31-6.59,9.47-13.61,18.07-22.12,25.8-14.44,13.11-31.29,22.39-49.91,28.31-16.44,5.23-33.04,8.41-50.19,10.09l-28.18,2.77c-10.3,1.01-20,3.68-29.83,6.9-5.48,1.79-10.5,4.22-15.32,6.9Z"/>
+        <text style="font-family:Inter-Medium,Inter;font-size:104.57px;font-weight:500;fill:#f8f1eb" transform="translate(16.34 834.11)">COM PROPÓSITO</text>
+        <text style="font-family:MinionConceptRoman-Semibold,'Minion Variable Concept';font-size:620.66px;font-weight:600;fill:#f8f1eb" transform="translate(0 702.57)">RH</text>
+      </svg>
+      <div class="admin-badge">Painel Admin — Cristiele</div>
+      <div style="display:flex;gap:8px;align-items:center">
+        <a class="q-back" href="index.html" style="text-decoration:none">← Painel geral</a>
+        <button class="q-back" onclick="RH.auth.sair()">Sair</button>
+      </div>
+    </div>
+
+    <div class="admin-hero">
+      <div class="q-eyebrow">Programa Construindo Juntos</div>
+      <h2 class="admin-title">Painel de Análise e<br>Geração do Relatório</h2>
+      <p class="admin-sub">Escolha a empresa, preencha a avaliação de comunicação e gere o relatório compilado. Tudo fica salvo no banco.</p>
+      <div id="admin-company-display" style="margin-top:16px"></div>
+      <div class="company-row" style="margin:20px 0 0;max-width:560px">
+        <label>EMPRESA</label>
+        <input type="text" id="empresaInput" list="empresasLista" placeholder="Escolha ou digite a empresa" autocomplete="off">
+        <datalist id="empresasLista"></datalist>
+        <button class="modal-btn" style="width:auto;padding:12px 20px;margin:0" onclick="selecionarEmpresa()">Carregar</button>
+      </div>
+    </div>
+
+    <div class="admin-body">
+      <div class="admin-tabs">
+        <button class="admin-tab active" onclick="switchTab('secao4')">📋 Seção 4 — Comunicação</button>
+        <button class="admin-tab" onclick="switchTab('compilar')">📥 Compilar Respostas</button>
+        <button class="admin-tab" onclick="switchTab('gerar')">🤖 Gerar Relatório Final</button>
+        <button class="admin-tab" onclick="showView('progresso')">📈 Progresso</button>
+      </div>
+
+      <!-- TAB: SEÇÃO 4 -->
+      <div id="tab-secao4" class="admin-tab-panel active">
+        <div class="a-section">
+          <div class="a-section-header">
+            <div class="a-section-eyebrow">Seção 4</div>
+            <div class="a-section-title">Avaliação da Comunicação Interna</div>
+            <div class="a-section-sub">Itens para observação — preenchido por Cristiele durante o diagnóstico.</div>
+          </div>
+
+          <div class="chk-list">
+            <div class="chk-group">
+              <label class="chk-item">
+                <input type="checkbox" id="s4-1" onchange="updateCheckStatus(this)">
+                <div class="chk-box"></div>
+                <div class="chk-text">As informações chegam a todos os colaboradores?</div>
+                <div class="chk-status" id="s4-1-status">Não</div>
+              </label>
+              <textarea class="chk-obs" id="s4-1-txt" placeholder="Observações sobre este ponto..."></textarea>
+            </div>
+            <div class="chk-group">
+              <label class="chk-item">
+                <input type="checkbox" id="s4-2" onchange="updateCheckStatus(this)">
+                <div class="chk-box"></div>
+                <div class="chk-text">Existem ruídos de comunicação?</div>
+                <div class="chk-status" id="s4-2-status">Não</div>
+              </label>
+              <textarea class="chk-obs" id="s4-2-txt" placeholder="Observações sobre este ponto..."></textarea>
+            </div>
+            <div class="chk-group">
+              <label class="chk-item">
+                <input type="checkbox" id="s4-3" onchange="updateCheckStatus(this)">
+                <div class="chk-box"></div>
+                <div class="chk-text">Há alinhamento entre os setores?</div>
+                <div class="chk-status" id="s4-3-status">Não</div>
+              </label>
+              <textarea class="chk-obs" id="s4-3-txt" placeholder="Observações sobre este ponto..."></textarea>
+            </div>
+            <div class="chk-group">
+              <label class="chk-item">
+                <input type="checkbox" id="s4-4" onchange="updateCheckStatus(this)">
+                <div class="chk-box"></div>
+                <div class="chk-text">Existem reuniões periódicas?</div>
+                <div class="chk-status" id="s4-4-status">Não</div>
+              </label>
+              <textarea class="chk-obs" id="s4-4-txt" placeholder="Observações sobre este ponto..."></textarea>
+            </div>
+            <div class="chk-group">
+              <label class="chk-item">
+                <input type="checkbox" id="s4-5" onchange="updateCheckStatus(this)">
+                <div class="chk-box"></div>
+                <div class="chk-text">Os líderes comunicam de forma clara?</div>
+                <div class="chk-status" id="s4-5-status">Não</div>
+              </label>
+              <textarea class="chk-obs" id="s4-5-txt" placeholder="Observações sobre este ponto..."></textarea>
+            </div>
+          </div>
+
+          <div class="obs-field">
+            <label>OBSERVAÇÕES GERAIS</label>
+            <textarea class="compile-input" id="s4-obs" placeholder="Anote aqui observações gerais sobre a comunicação interna feitas durante o diagnóstico..." style="min-height:90px"></textarea>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB: COMPILAR -->
+      <div id="tab-compilar" class="admin-tab-panel">
+        <div class="a-section">
+          <div class="a-section-header">
+            <div class="a-section-eyebrow">Respostas Coletadas</div>
+            <div class="a-section-title">Resumo automático das respostas</div>
+            <div class="a-section-sub" id="compilar-sub">As respostas são salvas na nuvem (Supabase) e carregadas automaticamente. Clique em "Gerar Relatório" para gerar o diagnóstico completo.</div>
+          </div>
+
+          <div id="sb-status-bar" style="display:none;align-items:center;gap:8px;margin-bottom:16px;padding:10px 14px;background:rgba(74,154,114,.1);border:1px solid rgba(74,154,114,.3);border-radius:8px;font-size:12px;color:rgba(255,255,255,.7)">
+            <span style="color:#4ADE80;font-size:16px">●</span>
+            <span>Supabase conectado — respostas carregadas da nuvem para empresa <strong id="sb-company-name" style="color:var(--gold)"></strong></span>
+          </div>
+
+          <!-- Company filter -->
+          <div class="company-filter" id="company-filter" style="display:none">
+            <span class="company-filter-label">Empresa:</span>
+            <div id="cf-chips"></div>
+          </div>
+
+          <div class="resp-summary">
+            <div class="resp-row" onclick="openViewer('direcao')">
+              <div class="resp-row-label">🏛️ Direção — Seção 1</div>
+              <div class="resp-row-count"><span id="count-direcao">0</span> resposta(s)<span class="resp-row-ver">Ver →</span></div>
+            </div>
+            <div class="resp-row" onclick="openViewer('gestores')">
+              <div class="resp-row-label">👥 Gestores — Seção 2</div>
+              <div class="resp-row-count"><span id="count-gestores">0</span> resposta(s)<span class="resp-row-ver">Ver →</span></div>
+            </div>
+            <div class="resp-row" onclick="openViewer('colaboradores')">
+              <div class="resp-row-label">💬 Colaboradores — Seção 3</div>
+              <div class="resp-row-count"><span id="count-colaboradores">0</span> resposta(s)<span class="resp-row-ver">Ver →</span></div>
+            </div>
+            <div class="resp-row" onclick="openViewer('identidade')">
+              <div class="resp-row-label">🏢 Identidade Organizacional — Seção 4</div>
+              <div class="resp-row-count"><span id="count-identidade">0</span> registro(s)<span class="resp-row-ver">Ver →</span></div>
+            </div>
+            <div class="resp-row" onclick="openViewer('cartilha')">
+              <div class="resp-row-label">📋 Cartilha de Cultura — Seção 5</div>
+              <div class="resp-row-count"><span id="count-cartilha">0</span> registro(s)<span class="resp-row-ver">Ver →</span></div>
+            </div>
+            <div class="resp-row" style="border-top:1px solid rgba(255,255,255,.06);margin-top:4px;padding-top:14px" onclick="openViewer('pre_diagnostico')">
+              <div class="resp-row-label">📋 Pré-Diagnóstico</div>
+              <div class="resp-row-count"><span id="count-prediagnostico">0</span> formulário(s)<span class="resp-row-ver">Ver →</span></div>
+            </div>
+          </div>
+
+          <!-- Individual response viewer -->
+          <div class="resp-viewer" id="resp-viewer">
+            <div class="rv-topbar">
+              <div class="rv-title" id="rv-title"></div>
+              <button class="rv-close" onclick="closeViewer()">✕ Fechar</button>
+            </div>
+            <div class="rv-nav">
+              <button class="rv-btn" id="rv-prev" onclick="showResp(viewerIdx-1)">← Anterior</button>
+              <span class="rv-count" id="rv-count"></span>
+              <button class="rv-btn" id="rv-next" onclick="showResp(viewerIdx+1)">Próximo →</button>
+            </div>
+            <div class="rv-body" id="rv-body"></div>
+          </div>
+
+          <div style="display:flex;gap:12px;justify-content:center;margin-top:16px">
+            <button class="generate-btn" onclick="switchTab('gerar')" style="padding:13px 28px;font-size:14px">Ir para Gerar Relatório →</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB: GERAR RELATÓRIO -->
+      <div id="tab-gerar" class="admin-tab-panel">
+        <div class="a-section">
+          <div class="a-section-header">
+            <div class="a-section-eyebrow">Relatório Final</div>
+            <div class="a-section-title">Compilado Completo das Respostas</div>
+            <div class="a-section-sub">Gera um documento com todas as respostas coletadas de Direção, Gestores, Colaboradores e a avaliação de comunicação da Seção 4.</div>
+          </div>
+
+          <div class="generate-area">
+            <button class="generate-btn" id="generateBtn" onclick="generateReport()">
+              <span id="generate-icon">📄</span>
+              <span id="generate-label">Gerar Relatório Compilado</span>
+            </button>
+            <div class="generate-note" id="generate-note">Compila todas as respostas coletadas em um documento para análise e anotações.</div>
+            <button class="out-btn out-btn-print" style="margin-top:14px" onclick="gerarCartilhaEmpresa()">🎨 Baixar Cartilha de Cultura da empresa</button>
+          </div>
+
+          <!-- Output -->
+          <div class="output-box" id="outputBox">
+            <div class="output-header">
+              <div>
+                <div class="output-logo-text">RH com Propósito</div>
+                <div class="output-meta" id="output-meta"></div>
+              </div>
+              <div class="output-meta" id="output-date"></div>
+            </div>
+
+            <div class="output-section">
+              <div class="output-section-title">Respostas dos Questionários (Seções 1, 2 e 3)</div>
+              <div class="output-content" id="out-desafios"></div>
+            </div>
+
+            <div class="output-section">
+              <div class="output-section-title">Seção 4 — Avaliação da Comunicação Interna</div>
+              <div class="output-content" id="out-relatorio"></div>
+            </div>
+
+            <div class="output-actions">
+              <button class="out-btn out-btn-copy" onclick="copyOutput()">📋 Copiar texto</button>
+              <button class="out-btn out-btn-print" onclick="printOutput()">🖨️ Imprimir / PDF</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="view-progresso" class="view">
+<div class="prog-shell">
+
+  <div class="prog-topbar">
+    <svg style="height:32px;width:auto" viewBox="0 0 900.76 921.01" xmlns="http://www.w3.org/2000/svg">
+      <path fill="#f8f1eb" d="M403.28,261.57c-.83.35-1.09.02-.54-.67,1.02-4.13,2.26-8.24,3.71-12.35,1.49-4.52,3.22-8.83,5.2-12.93l-.65-.82c.24-1.23,1.85-5.36,3.2-5.22,1.83-4.96,4.4-10.39,7.09-15.12.05-.1.24-.12.46-.12-.19-.15-.36-.3-.42-.49-.18-.55,3.92-7.53,4.61-8.5l1.13-.11c.27-1.56,1.75-3.76,2.97-4.7,1.01-3.45,2.81-6.64,5.42-9.57,2.3-3.73,5.11-6.83,8.43-9.31l.57-1.66c5.75-7.98,12.8-15.04,19.86-21.9,1.48-.74,2.91-1.62,4.27-2.64l-.18-1.03c6.17-4.51,11.89-9.55,17.19-15.13l7.72-10.09,1.12-.53c2.33-2.92,4.78-5.46,7.33-7.64l-.37-.95,23.24-24.44,1.02.04c.38-1.42-.45-1.1-1.51-.67.16.33.35.86.14,1-8.62,5.88-18.3,12.08-27.25,17.47l-.96-.48-1.34,1.34c-7.79,6.07-15.63,12.14-23.51,18.21l-1.8.76c-1.9,2.18-4.09,4.35-6.58,6.49.54.78,0,1.35-.79.85-1,1.48-2.17,2.91-3.51,4.29l-1.11-.2c-1.5,2.32-3.83,4.58-5.98,6.15-.4,1.05-.84,2.11-1.57,2.98-3.46,4.12-6.92,8.26-10.38,12.38-.73.87-1.7,1.49-2.67,2.07-.97,2.09-2.91,5.17-4.72,6.54l-.25,1.4c-3.76,5.69-7.39,11.48-10.89,17.37l-2.01,1.84c-.36,1.84-1.56,4.19-2.86,5.58,1.28.56.44,3.26-.94,3.18-1.85,2.98-3.46,6.13-4.82,9.45l-.42.14c-.16,1.24-.53,2.44-1.1,3.61.5.93-.19,2.16-1.36,1.96-.96,3.06-2.05,6.12-3.27,9.19-1.49,3.97-3.02,7.82-4.61,11.56-.89,4.01-2.53,8.89-4.36,12.67l.72.71c-1.55,5.13-3.8,11.29-5.84,16.27-.85,2.07-1.71,3.83-3.02,5.67-5.94,12.72-20.4,29.32-33.68,34.42-3.48,1.34-7.42.67-10.29-1.5-2.47-1.86-4.21-5.38-3.76-8.86.64-4.89,3.59-8.92,7.68-11.61,6.11-4.02,10.95-9.06,14.23-15.68,7.84-15.78,10.86-44.32,9.25-61.99l-2.72-29.94c-4.06-44.62,14.8-88.21,46.76-118.84,14.62-14.01,31.39-25.61,50.85-31.51,6.81-2.07,13.08-4.44,19.71-6.99,7.23-2.78,14.39-4.88,22.04-6.48,14.1-2.95,27.95-4.98,42.38-6l35.26-2.49c13.92-.98,27.51-1.73,41.2-4.2,6.4-1.16,9-5.09,11.66-3.44.76.47,1.82,1.64,2.02,2.93,1.02,6.42.97,12.63.95,19.24-.06,15.85-1.36,31.14-3.1,46.93-4.46,40.65-15.24,77.61-38.7,111.31-6.59,9.47-13.61,18.07-22.12,25.8-14.44,13.11-31.29,22.39-49.91,28.31-16.44,5.23-33.04,8.41-50.19,10.09l-28.18,2.77c-10.3,1.01-20,3.68-29.83,6.9-5.48,1.79-10.5,4.22-15.32,6.9Z"/>
+      <text style="font-family:Inter-Medium,Inter;font-size:104.57px;font-weight:500;fill:#f8f1eb" transform="translate(16.34 834.11)">COM PROPÓSITO</text>
+      <text style="font-family:MinionConceptRoman-Semibold,'Minion Variable Concept';font-size:620.66px;font-weight:600;fill:#f8f1eb" transform="translate(0 702.57)">RH</text>
+    </svg>
+    <div class="q-topbar-badge"><div class="q-topbar-dot"></div>Acompanhamento de Progresso</div>
+    <button class="q-back" onclick="showView('admin')">← Painel do Programa</button>
+  </div>
+
+  <div class="prog-hero">
+    <div class="prog-hero-eyebrow">Programa Construindo Juntos</div>
+    <h2 class="prog-hero-title">Acompanhamento de <span>Progresso</span></h2>
+    <p class="prog-hero-sub">Registre o avanço de cada etapa e anote observações sobre a evolução em cada seção.</p>
+
+    <div class="prog-summary">
+      <div class="prog-summary-ring">
+        <svg viewBox="0 0 72 72" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="36" cy="36" r="29" fill="none" stroke="rgba(255,255,255,.07)" stroke-width="7"/>
+          <circle id="overall-ring" cx="36" cy="36" r="29" fill="none" stroke="var(--gold)" stroke-width="7"
+            stroke-linecap="round" stroke-dasharray="182.2" stroke-dashoffset="182.2"
+            style="transition:stroke-dashoffset .6s ease"/>
+        </svg>
+        <div class="prog-ring-text" id="overall-ring-pct">0%</div>
+      </div>
+      <div class="prog-summary-info">
+        <div class="prog-summary-pct"><span id="overall-num">0</span><span>% concluído</span></div>
+        <div class="prog-summary-meta" id="overall-meta">0 de 9 etapas concluídas</div>
+        <div class="prog-summary-bar-wrap">
+          <div class="prog-summary-bar-fill" id="overall-bar" style="width:0%"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="prog-body">
+
+    <!-- ══════════════════════════════════
+         CHART PANEL
+    ══════════════════════════════════════ -->
+    <div class="chart-panel">
+      <div class="chart-panel-title">Visão Geral por Grupo</div>
+      <div class="chart-panel-sub">Média de conclusão por área do programa</div>
+
+      <!-- 3 Donuts por grupo -->
+      <div class="chart-donuts">
+
+        <!-- Diagnóstico -->
+        <div class="chart-donut-card">
+          <div class="chart-donut-wrap">
+            <svg viewBox="0 0 96 96" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="48" cy="48" r="38" class="donut-track"/>
+              <circle cx="48" cy="48" r="38" class="donut-fill" id="donut-diag"
+                stroke="#4A9A72" stroke-dasharray="238.76" stroke-dashoffset="238.76"/>
+            </svg>
+            <div class="chart-donut-center">
+              <div class="chart-donut-pct" id="donut-diag-pct">0%</div>
+              <div class="chart-donut-sub">MÉDIA</div>
+            </div>
+          </div>
+          <div class="chart-donut-label">📊 Diagnóstico</div>
+          <div class="chart-donut-mini-bars">
+            <div class="chart-mini-bar-row">
+              <div class="chart-mini-bar-label">Direção</div>
+              <div class="chart-mini-bar-wrap"><div class="chart-mini-bar-fill" id="mbar-direcao" style="width:0%;background:#4A9A72"></div></div>
+              <div class="chart-mini-bar-pct" id="mpct-direcao">0%</div>
+            </div>
+            <div class="chart-mini-bar-row">
+              <div class="chart-mini-bar-label">Gestores</div>
+              <div class="chart-mini-bar-wrap"><div class="chart-mini-bar-fill" id="mbar-gestores" style="width:0%;background:#7EAECF"></div></div>
+              <div class="chart-mini-bar-pct" id="mpct-gestores">0%</div>
+            </div>
+            <div class="chart-mini-bar-row">
+              <div class="chart-mini-bar-label">Colaboradores</div>
+              <div class="chart-mini-bar-wrap"><div class="chart-mini-bar-fill" id="mbar-colaboradores" style="width:0%;background:#7ECFCF"></div></div>
+              <div class="chart-mini-bar-pct" id="mpct-colaboradores">0%</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Identidade -->
+        <div class="chart-donut-card">
+          <div class="chart-donut-wrap">
+            <svg viewBox="0 0 96 96" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="48" cy="48" r="38" class="donut-track"/>
+              <circle cx="48" cy="48" r="38" class="donut-fill" id="donut-ident"
+                stroke="#C89B3C" stroke-dasharray="238.76" stroke-dashoffset="238.76"/>
+            </svg>
+            <div class="chart-donut-center">
+              <div class="chart-donut-pct" id="donut-ident-pct">0%</div>
+              <div class="chart-donut-sub">MÉDIA</div>
+            </div>
+          </div>
+          <div class="chart-donut-label">🏢 Identidade</div>
+          <div class="chart-donut-mini-bars">
+            <div class="chart-mini-bar-row">
+              <div class="chart-mini-bar-label">Comunicação</div>
+              <div class="chart-mini-bar-wrap"><div class="chart-mini-bar-fill" id="mbar-comunicacao" style="width:0%;background:#AA7ECF"></div></div>
+              <div class="chart-mini-bar-pct" id="mpct-comunicacao">0%</div>
+            </div>
+            <div class="chart-mini-bar-row">
+              <div class="chart-mini-bar-label">Identidade</div>
+              <div class="chart-mini-bar-wrap"><div class="chart-mini-bar-fill" id="mbar-identidade" style="width:0%;background:#C89B3C"></div></div>
+              <div class="chart-mini-bar-pct" id="mpct-identidade">0%</div>
+            </div>
+            <div class="chart-mini-bar-row">
+              <div class="chart-mini-bar-label">Cartilha</div>
+              <div class="chart-mini-bar-wrap"><div class="chart-mini-bar-fill" id="mbar-cartilha" style="width:0%;background:#CFB87E"></div></div>
+              <div class="chart-mini-bar-pct" id="mpct-cartilha">0%</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Treinamentos -->
+        <div class="chart-donut-card">
+          <div class="chart-donut-wrap">
+            <svg viewBox="0 0 96 96" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="48" cy="48" r="38" class="donut-track"/>
+              <circle cx="48" cy="48" r="38" class="donut-fill" id="donut-trein"
+                stroke="#CFB87E" stroke-dasharray="238.76" stroke-dashoffset="238.76"/>
+            </svg>
+            <div class="chart-donut-center">
+              <div class="chart-donut-pct" id="donut-trein-pct">0%</div>
+              <div class="chart-donut-sub">MÉDIA</div>
+            </div>
+          </div>
+          <div class="chart-donut-label">🌟 Treinamentos</div>
+          <div class="chart-donut-mini-bars">
+            <div class="chart-mini-bar-row">
+              <div class="chart-mini-bar-label">Líderes</div>
+              <div class="chart-mini-bar-wrap"><div class="chart-mini-bar-fill" id="mbar-lideres" style="width:0%;background:#C89B3C"></div></div>
+              <div class="chart-mini-bar-pct" id="mpct-lideres">0%</div>
+            </div>
+            <div class="chart-mini-bar-row">
+              <div class="chart-mini-bar-label">Pertencimento</div>
+              <div class="chart-mini-bar-wrap"><div class="chart-mini-bar-fill" id="mbar-pertencimento" style="width:0%;background:#7EAECF"></div></div>
+              <div class="chart-mini-bar-pct" id="mpct-pertencimento">0%</div>
+            </div>
+            <div class="chart-mini-bar-row">
+              <div class="chart-mini-bar-label">Workshops</div>
+              <div class="chart-mini-bar-wrap"><div class="chart-mini-bar-fill" id="mbar-treinamentos" style="width:0%;background:#CFB87E"></div></div>
+              <div class="chart-mini-bar-pct" id="mpct-treinamentos">0%</div>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- /chart-donuts -->
+
+      <!-- Gráfico de barras horizontal — todas as 9 seções -->
+      <div class="chart-hbar-title">Todas as Etapas</div>
+      <div class="chart-hbar-list">
+
+        <div class="chart-hbar-row">
+          <div class="chart-hbar-icon">🏛️</div>
+          <div class="chart-hbar-name">Direção</div>
+          <div class="chart-hbar-track"><div class="chart-hbar-fill" id="hbar-direcao" style="width:0%;background:#4A9A72"></div></div>
+          <div class="chart-hbar-pct" id="hpct-direcao">0%</div>
+        </div>
+        <div class="chart-hbar-row">
+          <div class="chart-hbar-icon">👥</div>
+          <div class="chart-hbar-name">Gestores</div>
+          <div class="chart-hbar-track"><div class="chart-hbar-fill" id="hbar-gestores" style="width:0%;background:#7EAECF"></div></div>
+          <div class="chart-hbar-pct" id="hpct-gestores">0%</div>
+        </div>
+        <div class="chart-hbar-row">
+          <div class="chart-hbar-icon">💬</div>
+          <div class="chart-hbar-name">Colaboradores</div>
+          <div class="chart-hbar-track"><div class="chart-hbar-fill" id="hbar-colaboradores" style="width:0%;background:#7ECFCF"></div></div>
+          <div class="chart-hbar-pct" id="hpct-colaboradores">0%</div>
+        </div>
+
+        <div class="chart-hbar-group-sep"></div>
+
+        <div class="chart-hbar-row">
+          <div class="chart-hbar-icon">📡</div>
+          <div class="chart-hbar-name">Comunicação Interna</div>
+          <div class="chart-hbar-track"><div class="chart-hbar-fill" id="hbar-comunicacao" style="width:0%;background:#AA7ECF"></div></div>
+          <div class="chart-hbar-pct" id="hpct-comunicacao">0%</div>
+        </div>
+        <div class="chart-hbar-row">
+          <div class="chart-hbar-icon">🏢</div>
+          <div class="chart-hbar-name">Identidade Org.</div>
+          <div class="chart-hbar-track"><div class="chart-hbar-fill" id="hbar-identidade" style="width:0%;background:#C89B3C"></div></div>
+          <div class="chart-hbar-pct" id="hpct-identidade">0%</div>
+        </div>
+        <div class="chart-hbar-row">
+          <div class="chart-hbar-icon">📋</div>
+          <div class="chart-hbar-name">Cartilha de Cultura</div>
+          <div class="chart-hbar-track"><div class="chart-hbar-fill" id="hbar-cartilha" style="width:0%;background:#CFB87E"></div></div>
+          <div class="chart-hbar-pct" id="hpct-cartilha">0%</div>
+        </div>
+
+        <div class="chart-hbar-group-sep"></div>
+
+        <div class="chart-hbar-row">
+          <div class="chart-hbar-icon">🌟</div>
+          <div class="chart-hbar-name">Líderes que Inspiram</div>
+          <div class="chart-hbar-track"><div class="chart-hbar-fill" id="hbar-lideres" style="width:0%;background:#C89B3C"></div></div>
+          <div class="chart-hbar-pct" id="hpct-lideres">0%</div>
+        </div>
+        <div class="chart-hbar-row">
+          <div class="chart-hbar-icon">🤝</div>
+          <div class="chart-hbar-name">Pertencimento</div>
+          <div class="chart-hbar-track"><div class="chart-hbar-fill" id="hbar-pertencimento" style="width:0%;background:#7EAECF"></div></div>
+          <div class="chart-hbar-pct" id="hpct-pertencimento">0%</div>
+        </div>
+        <div class="chart-hbar-row">
+          <div class="chart-hbar-icon">🎓</div>
+          <div class="chart-hbar-name">Treinamentos</div>
+          <div class="chart-hbar-track"><div class="chart-hbar-fill" id="hbar-treinamentos" style="width:0%;background:#CFB87E"></div></div>
+          <div class="chart-hbar-pct" id="hpct-treinamentos">0%</div>
+        </div>
+
+      </div><!-- /chart-hbar-list -->
+    </div><!-- /chart-panel -->
+
+    <!-- ── GRUPO: DIAGNÓSTICO ── -->
+    <div class="prog-divider">
+      <div class="prog-divider-line"></div>
+      <div class="prog-divider-label">📊 Diagnóstico — Seções 1, 2 e 3</div>
+      <div class="prog-divider-line"></div>
+    </div>
+
+    <!-- Seção 1 — Direção -->
+    <div class="prog-card" id="pcard-direcao">
+      <div class="prog-card-head">
+        <div class="prog-card-icon" style="background:rgba(46,125,88,.2);border:1px solid rgba(46,125,88,.4)">🏛️</div>
+        <div class="prog-card-meta">
+          <div class="prog-card-label" style="color:#4A9A72">Seção 1</div>
+          <div class="prog-card-name">Reunião com a Direção</div>
+        </div>
+        <div class="prog-card-right">
+          <div class="prog-pct-badge" id="pct-direcao">0%</div>
+          <div class="prog-status-badge prog-status-none" id="status-direcao">Não iniciado</div>
+        </div>
+      </div>
+      <div class="prog-bar-wrap"><div class="prog-bar-fill" id="bar-direcao" style="width:0%;background:#4A9A72"></div></div>
+      <input type="range" class="prog-slider" min="0" max="100" value="0" id="range-direcao"
+             oninput="updateProg('direcao',this.value)" style="accent-color:#4A9A72">
+      <div class="prog-resp-row" id="resp-row-direcao" style="display:none">
+        <div class="prog-resp-dot"></div>
+        <span class="prog-resp-count" id="resp-direcao">0</span>
+        <span>resposta(s) coletada(s) via questionário</span>
+      </div>
+      <div class="prog-obs-label">Observações</div>
+      <textarea class="prog-obs" id="obs-direcao" placeholder="Anote aqui a evolução, pontos levantados, próximos passos..." oninput="autoSaveObs('direcao',this.value)"></textarea>
+      <div class="prog-save-indicator" id="saved-direcao">✓ salvo</div>
+    </div>
+
+    <!-- Seção 2 — Gestores -->
+    <div class="prog-card" id="pcard-gestores">
+      <div class="prog-card-head">
+        <div class="prog-card-icon" style="background:rgba(59,130,246,.15);border:1px solid rgba(59,130,246,.3)">👥</div>
+        <div class="prog-card-meta">
+          <div class="prog-card-label" style="color:#7EAECF">Seção 2</div>
+          <div class="prog-card-name">Entrevista com Gestores</div>
+        </div>
+        <div class="prog-card-right">
+          <div class="prog-pct-badge" id="pct-gestores">0%</div>
+          <div class="prog-status-badge prog-status-none" id="status-gestores">Não iniciado</div>
+        </div>
+      </div>
+      <div class="prog-bar-wrap"><div class="prog-bar-fill" id="bar-gestores" style="width:0%;background:#7EAECF"></div></div>
+      <input type="range" class="prog-slider" min="0" max="100" value="0" id="range-gestores"
+             oninput="updateProg('gestores',this.value)" style="accent-color:#7EAECF">
+      <div class="prog-resp-row" id="resp-row-gestores" style="display:none">
+        <div class="prog-resp-dot"></div>
+        <span class="prog-resp-count" id="resp-gestores">0</span>
+        <span>resposta(s) coletada(s) via questionário</span>
+      </div>
+      <div class="prog-obs-label">Observações</div>
+      <textarea class="prog-obs" id="obs-gestores" placeholder="Anote aqui a evolução, pontos levantados, próximos passos..." oninput="autoSaveObs('gestores',this.value)"></textarea>
+      <div class="prog-save-indicator" id="saved-gestores">✓ salvo</div>
+    </div>
+
+    <!-- Seção 3 — Colaboradores -->
+    <div class="prog-card" id="pcard-colaboradores">
+      <div class="prog-card-head">
+        <div class="prog-card-icon" style="background:rgba(20,184,166,.12);border:1px solid rgba(20,184,166,.3)">💬</div>
+        <div class="prog-card-meta">
+          <div class="prog-card-label" style="color:#7ECFCF">Seção 3</div>
+          <div class="prog-card-name">Conversa com Colaboradores</div>
+        </div>
+        <div class="prog-card-right">
+          <div class="prog-pct-badge" id="pct-colaboradores">0%</div>
+          <div class="prog-status-badge prog-status-none" id="status-colaboradores">Não iniciado</div>
+        </div>
+      </div>
+      <div class="prog-bar-wrap"><div class="prog-bar-fill" id="bar-colaboradores" style="width:0%;background:#7ECFCF"></div></div>
+      <input type="range" class="prog-slider" min="0" max="100" value="0" id="range-colaboradores"
+             oninput="updateProg('colaboradores',this.value)" style="accent-color:#7ECFCF">
+      <div class="prog-resp-row" id="resp-row-colaboradores" style="display:none">
+        <div class="prog-resp-dot"></div>
+        <span class="prog-resp-count" id="resp-colaboradores">0</span>
+        <span>resposta(s) coletada(s) via questionário</span>
+      </div>
+      <div class="prog-obs-label">Observações</div>
+      <textarea class="prog-obs" id="obs-colaboradores" placeholder="Anote aqui a evolução, pontos levantados, próximos passos..." oninput="autoSaveObs('colaboradores',this.value)"></textarea>
+      <div class="prog-save-indicator" id="saved-colaboradores">✓ salvo</div>
+    </div>
+
+    <!-- ── GRUPO: IDENTIDADE ── -->
+    <div class="prog-divider">
+      <div class="prog-divider-line"></div>
+      <div class="prog-divider-label">🏢 Identidade Organizacional — Seções 4 e 5</div>
+      <div class="prog-divider-line"></div>
+    </div>
+
+    <!-- Seção 4 — Comunicação Interna (Admin) -->
+    <div class="prog-card" id="pcard-comunicacao">
+      <div class="prog-card-head">
+        <div class="prog-card-icon" style="background:rgba(139,92,246,.15);border:1px solid rgba(139,92,246,.3)">📡</div>
+        <div class="prog-card-meta">
+          <div class="prog-card-label" style="color:#AA7ECF">Seção 4 — Admin</div>
+          <div class="prog-card-name">Avaliação de Comunicação Interna</div>
+        </div>
+        <div class="prog-card-right">
+          <div class="prog-pct-badge" id="pct-comunicacao">0%</div>
+          <div class="prog-status-badge prog-status-none" id="status-comunicacao">Não iniciado</div>
+        </div>
+      </div>
+      <div class="prog-bar-wrap"><div class="prog-bar-fill" id="bar-comunicacao" style="width:0%;background:#AA7ECF"></div></div>
+      <input type="range" class="prog-slider" min="0" max="100" value="0" id="range-comunicacao"
+             oninput="updateProg('comunicacao',this.value)" style="accent-color:#AA7ECF">
+      <div class="prog-obs-label">Observações</div>
+      <textarea class="prog-obs" id="obs-comunicacao" placeholder="Anote aqui a evolução, pontos levantados, próximos passos..." oninput="autoSaveObs('comunicacao',this.value)"></textarea>
+      <div class="prog-save-indicator" id="saved-comunicacao">✓ salvo</div>
+    </div>
+
+    <!-- Seção 4 — Identidade Organizacional -->
+    <div class="prog-card" id="pcard-identidade">
+      <div class="prog-card-head">
+        <div class="prog-card-icon" style="background:rgba(200,155,60,.15);border:1px solid rgba(200,155,60,.4)">🏢</div>
+        <div class="prog-card-meta">
+          <div class="prog-card-label" style="color:var(--gold)">Seção 4</div>
+          <div class="prog-card-name">Identidade Organizacional</div>
+        </div>
+        <div class="prog-card-right">
+          <div class="prog-pct-badge" id="pct-identidade">0%</div>
+          <div class="prog-status-badge prog-status-none" id="status-identidade">Não iniciado</div>
+        </div>
+      </div>
+      <div class="prog-bar-wrap"><div class="prog-bar-fill" id="bar-identidade" style="width:0%;background:var(--gold)"></div></div>
+      <input type="range" class="prog-slider" min="0" max="100" value="0" id="range-identidade"
+             oninput="updateProg('identidade',this.value)" style="accent-color:#C89B3C">
+      <div class="prog-resp-row" id="resp-row-identidade" style="display:none">
+        <div class="prog-resp-dot" style="background:rgba(200,155,60,.7)"></div>
+        <span class="prog-resp-count" id="resp-identidade">0</span>
+        <span>registro(s) preenchido(s)</span>
+      </div>
+      <div class="prog-obs-label">Observações</div>
+      <textarea class="prog-obs" id="obs-identidade" placeholder="Anote aqui a evolução, pontos levantados, próximos passos..." oninput="autoSaveObs('identidade',this.value)"></textarea>
+      <div class="prog-save-indicator" id="saved-identidade">✓ salvo</div>
+    </div>
+
+    <!-- Seção 5 — Cartilha de Cultura -->
+    <div class="prog-card" id="pcard-cartilha">
+      <div class="prog-card-head">
+        <div class="prog-card-icon" style="background:rgba(207,184,126,.1);border:1px solid rgba(207,184,126,.3)">📋</div>
+        <div class="prog-card-meta">
+          <div class="prog-card-label" style="color:#CFB87E">Seção 5</div>
+          <div class="prog-card-name">Cartilha de Cultura</div>
+        </div>
+        <div class="prog-card-right">
+          <div class="prog-pct-badge" id="pct-cartilha">0%</div>
+          <div class="prog-status-badge prog-status-none" id="status-cartilha">Não iniciado</div>
+        </div>
+      </div>
+      <div class="prog-bar-wrap"><div class="prog-bar-fill" id="bar-cartilha" style="width:0%;background:#CFB87E"></div></div>
+      <input type="range" class="prog-slider" min="0" max="100" value="0" id="range-cartilha"
+             oninput="updateProg('cartilha',this.value)" style="accent-color:#CFB87E">
+      <div class="prog-resp-row" id="resp-row-cartilha" style="display:none">
+        <div class="prog-resp-dot" style="background:rgba(207,184,126,.7)"></div>
+        <span class="prog-resp-count" id="resp-cartilha">0</span>
+        <span>registro(s) preenchido(s)</span>
+      </div>
+      <div class="prog-obs-label">Observações</div>
+      <textarea class="prog-obs" id="obs-cartilha" placeholder="Anote aqui a evolução, pontos levantados, próximos passos..." oninput="autoSaveObs('cartilha',this.value)"></textarea>
+      <div class="prog-save-indicator" id="saved-cartilha">✓ salvo</div>
+    </div>
+
+    <!-- ── GRUPO: TREINAMENTOS ── -->
+    <div class="prog-divider">
+      <div class="prog-divider-line"></div>
+      <div class="prog-divider-label">🌟 Treinamentos e Programas</div>
+      <div class="prog-divider-line"></div>
+    </div>
+
+    <!-- Líderes que Inspiram -->
+    <div class="prog-card" id="pcard-lideres">
+      <div class="prog-card-head">
+        <div class="prog-card-icon" style="background:rgba(200,155,60,.15);border:1px solid rgba(200,155,60,.4)">🌟</div>
+        <div class="prog-card-meta">
+          <div class="prog-card-label" style="color:var(--gold)">Treinamento de Liderança</div>
+          <div class="prog-card-name">Líderes que Inspiram</div>
+        </div>
+        <div class="prog-card-right">
+          <div class="prog-pct-badge" id="pct-lideres">0%</div>
+          <div class="prog-status-badge prog-status-none" id="status-lideres">Não iniciado</div>
+        </div>
+      </div>
+      <div class="prog-bar-wrap"><div class="prog-bar-fill" id="bar-lideres" style="width:0%;background:var(--gold)"></div></div>
+      <input type="range" class="prog-slider" min="0" max="100" value="0" id="range-lideres"
+             oninput="updateProg('lideres',this.value)" style="accent-color:#C89B3C">
+      <div class="prog-obs-label">Observações</div>
+      <textarea class="prog-obs" id="obs-lideres" placeholder="Anote aqui a evolução, participantes, feedback recebido..." oninput="autoSaveObs('lideres',this.value)"></textarea>
+      <div class="prog-save-indicator" id="saved-lideres">✓ salvo</div>
+    </div>
+
+    <!-- Construindo Pertencimento -->
+    <div class="prog-card" id="pcard-pertencimento">
+      <div class="prog-card-head">
+        <div class="prog-card-icon" style="background:rgba(74,138,181,.12);border:1px solid rgba(74,138,181,.3)">🤝</div>
+        <div class="prog-card-meta">
+          <div class="prog-card-label" style="color:#7EAECF">Programa de Engajamento</div>
+          <div class="prog-card-name">Construindo Pertencimento</div>
+        </div>
+        <div class="prog-card-right">
+          <div class="prog-pct-badge" id="pct-pertencimento">0%</div>
+          <div class="prog-status-badge prog-status-none" id="status-pertencimento">Não iniciado</div>
+        </div>
+      </div>
+      <div class="prog-bar-wrap"><div class="prog-bar-fill" id="bar-pertencimento" style="width:0%;background:#7EAECF"></div></div>
+      <input type="range" class="prog-slider" min="0" max="100" value="0" id="range-pertencimento"
+             oninput="updateProg('pertencimento',this.value)" style="accent-color:#7EAECF">
+      <div class="prog-obs-label">Observações</div>
+      <textarea class="prog-obs" id="obs-pertencimento" placeholder="Anote aqui a evolução, participantes, feedback recebido..." oninput="autoSaveObs('pertencimento',this.value)"></textarea>
+      <div class="prog-save-indicator" id="saved-pertencimento">✓ salvo</div>
+    </div>
+
+    <!-- Treinamentos e Workshops -->
+    <div class="prog-card" id="pcard-treinamentos">
+      <div class="prog-card-head">
+        <div class="prog-card-icon" style="background:rgba(207,184,126,.1);border:1px solid rgba(207,184,126,.3)">🎓</div>
+        <div class="prog-card-meta">
+          <div class="prog-card-label" style="color:#CFB87E">Etapa 5 — Workshops</div>
+          <div class="prog-card-name">Treinamentos e Workshops</div>
+        </div>
+        <div class="prog-card-right">
+          <div class="prog-pct-badge" id="pct-treinamentos">0%</div>
+          <div class="prog-status-badge prog-status-none" id="status-treinamentos">Não iniciado</div>
+        </div>
+      </div>
+      <div class="prog-bar-wrap"><div class="prog-bar-fill" id="bar-treinamentos" style="width:0%;background:#CFB87E"></div></div>
+      <input type="range" class="prog-slider" min="0" max="100" value="0" id="range-treinamentos"
+             oninput="updateProg('treinamentos',this.value)" style="accent-color:#CFB87E">
+      <div class="prog-obs-label">Observações</div>
+      <textarea class="prog-obs" id="obs-treinamentos" placeholder="Anote aqui a evolução, workshops realizados, feedback recebido..." oninput="autoSaveObs('treinamentos',this.value)"></textarea>
+      <div class="prog-save-indicator" id="saved-treinamentos">✓ salvo</div>
+    </div>
+
+  </div><!-- /prog-body -->
+</div><!-- /prog-shell -->
+</div><!-- /view-progresso -->
+
+</div>
+
+<div class="toast-admin" id="toast"></div>
+
+<script src="../js/config.js"></script>
+<script src="../js/api.js"></script>
+<script src="../js/auth.js"></script>
+<script src="../js/cartilha.js"></script>
+<script>
+// ══════════════════════════════════════════════════
+// Painel do Programa — dados por empresa no Supabase
+// ══════════════════════════════════════════════════
+const PERGUNTAS = {
+  direcao: ['1. História da empresa','2. Principais objetivos para os próximos anos','3. Maiores desafios enfrentados','4. Comportamentos esperados dos colaboradores','5. O que precisa melhorar na equipe','6. Como gostaria que a empresa fosse reconhecida'],
+  gestores: ['1. Principal desafio da equipe atualmente','2. Conflitos mais frequentes','3. Como ocorre a comunicação entre os setores','4. O que mais impacta os resultados da equipe','5. Que apoio precisa para liderar melhor'],
+  colaboradores: ['1. O que mais gosta de trabalhar nesta empresa','2. O que poderia melhorar','3. Se sente ouvido pela liderança','4. Avaliação da comunicação interna','5. O que faz uma pessoa ter sucesso nesta empresa'],
+  identidade: ['1. Nossa História','2. Cultura Organizacional','3. Missão','4. Visão','5. Valores','6. O Que Esperamos do Nosso Time','7. Nosso Compromisso']
+};
+const VIEWER_LABELS = {
+  direcao: '🏛️ Direção — Seção 1', gestores: '👥 Gestores — Seção 2', colaboradores: '💬 Colaboradores — Seção 3',
+  identidade: '🏢 Identidade Organizacional', cartilha: '📋 Cartilha de Cultura', pre_diagnostico: '📋 Pré-Diagnóstico'
+};
+const PRE_DIAG_SECTIONS = [
+  { title:'Informações da empresa', fields:[['empresa','Empresa'],['responsavel','Responsável'],['cargo','Cargo'],['segmento','Segmento'],['cidade','Cidade'],['anos_empresa','Anos de empresa'],['num_colaboradores','Nº de colaboradores']]},
+  { title:'Sobre a equipe', fields:[['desc_equipe','Descrição da equipe'],['maiores_desafios','Maiores desafios'],['maior_preocupacao','Maior preocupação'],['dific_contratar','Dificuldade para contratar'],['dific_manter','Dificuldade para manter']]},
+  { title:'Liderança', fields:[['tem_lideres','Possui líderes/gestores'],['avaliacao_lideres','Avaliação dos líderes'],['desafio_lideranca','Desafio da liderança']]},
+  { title:'Comunicação', fields:[['avaliacao_comunicacao','Avaliação da comunicação'],['feedback_frequencia','Frequência de feedback']]},
+  { title:'Cultura', fields:[['tem_mvv','Possui MVV'],['colab_conhecem_mvv','Colaboradores conhecem MVV'],['frase_cultura','Cultura em uma frase']]},
+  { title:'Clima organizacional', fields:[['clima','Como colaboradores chegam ao trabalho'],['conflitos','Conflitos frequentes']]},
+  { title:'Desenvolvimento', fields:[['realiza_treinamentos','Realiza treinamentos'],['temas_importantes','Temas mais importantes']]},
+  { title:'Objetivos', fields:[['motivacao','Motivação para buscar RH com Propósito'],['expectativa','Expectativa nos próximos 6 meses'],['prioridade','Problema prioritário'],['sucesso','Definição de sucesso']]},
+  { title:'Encerramento', fields:[['adicional','Informações adicionais'],['como_conheceu','Como conheceu o RH com Propósito']]}
+];
+const CARTILHA_CAMPOS = [['missao','Missão'],['visao','Visão'],['valores','Valores'],['msgDirecao','Mensagem da Direção'],['historia','Nossa História'],['esperamos','O Que Esperamos'],['naoNegociamos','O Que Não Negociamos']];
+
+const $ = id => document.getElementById(id);
+const sb = () => RH.supabase();
+let empresaExibicao = '';   // como a consultora digitou
+let empresaChave = '';      // normalizada em minúsculas (chave em programa_dados)
+let cache = {};
+
+function showToast(msg) {
+  const t = $('toast'); t.textContent = msg; t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3000);
+}
+function debounce(fn, ms) { let t; return (...a) => { clearTimeout(t); t = setTimeout(() => fn(...a), ms); }; }
+
+function showView(id) {
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  $('view-' + id).classList.add('active');
+  window.scrollTo(0, 0);
+  history.replaceState(null, '', location.pathname + (id === 'progresso' ? '#progresso' : ''));
+  if (id === 'progresso') loadProgresso();
+}
+
+function switchTab(id) {
+  const tabIndex = {secao4:0, compilar:1, gerar:2};
+  document.querySelectorAll('.admin-tab').forEach((t, i) => t.classList.toggle('active', i === tabIndex[id]));
+  document.querySelectorAll('.admin-tab-panel').forEach(p => p.classList.remove('active'));
+  $('tab-' + id).classList.add('active');
+  if (id === 'compilar') updateResponseCounts();
+}
+
+function updateCheckStatus(chk) {
+  const statusEl = $(chk.id + '-status');
+  if (statusEl) statusEl.textContent = chk.checked ? 'Sim' : 'Não';
+}
+
+// ── Empresa ──
+function exigirEmpresa() {
+  if (empresaChave) return true;
+  showToast('Escolha a empresa primeiro.');
+  $('empresaInput').focus();
+  return false;
+}
+
+async function carregarListaEmpresas() {
+  const { data } = await sb().from('empresas').select('nome_exibicao').order('ultima_resposta', { ascending: false });
+  $('empresasLista').innerHTML = (data || []).map(e => `<option value="${RH.esc(e.nome_exibicao)}">`).join('');
+}
+
+async function selecionarEmpresa() {
+  empresaExibicao = RH.normalizarEmpresa($('empresaInput').value);
+  empresaChave = empresaExibicao.toLowerCase();
+  localStorage.setItem('admin_empresa', empresaExibicao);
+  cache = {};
+  const el = $('admin-company-display');
+  el.innerHTML = '';
+  if (empresaExibicao) {
+    const div = document.createElement('div');
+    div.className = 'company-display';
+    div.textContent = '🏢 ' + empresaExibicao;
+    el.appendChild(div);
+  }
+  if (!empresaChave) return;
+  await Promise.all([updateResponseCounts(), carregarSecao4()]);
+  if ($('view-progresso').classList.contains('active')) loadProgresso();
+}
+
+// ── Respostas ──
+async function linhas(section) {
+  if (!cache[section]) {
+    const { data, error } = await sb().from('responses').select('*').eq('section', section).order('created_at', { ascending: true });
+    if (error) throw error;
+    cache[section] = data || [];
+  }
+  return cache[section];
+}
+async function daEmpresa(section) {
+  if (!empresaChave) return [];
+  const rows = await linhas(section);
+  return rows.filter(r => RH.normalizarEmpresa(r.company || RH.lerJson(r.r1).empresa).toLowerCase() === empresaChave);
+}
+
+async function updateResponseCounts() {
+  const alvo = { direcao:'count-direcao', gestores:'count-gestores', colaboradores:'count-colaboradores', identidade:'count-identidade', cartilha:'count-cartilha', pre_diagnostico:'count-prediagnostico' };
+  const sbName = $('sb-company-name'), sbBar = $('sb-status-bar');
+  if (sbBar) sbBar.style.display = empresaChave ? 'flex' : 'none';
+  if (sbName) sbName.textContent = empresaExibicao;
+  await Promise.all(Object.entries(alvo).map(async ([sec, id]) => {
+    try { $(id).textContent = (await daEmpresa(sec)).length; }
+    catch { $(id).textContent = 'erro'; }
+  }));
+}
+
+// ── Viewer ──
+let viewerRows = [], viewerIdx = 0, viewerSec = '';
+
+async function openViewer(section) {
+  if (!exigirEmpresa()) return;
+  let rows;
+  try { rows = await daEmpresa(section); } catch (e) { showToast('Erro ao carregar: ' + e.message); return; }
+  if (!rows.length) { showToast('Nenhuma resposta registrada para esta seção.'); return; }
+  viewerSec = section;
+  viewerRows = rows;
+  viewerIdx = 0;
+  $('company-filter').style.display = 'none';
+  $('rv-title').textContent = VIEWER_LABELS[section] || section;
+  $('resp-viewer').style.display = 'block';
+  renderResp();
+  $('resp-viewer').scrollIntoView({ behavior:'smooth', block:'nearest' });
+}
+function showResp(idx) { if (idx < 0 || idx >= viewerRows.length) return; viewerIdx = idx; renderResp(); }
+function renderResp() {
+  const total = viewerRows.length;
+  $('rv-count').textContent = total ? `${viewerIdx + 1} de ${total}` : '0 respostas';
+  $('rv-prev').disabled = viewerIdx === 0;
+  $('rv-next').disabled = viewerIdx >= total - 1;
+  $('rv-body').innerHTML = buildCard(viewerRows[viewerIdx], viewerSec);
+}
+function closeViewer() { $('resp-viewer').style.display = 'none'; viewerRows = []; viewerSec = ''; }
+
+function qa(label, ans) {
+  return `<div class="rv-q"><div class="rv-q-label">${RH.esc(label)}</div><div class="rv-q-ans">${RH.escBr(ans || '—')}</div></div>`;
+}
+function cabecalho(titulo, partes) {
+  const meta = partes.filter(Boolean).map(p => '<span>' + RH.esc(p) + '</span>').join('');
+  return `<div class="rv-respondent"><div class="rv-nome">${RH.esc(titulo || '—')}</div><div class="rv-meta">${meta}</div></div>`;
+}
+function buildCard(row, section) {
+  const data = row.data_resposta || (row.created_at || '').split('T')[0];
+  if (section === 'pre_diagnostico') {
+    const d = RH.lerJson(row.r1);
+    let html = cabecalho(row.company || d.empresa, [(row.nome || d.responsavel || '') + (row.cargo_setor ? ' — ' + row.cargo_setor : ''), data]);
+    PRE_DIAG_SECTIONS.forEach(sec => {
+      html += `<div class="rv-section-sep">${RH.esc(sec.title)}</div>`;
+      sec.fields.forEach(([key, label]) => { const v = d[key]; html += qa(label, Array.isArray(v) ? v.join(', ') : v); });
+    });
+    return html;
+  }
+  if (section === 'cartilha') {
+    const d = RH.lerJson(row.r1);
+    return cabecalho(d.empresa || row.company, [d.segmento, data]) + CARTILHA_CAMPOS.map(([k, l]) => qa(l, d[k])).join('');
+  }
+  const d = section === 'identidade' ? RH.lerJson(row.r1) : row;
+  let html = cabecalho(row.nome || 'Anônimo', [row.cargo_setor, data, row.company]);
+  (PERGUNTAS[section] || []).forEach((q, i) => { html += qa(q, d['r' + (i + 1)]); });
+  return html;
+}
+
+// ── Compilação do relatório ──
+async function compilarRespostas() {
+  const formatar = (rows, tipo, origem) => {
+    if (!rows.length) return null;
+    return rows.map((r, i) => {
+      const d = origem ? origem(r) : r;
+      const header = `=== Respondente ${i+1}: ${r.nome || 'Anônimo'}${r.cargo_setor ? ' — ' + r.cargo_setor : ''} ===`;
+      return header + '\n' + PERGUNTAS[tipo].map((q, qi) => `${q}:\n${d['r'+(qi+1)] || '(não respondido)'}`).join('\n\n');
+    }).join('\n\n');
+  };
+  const [D, G, C, I, CT] = await Promise.all(['direcao','gestores','colaboradores','identidade','cartilha'].map(daEmpresa));
+  const vazio = '(Nenhuma resposta registrada)';
+  let cartilhaText = '(Nenhum dado registrado)';
+  if (CT.length) {
+    const cd = RH.lerJson(CT[CT.length - 1].r1);
+    cartilhaText = [`Empresa: ${cd.empresa || ''} | Segmento: ${cd.segmento || ''}`, `Missão: ${cd.missao || ''}`, `Visão: ${cd.visao || ''}`, `Valores: ${cd.valores || ''}`, `Mensagem da Direção: ${cd.msgDirecao || ''}`].join('\n\n');
+  }
+  return {
+    direcaoText: formatar(D, 'direcao') || vazio,
+    gestoresText: formatar(G, 'gestores') || vazio,
+    colaboradoresText: formatar(C, 'colaboradores') || vazio,
+    identidadeText: formatar(I, 'identidade', r => RH.lerJson(r.r1)) || vazio,
+    cartilhaText
+  };
+}
+
+async function gerarCartilhaEmpresa() {
+  if (!exigirEmpresa()) return;
+  const rows = await daEmpresa('cartilha');
+  if (!rows.length) { showToast('A empresa ainda não enviou a Cartilha de Cultura.'); return; }
+  RH.baixarCartilha(RH.lerJson(rows[rows.length - 1].r1));
+}
+
+// ── programa_dados (Seção 4 e progresso) ──
+async function lerDado(chave) {
+  const { data, error } = await sb().from('programa_dados').select('valor').eq('empresa', empresaChave).eq('chave', chave).maybeSingle();
+  if (error) { showToast('Erro ao carregar dados: ' + error.message); return null; }
+  return data ? data.valor : null;
+}
+async function salvarDado(chave, valor) {
+  if (!empresaChave) return false;
+  const { error } = await sb().from('programa_dados').upsert({ empresa: empresaChave, chave, valor, updated_at: new Date().toISOString() });
+  if (error) { showToast('Erro ao salvar: ' + error.message); return false; }
+  return true;
+}
+
+function lerSecao4() {
+  const itens = {};
+  for (let i = 1; i <= 5; i++) itens['s4-' + i] = { sim: $('s4-' + i).checked, obs: $('s4-' + i + '-txt').value };
+  return { itens, obs: $('s4-obs').value };
+}
+async function carregarSecao4() {
+  const v = (await lerDado('comunicacao')) || { itens: {}, obs: '' };
+  for (let i = 1; i <= 5; i++) {
+    const it = (v.itens || {})['s4-' + i] || {};
+    $('s4-' + i).checked = !!it.sim;
+    $('s4-' + i + '-txt').value = it.obs || '';
+    updateCheckStatus($('s4-' + i));
+  }
+  $('s4-obs').value = v.obs || '';
+}
+const salvarSecao4 = debounce(() => salvarDado('comunicacao', lerSecao4()), 800);
+
+function getSecao4Text() {
+  const itens = [
+    { id:'s4-1', q:'As informações chegam a todos os colaboradores?' },
+    { id:'s4-2', q:'Existem ruídos de comunicação?' },
+    { id:'s4-3', q:'Há alinhamento entre os setores?' },
+    { id:'s4-4', q:'Existem reuniões periódicas?' },
+    { id:'s4-5', q:'Os líderes comunicam de forma clara?' },
+  ];
+  let text = itens.map(item => {
+    const sim = document.getElementById(item.id)?.checked ? 'SIM' : 'NÃO';
+    const obs = document.getElementById(item.id + '-txt')?.value?.trim();
+    return `- ${item.q} → ${sim}${obs ? '\n  Obs: ' + obs : ''}`;
+  }).join('\n');
+  const obsGeral = document.getElementById('s4-obs')?.value?.trim();
+  if (obsGeral) text += '\n\nObservações gerais: ' + obsGeral;
+  return text;
+}
+
+async function generateReport() {
+  if (!exigirEmpresa()) return;
+  const company = empresaExibicao;
+
+  const btn   = document.getElementById('generateBtn');
+  const label = document.getElementById('generate-label');
+  const icon  = document.getElementById('generate-icon');
+  btn.disabled = true;
+  icon.innerHTML = '<div class="spinner"></div>';
+  label.textContent = 'Compilando respostas...';
+
+  // Lê do Supabase ou localStorage
+  const { direcaoText: direcao, gestoresText: gestores, colaboradoresText: colab, identidadeText: identidade, cartilhaText: cartilha } = await compilarRespostas();
+  const s4text = getSecao4Text();
+
+  if (direcao === '(Nenhuma resposta registrada)' && gestores === '(Nenhuma resposta registrada)' && colab === '(Nenhuma resposta registrada)') {
+    btn.disabled = false;
+    icon.textContent = '📄';
+    label.textContent = 'Gerar Relatório Compilado';
+    alert(`Nenhuma resposta encontrada para a empresa "${company}".\n\nConfira se o nome da empresa está igual ao usado nos questionários.`);
+    switchTab('compilar');
+    return;
+  }
+
+  // Monta o bloco de respostas dos questionários
+  const questionariosText = [
+    '════════════════════════════════════════\nSEÇÃO 1 — REUNIÃO COM A DIREÇÃO\n════════════════════════════════════════\n\n' + direcao,
+    '════════════════════════════════════════\nSEÇÃO 2 — ENTREVISTA COM GESTORES\n════════════════════════════════════════\n\n' + gestores,
+    '════════════════════════════════════════\nSEÇÃO 3 — CONVERSA COM COLABORADORES\n════════════════════════════════════════\n\n' + colab,
+    '════════════════════════════════════════\nSEÇÃO 4 — IDENTIDADE ORGANIZACIONAL\n════════════════════════════════════════\n\n' + identidade,
+  ].join('\n\n\n');
+
+  // Monta o bloco da Avaliação da Comunicação
+  const sec4Text = '════════════════════════════════════════\nAVALIAÇÃO DA COMUNICAÇÃO INTERNA\n════════════════════════════════════════\n\n' + s4text;
+
+  document.getElementById('out-desafios').textContent  = questionariosText;
+  document.getElementById('out-relatorio').textContent = sec4Text;
+  document.getElementById('output-meta').textContent   = company;
+  document.getElementById('output-date').textContent   = new Date().toLocaleDateString('pt-BR', {day:'2-digit',month:'long',year:'numeric'});
+  document.getElementById('outputBox').classList.add('show');
+  document.getElementById('outputBox').scrollIntoView({behavior:'smooth', block:'start'});
+
+  btn.disabled = false;
+  icon.textContent = '📄';
+  label.textContent = 'Gerar Relatório Compilado';
+  document.getElementById('generate-note').textContent = 'Clique novamente para atualizar com novas respostas.';
+}
+
+function copyOutput() {
+  const questionarios = document.getElementById('out-desafios').textContent;
+  const sec4          = document.getElementById('out-relatorio').textContent;
+  const company = empresaExibicao;
+  const date    = new Date().toLocaleDateString('pt-BR');
+  const full = [
+    'DIAGNÓSTICO ORGANIZACIONAL — RH COM PROPÓSITO',
+    company ? 'Empresa: ' + company : '',
+    'Data: ' + date,
+    '',
+    questionarios,
+    '',
+    sec4
+  ].filter(l => l !== undefined).join('\n');
+  navigator.clipboard.writeText(full).then(() => alert('Texto copiado!')).catch(() => alert('Não foi possível copiar. Selecione o texto manualmente.'));
+}
+
+function printOutput() {
+  // Temporarily show only output
+  const box = document.getElementById('outputBox');
+  const orig = document.body.innerHTML;
+  const print = box.cloneNode(true);
+  print.querySelector('.output-actions').style.display = 'none';
+  const win = window.open('', '_blank');
+  win.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Programa Construindo Juntos — RH com Propósito</title><style>
+    body{font-family:Arial,sans-serif;padding:40px;color:#111;background:white;max-width:800px;margin:0 auto}
+    .output-header{display:flex;justify-content:space-between;padding-bottom:16px;border-bottom:2px solid #1A5C45;margin-bottom:24px}
+    .output-logo-text{font-size:18px;font-weight:700;color:#1A5C45}
+    .output-meta,.output-date{font-size:12px;color:#888}
+    .output-section{margin-bottom:28px}
+    .output-section-title{font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#1A5C45;margin-bottom:8px;padding-bottom:6px;border-bottom:1px solid #E0EDE7}
+    .output-content{font-size:13px;color:#333;line-height:1.8;white-space:pre-wrap}
+  </style></head><body>${print.innerHTML}</body></html>`);
+  win.document.close();
+  win.focus();
+  setTimeout(() => { win.print(); win.close(); }, 500);
+}
+
+// ══════════════════════════════════════════════════
+// ACOMPANHAMENTO DE PROGRESSO
+// ══════════════════════════════════════════════════
+const PROG_SECTIONS = ['direcao','gestores','colaboradores','comunicacao','identidade','cartilha','lideres','pertencimento','treinamentos'];
+const PROG_SUPABASE_SECTIONS = ['direcao','gestores','colaboradores','identidade','cartilha'];
+let prog = { pct: {}, obs: {} };
+
+const salvarProgresso = debounce(async ids => {
+  const total = PROG_SECTIONS.reduce((s, id) => s + (prog.pct[id] || 0), 0);
+  const ok = await salvarDado('progresso', { ...prog, media: Math.round(total / PROG_SECTIONS.length) });
+  if (ok) (ids || []).forEach(id => {
+    const ind = $('saved-' + id);
+    if (ind) { ind.classList.add('show'); setTimeout(() => ind.classList.remove('show'), 1800); }
+  });
+}, 700);
+
+function renderProg(id, val) {
+  const bar = $('bar-' + id), pct = $('pct-' + id), status = $('status-' + id);
+  if (bar) bar.style.width = val + '%';
+  if (pct) pct.textContent = val + '%';
+  if (status) {
+    status.className = 'prog-status-badge ' + (val === 0 ? 'prog-status-none' : val === 100 ? 'prog-status-done' : 'prog-status-ongoing');
+    status.textContent = val === 0 ? 'Não iniciado' : val === 100 ? 'Concluído' : 'Em andamento';
+  }
+}
+
+function updateProg(id, val) {
+  if (!exigirEmpresa()) { $('range-' + id).value = prog.pct[id] || 0; return; }
+  val = parseInt(val);
+  prog.pct[id] = val;
+  renderProg(id, val);
+  updateOverallProg();
+  salvarProgresso();
+}
+
+function autoSaveObs(id, val) {
+  if (!exigirEmpresa()) return;
+  prog.obs[id] = val;
+  salvarProgresso([id]);
+}
+
+function _setDonut(id, avg) {
+  const circ = 238.76;
+  const el = document.getElementById(id);
+  if (el) el.setAttribute('stroke-dashoffset', (circ - circ * avg / 100).toFixed(2));
+  const pct = document.getElementById(id + '-pct');
+  if (pct) pct.textContent = avg + '%';
+}
+
+function updateChartPanel() {
+  const g = id => prog.pct[id] || 0;
+  PROG_SECTIONS.forEach(id => {
+    const v = g(id);
+    const mb = $('mbar-' + id), mp = $('mpct-' + id), hb = $('hbar-' + id), hp = $('hpct-' + id);
+    if (mb) mb.style.width = v + '%';
+    if (mp) mp.textContent = v + '%';
+    if (hb) hb.style.width = v + '%';
+    if (hp) hp.textContent = v + '%';
+  });
+  _setDonut('donut-diag',  Math.round((g('direcao') + g('gestores') + g('colaboradores')) / 3));
+  _setDonut('donut-ident', Math.round((g('comunicacao') + g('identidade') + g('cartilha')) / 3));
+  _setDonut('donut-trein', Math.round((g('lideres') + g('pertencimento') + g('treinamentos')) / 3));
+}
+
+function updateOverallProg() {
+  let total = 0, done = 0;
+  PROG_SECTIONS.forEach(id => { const v = prog.pct[id] || 0; total += v; if (v === 100) done++; });
+  const avg = Math.round(total / PROG_SECTIONS.length);
+  if ($('overall-num')) $('overall-num').textContent = avg;
+  if ($('overall-meta')) $('overall-meta').textContent = done + ' de ' + PROG_SECTIONS.length + ' etapas concluídas';
+  if ($('overall-bar')) $('overall-bar').style.width = avg + '%';
+  if ($('overall-ring')) { const circ = 182.2; $('overall-ring').setAttribute('stroke-dashoffset', circ - (circ * avg / 100)); }
+  if ($('overall-ring-pct')) $('overall-ring-pct').textContent = avg + '%';
+  updateChartPanel();
+}
+
+async function loadProgresso() {
+  prog = { pct: {}, obs: {} };
+  if (empresaChave) {
+    const v = await lerDado('progresso');
+    if (v) prog = { pct: v.pct || {}, obs: v.obs || {} };
+  }
+  PROG_SECTIONS.forEach(id => {
+    const val = prog.pct[id] || 0;
+    if ($('range-' + id)) $('range-' + id).value = val;
+    renderProg(id, val);
+    if ($('obs-' + id)) $('obs-' + id).value = prog.obs[id] || '';
+  });
+  updateOverallProg();
+  for (const id of PROG_SUPABASE_SECTIONS) {
+    const respRow = $('resp-row-' + id), respEl = $('resp-' + id);
+    if (!respRow || !respEl) continue;
+    const count = empresaChave ? (await daEmpresa(id)).length : 0;
+    respEl.textContent = count;
+    respRow.style.display = count > 0 ? 'flex' : 'none';
+  }
+}
+
+// ── Início ──
+document.addEventListener('DOMContentLoaded', () => {
+  document.querySelectorAll('#tab-secao4 input, #tab-secao4 textarea').forEach(el => {
+    el.addEventListener(el.type === 'checkbox' ? 'change' : 'input', () => { if (exigirEmpresa()) salvarSecao4(); });
+  });
+  $('empresaInput').addEventListener('keydown', e => { if (e.key === 'Enter') selecionarEmpresa(); });
+
+  RH.auth.protegerPagina(async () => {
+    $('app').style.display = '';
+    $('empresaInput').value = localStorage.getItem('admin_empresa') || '';
+    carregarListaEmpresas();
+    if ($('empresaInput').value) await selecionarEmpresa();
+    showView(location.hash === '#progresso' ? 'progresso' : 'admin');
+  });
+});
+</script>
+</body>
+</html>

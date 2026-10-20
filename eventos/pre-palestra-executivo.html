@@ -3,9 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
 <title>Pré-Palestra Executivo — RH com Propósito</title>
+<link rel="stylesheet" href="../css/base.css">
 <style>
-:root{--green:#1A5C45;--gold:#C89B3C;--gold-l:#E8C96A;--dark:#0A1C12;--bg:#F2F0EA;--paper:#FAFAF7;--text:#18261E;--muted:#5A6960;--border:#D5D0C6;--stripe:#F0EDE6;}
+:root{--green:var(--rh-green);--gold:var(--rh-gold);--gold-l:var(--rh-gold-light);--dark:var(--rh-dark);--bg:#F2F0EA;--paper:var(--rh-off);--text:#18261E;--muted:#5A6960;--border:#D5D0C6;--stripe:#F0EDE6;}
 *{box-sizing:border-box;margin:0;padding:0;}
 html{scroll-behavior:smooth;}
 body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
@@ -336,10 +338,9 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
 
 <div class="toast" id="toast"></div>
 
+<script src="../js/config.js"></script>
+<script src="../js/api.js"></script>
 <script>
-const SB_URL = 'https://jngyyterkatblntpsjbm.supabase.co';
-const SB_KEY = 'sb_publishable_30rUV3wLjGCDd4DggNYePQ_CwkdB1br';
-const W3F_KEY = '1993f0e1-d865-477b-97bd-7a854f842224';
 
 /* ── Radio visual ── */
 function markRadio(name) {
@@ -421,11 +422,7 @@ async function salvar() {
     r1: JSON.stringify(data)
   };
 
-  const sbSave = fetch(SB_URL + '/rest/v1/responses', {
-    method: 'POST',
-    headers: { 'apikey': SB_KEY, 'Authorization': 'Bearer ' + SB_KEY, 'Content-Type': 'application/json', 'Prefer': 'return=minimal' },
-    body: JSON.stringify(payload)
-  }).then(async r => { if (!r.ok) { const t = await r.text().catch(() => ''); throw new Error('HTTP ' + r.status + ': ' + t); } return r; });
+  const sbSave = RH.salvarResposta(payload);
 
   const linhas = [
     `Diretor(a): ${data.diretor}`, `Empresa: ${data.empresa}`, `Data: ${data.data || '—'}`, ``,
@@ -440,11 +437,7 @@ async function salvar() {
     `Atitudes a cultivar: ${[data.atitude1, data.atitude2, data.atitude3].filter(Boolean).join(' | ')}`,
   ].join('\n');
 
-  const emailSave = fetch('https://api.web3forms.com/submit', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-    body: JSON.stringify({ access_key: W3F_KEY, subject: `[Pré-Palestra] ${data.diretor} — ${data.empresa}`, message: linhas, from_name: 'RH com Propósito · Pré-Palestra' })
-  }).then(async r => { if (!r.ok) throw new Error('email-fail'); return r; });
+  const emailSave = RH.enviarEmail({ subject: `[Pré-Palestra] ${data.diretor} — ${data.empresa}`, message: linhas, from_name: 'RH com Propósito · Pré-Palestra' }).then(ok => { if (!ok) throw new Error('email-fail'); });
 
   const [sbResult, emailResult] = await Promise.allSettled([sbSave, emailSave]);
 

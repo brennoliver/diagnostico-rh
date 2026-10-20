@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>Cartilha de Cultura — RH com Propósito</title>
+<link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700;900&family=Playfair+Display:ital,wght@0,600;0,700;1,500;1,600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/base.css">
+<link rel="stylesheet" href="programa.css">
+</head>
+<body>
+
+<!-- Tela de identificação da empresa -->
+<div id="view-empresa" class="view">
+  <div class="cover">
+    <div class="cover-inner">
+      <div class="cover-eyebrow">Programa Construindo Juntos</div>
+      <h1 class="cover-title" id="empresa-titulo" style="font-size:clamp(24px,4vw,38px)"></h1>
+      <p class="cover-sub">Suas respostas são confidenciais e serão utilizadas exclusivamente para personalizar o programa de desenvolvimento da equipe.</p>
+      <div class="company-row">
+        <label>EMPRESA</label>
+        <input type="text" id="companyName" placeholder="Nome da empresa (obrigatório)" autocomplete="organization">
+      </div>
+      <button class="modal-btn" style="max-width:320px" onclick="confirmarEmpresa()">Acessar questionário →</button>
+      <p style="font-size:12px;color:rgba(255,255,255,.35);margin:24px auto 0;max-width:420px;line-height:1.5">Você precisará da senha fornecida pela consultora.</p>
+    </div>
+  </div>
+</div>
+
+<div id="view-cartilha" class="view">
+  <div class="qshell">
+    <div class="q-topbar">
+      <svg class="q-topbar-logo" viewBox="0 0 900.76 921.01" xmlns="http://www.w3.org/2000/svg">
+        <path fill="#f8f1eb" d="M403.28,261.57c-.83.35-1.09.02-.54-.67,1.02-4.13,2.26-8.24,3.71-12.35,1.49-4.52,3.22-8.83,5.2-12.93l-.65-.82c.24-1.23,1.85-5.36,3.2-5.22,1.83-4.96,4.4-10.39,7.09-15.12.05-.1.24-.12.46-.12-.19-.15-.36-.3-.42-.49-.18-.55,3.92-7.53,4.61-8.5l1.13-.11c.27-1.56,1.75-3.76,2.97-4.7,1.01-3.45,2.81-6.64,5.42-9.57,2.3-3.73,5.11-6.83,8.43-9.31l.57-1.66c5.75-7.98,12.8-15.04,19.86-21.9,1.48-.74,2.91-1.62,4.27-2.64l-.18-1.03c6.17-4.51,11.89-9.55,17.19-15.13l7.72-10.09,1.12-.53c2.33-2.92,4.78-5.46,7.33-7.64l-.37-.95,23.24-24.44,1.02.04c.38-1.42-.45-1.1-1.51-.67.16.33.35.86.14,1-8.62,5.88-18.3,12.08-27.25,17.47l-.96-.48-1.34,1.34c-7.79,6.07-15.63,12.14-23.51,18.21l-1.8.76c-1.9,2.18-4.09,4.35-6.58,6.49.54.78,0,1.35-.79.85-1,1.48-2.17,2.91-3.51,4.29l-1.11-.2c-1.5,2.32-3.83,4.58-5.98,6.15-.4,1.05-.84,2.11-1.57,2.98-3.46,4.12-6.92,8.26-10.38,12.38-.73.87-1.7,1.49-2.67,2.07-.97,2.09-2.91,5.17-4.72,6.54l-.25,1.4c-3.76,5.69-7.39,11.48-10.89,17.37l-2.01,1.84c-.36,1.84-1.56,4.19-2.86,5.58,1.28.56.44,3.26-.94,3.18-1.85,2.98-3.46,6.13-4.82,9.45l-.42.14c-.16,1.24-.53,2.44-1.1,3.61.5.93-.19,2.16-1.36,1.96-.96,3.06-2.05,6.12-3.27,9.19-1.49,3.97-3.02,7.82-4.61,11.56-.89,4.01-2.53,8.89-4.36,12.67l.72.71c-1.55,5.13-3.8,11.29-5.84,16.27-.85,2.07-1.71,3.83-3.02,5.67-5.94,12.72-20.4,29.32-33.68,34.42-3.48,1.34-7.42.67-10.29-1.5-2.47-1.86-4.21-5.38-3.76-8.86.64-4.89,3.59-8.92,7.68-11.61,6.11-4.02,10.95-9.06,14.23-15.68,7.84-15.78,10.86-44.32,9.25-61.99l-2.72-29.94c-4.06-44.62,14.8-88.21,46.76-118.84,14.62-14.01,31.39-25.61,50.85-31.51,6.81-2.07,13.08-4.44,19.71-6.99,7.23-2.78,14.39-4.88,22.04-6.48,14.1-2.95,27.95-4.98,42.38-6l35.26-2.49c13.92-.98,27.51-1.73,41.2-4.2,6.4-1.16,9-5.09,11.66-3.44.76.47,1.82,1.64,2.02,2.93,1.02,6.42.97,12.63.95,19.24-.06,15.85-1.36,31.14-3.1,46.93-4.46,40.65-15.24,77.61-38.7,111.31-6.59,9.47-13.61,18.07-22.12,25.8-14.44,13.11-31.29,22.39-49.91,28.31-16.44,5.23-33.04,8.41-50.19,10.09l-28.18,2.77c-10.3,1.01-20,3.68-29.83,6.9-5.48,1.79-10.5,4.22-15.32,6.9Z"/>
+        <text style="font-family:Inter-Medium,Inter;font-size:104.57px;font-weight:500;fill:#f8f1eb" transform="translate(16.34 834.11)">COM PROPÓSITO</text>
+        <text style="font-family:MinionConceptRoman-Semibold,'Minion Variable Concept';font-size:620.66px;font-weight:600;fill:#f8f1eb" transform="translate(0 702.57)">RH</text>
+      </svg>
+      <div class="q-topbar-badge"><div class="q-topbar-dot"></div>Seção 5 — Cartilha de Cultura</div>
+      <button class="q-back" onclick="location.href='identidade.html'">← Identidade</button>
+    </div>
+
+    <div class="q-hero">
+      <div class="q-eyebrow">Construindo Juntos</div>
+      <h2 class="q-title">Cartilha de<br>Cultura Organizacional</h2>
+      <p class="q-sub">Preencha as informações da empresa. Ao salvar, você poderá gerar e baixar a Cartilha de Cultura completa e pronta para impressão.</p>
+    </div>
+
+    <div class="q-form">
+
+      <!-- BLOCO 1: IDENTIFICAÇÃO -->
+      <div class="q-card" style="border-left:3px solid var(--green)">
+        <div class="q-num" style="color:var(--green)">Identificação da Empresa</div>
+        <div class="id-row" style="margin-top:14px">
+          <div class="id-field"><label>NOME DA EMPRESA</label><input type="text" id="cc-empresa" placeholder="Nome completo da empresa"></div>
+          <div class="id-field"><label>SEGMENTO / RAMO</label><input type="text" id="cc-segmento" placeholder="Ex.: Materiais para construção, Varejo..."></div>
+        </div>
+        <div class="id-row" style="margin-top:14px">
+          <div class="id-field"><label>NOME DO DIRETOR(A) / ASSINANTE</label><input type="text" id="cc-diretor-nome" placeholder="Nome de quem assina a mensagem"></div>
+          <div class="id-field"><label>CARGO</label><input type="text" id="cc-diretor-cargo" placeholder="Ex.: Diretor, Sócio-fundador..."></div>
+        </div>
+      </div>
+
+      <!-- BLOCO 2: MENSAGEM DA DIREÇÃO -->
+      <div class="q-card">
+        <div class="q-num">Mensagem da Direção</div>
+        <div class="q-label">Texto de boas-vindas assinado pela direção</div>
+        <div class="q-hint">Carta pessoal endereçada a "Prezados colaboradores", apresentando a empresa e seus princípios.</div>
+        <textarea class="q-input" id="cc-msg-direcao" rows="5" placeholder="Prezados colaboradores, &#10;&#10;[Nome da empresa] construiu sua história com muito trabalho, dedicação e respeito às pessoas. Esta cartilha apresenta nossa cultura, nossos princípios e a forma como desejamos construir juntos um ambiente cada vez melhor..."></textarea>
+      </div>
+
+      <!-- BLOCO 3: NOSSA HISTÓRIA -->
+      <div class="q-card">
+        <div class="q-num">Nossa História</div>
+        <div class="q-label">Como a empresa nasceu e como chegou até aqui?</div>
+        <div class="q-hint">Fale sobre a origem, os fundadores, os marcos e a trajetória da empresa.</div>
+        <textarea class="q-input" id="cc-historia" rows="4" placeholder="A [Nome da empresa] nasceu com o propósito de..."></textarea>
+      </div>
+
+      <!-- BLOCO 4: MISSÃO + VISÃO -->
+      <div class="q-card">
+        <div class="q-num">Nossa Missão</div>
+        <div class="q-label">Por que a empresa existe? O que entrega, para quem e como?</div>
+        <textarea class="q-input" id="cc-missao" rows="3" placeholder="Ex.: Ter compromisso com nossos clientes na venda de [produtos], facilitando suas vidas com respeito e atendimento especializado."></textarea>
+      </div>
+      <div class="q-card">
+        <div class="q-num">Nossa Visão</div>
+        <div class="q-label">Onde a empresa quer chegar? Qual é o futuro desejado?</div>
+        <textarea class="q-input" id="cc-visao" rows="3" placeholder="Ex.: Ser líder no ramo de [segmento] na região [X], criando laços de fidelidade, confiança e credibilidade."></textarea>
+      </div>
+
+      <!-- BLOCO 5: VALORES -->
+      <div class="q-card">
+        <div class="q-num">Nossos Valores</div>
+        <div class="q-label">Princípios inegociáveis que guiam todas as decisões</div>
+        <div class="q-hint">Um valor por linha. Ex.: Respeito, Honestidade, Compromisso, Trabalho em Equipe...</div>
+        <textarea class="q-input" id="cc-valores" rows="6" placeholder="Respeito&#10;Honestidade&#10;Compromisso&#10;Trabalho em Equipe&#10;Confiança&#10;Excelência"></textarea>
+      </div>
+
+      <!-- BLOCO 6: O JEITO DE ATENDER -->
+      <div class="q-card">
+        <div class="q-num">O Jeito [Empresa] de Atender</div>
+        <div class="q-label">Título personalizado desta seção</div>
+        <input class="q-input" type="text" id="cc-jeito-titulo" placeholder='Ex.: "O Jeito Conceição de Atender"' style="margin-bottom:14px">
+        <div class="q-label">Comportamentos esperados no atendimento ao cliente</div>
+        <div class="q-hint">Um comportamento por linha.</div>
+        <textarea class="q-input" id="cc-jeito" rows="5" placeholder="Cumprimentar o cliente com cordialidade.&#10;Demonstrar interesse em ajudar.&#10;Oferecer soluções adequadas.&#10;Agir com respeito e profissionalismo.&#10;Agradecer pela preferência."></textarea>
+      </div>
+
+      <!-- BLOCO 7: O QUE ESPERAMOS DOS COLABORADORES -->
+      <div class="q-card">
+        <div class="q-num">O Que Esperamos dos Colaboradores</div>
+        <div class="q-label">Atitudes e posturas esperadas de todos no dia a dia</div>
+        <div class="q-hint">Um item por linha.</div>
+        <textarea class="q-input" id="cc-esperamos" rows="6" placeholder="Pontualidade&#10;Organização&#10;Responsabilidade&#10;Comprometimento&#10;Respeito aos colegas&#10;Postura ética"></textarea>
+      </div>
+
+      <!-- BLOCO 8: O QUE NÃO NEGOCIAMOS -->
+      <div class="q-card">
+        <div class="q-num">O Que Não Negociamos</div>
+        <div class="q-label">Comportamentos e atitudes absolutamente inaceitáveis</div>
+        <div class="q-hint">Um item por linha.</div>
+        <textarea class="q-input" id="cc-nao-negociamos" rows="4" placeholder="Falta de respeito&#10;Desonestidade&#10;Mau atendimento ao cliente&#10;Descumprimento das normas internas"></textarea>
+      </div>
+
+      <!-- BLOCO 9: O CLIENTE É NOSSA PRIORIDADE -->
+      <div class="q-card">
+        <div class="q-num">O Cliente é Nossa Prioridade</div>
+        <div class="q-label">Como a empresa vê e trata seus clientes?</div>
+        <textarea class="q-input" id="cc-cliente" rows="3" placeholder="Nosso objetivo não é apenas vender produtos, mas construir relacionamentos duradouros baseados na confiança."></textarea>
+      </div>
+
+      <!-- BLOCO 10: RECONHECIMENTO E VALORIZAÇÃO -->
+      <div class="q-card">
+        <div class="q-num">Reconhecimento e Valorização</div>
+        <div class="q-label">O que a empresa valoriza e reconhece nos colaboradores?</div>
+        <textarea class="q-input" id="cc-reconhecimento" rows="3" placeholder="Valorizamos colaboradores que demonstram comprometimento, proatividade, espírito de equipe, boa comunicação, responsabilidade e foco em resultados."></textarea>
+      </div>
+
+      <!-- BLOCO 11: COMPROMISSO COM AMBIENTE SAUDÁVEL -->
+      <div class="q-card">
+        <div class="q-num">Compromisso com um Ambiente Saudável</div>
+        <div class="q-label">Qual é o compromisso da empresa com o bem-estar da equipe?</div>
+        <textarea class="q-input" id="cc-ambiente" rows="3" placeholder="A empresa não tolera assédio moral, discriminação, humilhações ou desrespeito entre colaboradores."></textarea>
+      </div>
+
+      <!-- BLOCO 12: NOSSA EQUIPE FAZ A DIFERENÇA -->
+      <div class="q-card">
+        <div class="q-num">Nossa Equipe Faz a Diferença</div>
+        <div class="q-label">Mensagem de encerramento valorizando a equipe</div>
+        <textarea class="q-input" id="cc-equipe" rows="3" placeholder="O sucesso da empresa é resultado do trabalho de cada colaborador. Juntos construímos confiança, relacionamentos e resultados."></textarea>
+      </div>
+
+      <!-- BLOCO 13: TERMO DE COMPROMISSO -->
+      <div class="q-card">
+        <div class="q-num">Termo de Compromisso</div>
+        <div class="q-label">Texto do termo que o colaborador assina ao receber a cartilha</div>
+        <textarea class="q-input" id="cc-termo" rows="4" placeholder="Declaro que recebi a Cartilha de Cultura Organizacional da [Nome da empresa] e me comprometo a contribuir para um ambiente de trabalho pautado no respeito, ética, compromisso e excelência."></textarea>
+      </div>
+
+      <!-- AÇÕES -->
+      <div class="q-submit-area" style="gap:14px;flex-direction:column;align-items:center">
+        <div style="display:flex;gap:12px;flex-wrap:wrap;justify-content:center">
+          <button class="q-submit" id="cc-submit" onclick="submitCartilha()" style="min-width:220px">💾 Salvar informações</button>
+          <button class="q-submit" onclick="gerarCartilha()" style="min-width:220px;background:var(--gold);border-color:var(--gold)">🎨 Gerar e Baixar Cartilha</button>
+        </div>
+        <div class="q-submit-note">Salve para enviar as informações à consultora. O arquivo HTML gerado pode ser aberto em qualquer navegador e impresso em PDF.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- PASSWORD MODAL -->
+<div class="modal-overlay" id="pwdModal">
+  <div class="modal-box">
+    <div class="modal-icon" id="modal-icon">🔒</div>
+    <h3 class="modal-title" id="modal-title">Acesso Restrito</h3>
+    <p class="modal-sub" id="modal-sub">Digite a senha fornecida pela consultora para acessar este questionário.</p>
+    <input type="password" class="modal-input" id="pwdInput" placeholder="••••••••"
+           onkeydown="if(event.key==='Enter')checkPassword()">
+    <div class="modal-error" id="modal-error">Senha incorreta. Tente novamente.</div>
+    <button class="modal-btn" onclick="checkPassword()">Acessar</button>
+    <button class="modal-cancel" onclick="closeModal()">Cancelar</button>
+  </div>
+</div>
+
+<script src="../js/config.js"></script>
+<script src="../js/api.js"></script>
+<script src="../js/cartilha.js"></script>
+<script src="acesso.js"></script>
+<script>
+const CAMPOS = {
+  empresa:'cc-empresa', segmento:'cc-segmento', diretorNome:'cc-diretor-nome', diretorCargo:'cc-diretor-cargo',
+  msgDirecao:'cc-msg-direcao', historia:'cc-historia', missao:'cc-missao', visao:'cc-visao', valores:'cc-valores',
+  jeitoTitulo:'cc-jeito-titulo', jeito:'cc-jeito', esperamos:'cc-esperamos', naoNegociamos:'cc-nao-negociamos',
+  cliente:'cc-cliente', reconhecimento:'cc-reconhecimento', ambiente:'cc-ambiente', equipe:'cc-equipe', termo:'cc-termo'
+};
+const RASCUNHO = 'cartilha_rascunho';  // sessionStorage: some ao fechar a aba
+
+function backToCover() { location.href = 'index.html'; }
+
+function getCartilhaData() {
+  const d = {};
+  Object.entries(CAMPOS).forEach(([k, id]) => d[k] = (document.getElementById(id) || {}).value || '');
+  return d;
+}
+
+function loadCartilhaForm() {
+  let d = {};
+  try { d = JSON.parse(sessionStorage.getItem(RASCUNHO) || '{}'); } catch {}
+  if (!d.empresa) d.empresa = Acesso.empresaAtual();
+  Object.entries(CAMPOS).forEach(([k, id]) => { const el = document.getElementById(id); if (el && d[k]) el.value = d[k]; });
+}
+
+async function submitCartilha() {
+  const btn = document.getElementById('cc-submit');
+  btn.disabled = true; btn.textContent = 'Salvando...';
+  const d = getCartilhaData();
+  const empresa = Acesso.empresaAtual() || d.empresa;
+  try {
+    await RH.salvarResposta({ section: 'cartilha', company: empresa, nome: d.diretorNome, cargo_setor: d.diretorCargo, r1: d });
+  } catch (e) {
+    btn.disabled = false; btn.textContent = '💾 Salvar informações';
+    alert('Não foi possível salvar agora. Verifique sua conexão e tente de novo.');
+    return;
+  }
+  const corpo = [
+    `Empresa / Segmento: ${d.empresa} — ${d.segmento}`, `Missão: ${d.missao}`, `Visão: ${d.visao}`, `Valores: ${d.valores}`,
+    `Mensagem da Direção: ${d.msgDirecao}`, `Nossa História: ${d.historia}`, `O Que Esperamos: ${d.esperamos}`, `O Que Não Negociamos: ${d.naoNegociamos}`
+  ].join('\n\n');
+  RH.enviarEmail({ subject: `[Construindo Juntos] Seção 5 — Cartilha de Cultura | ${empresa}`, message: corpo, from_name: 'Programa Construindo Juntos — RH com Propósito' });
+  btn.disabled = false; btn.textContent = '💾 Salvar informações';
+  alert('✅ Informações salvas! Agora você pode clicar em "Gerar e Baixar Cartilha".');
+}
+
+function gerarCartilha() {
+  const d = getCartilhaData();
+  if (!d.empresa) { alert('Preencha ao menos o nome da empresa antes de gerar a cartilha.'); return; }
+  RH.baixarCartilha(d);
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  Acesso.iniciar({
+    chave: 'cartilha', icone: '📋', titulo: 'Cartilha de Cultura', sub: 'Seção 5 — Informações para a Cartilha',
+    onLiberado: () => {
+      loadCartilhaForm();
+      showView('cartilha');
+      document.getElementById('view-cartilha').addEventListener('input', () => {
+        sessionStorage.setItem(RASCUNHO, JSON.stringify(getCartilhaData()));
+      });
+    }
+  });
+});
+</script>
+</body>
+</html>

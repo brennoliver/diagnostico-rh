@@ -3,13 +3,15 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Portal RH com Propósito — Ferramentas</title>
+<meta name="robots" content="noindex, nofollow">
+<title>Portal de Ferramentas — RH com Propósito</title>
 <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700;900&family=Playfair+Display:ital,wght@0,600;0,700;1,500;1,600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/base.css">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
-  --green:#1A5C45;--green-mid:#2E7D58;--green-light:#4A9A72;
-  --dark:#0A1C12;--gold:#C89B3C;--gold-light:#E8C96A;
+  --green:var(--rh-green);--green-mid:var(--rh-green-mid);--green-light:var(--rh-green-light);
+  --dark:var(--rh-dark);--gold:var(--rh-gold);--gold-light:var(--rh-gold-light);
   --r:16px;
 }
 html{scroll-behavior:smooth;font-size:16px}
@@ -189,7 +191,7 @@ footer strong{color:rgba(255,255,255,.5)}
     <div class="grid">
 
       <!-- Pré-Palestra Executivo -->
-      <a class="card card-full" style="background:linear-gradient(135deg,rgba(26,92,69,.12),rgba(255,255,255,.04));border-color:rgba(26,92,69,.3)" href="pre-palestra-executivo.html">
+      <a class="card card-full" style="background:linear-gradient(135deg,rgba(26,92,69,.12),rgba(255,255,255,.04));border-color:rgba(26,92,69,.3)" href="eventos/pre-palestra-executivo.html">
         <div style="display:flex;align-items:center;gap:20px;flex-wrap:wrap">
           <div class="card-icon icon-green" style="margin-bottom:0;flex-shrink:0;font-size:28px">🎤</div>
           <div style="flex:1;min-width:180px">
@@ -202,7 +204,7 @@ footer strong{color:rgba(255,255,255,.5)}
       </a>
 
       <!-- Pesquisa de Experiência -->
-      <a class="card card-full" style="background:linear-gradient(135deg,rgba(26,92,69,.08),rgba(255,255,255,.04));border-color:rgba(26,92,69,.25)" href="pesquisa-experiencia.html">
+      <a class="card card-full" style="background:linear-gradient(135deg,rgba(26,92,69,.08),rgba(255,255,255,.04));border-color:rgba(26,92,69,.25)" href="eventos/pesquisa-experiencia.html">
         <div style="display:flex;align-items:center;gap:20px;flex-wrap:wrap">
           <div class="card-icon icon-green" style="margin-bottom:0;flex-shrink:0;font-size:28px">📋</div>
           <div style="flex:1;min-width:180px">
@@ -215,7 +217,7 @@ footer strong{color:rgba(255,255,255,.5)}
       </a>
 
       <!-- Confirmação de Presença — Evento -->
-      <a class="card card-full" style="background:linear-gradient(135deg,rgba(200,155,60,.12),rgba(255,255,255,.04));border-color:rgba(200,155,60,.35)" href="confirmacao.html">
+      <a class="card card-full" style="background:linear-gradient(135deg,rgba(200,155,60,.12),rgba(255,255,255,.04));border-color:rgba(200,155,60,.35)" href="eventos/confirmacao.html">
         <div style="display:flex;align-items:center;gap:20px;flex-wrap:wrap">
           <div class="card-icon icon-gold" style="margin-bottom:0;flex-shrink:0;font-size:28px">🎉</div>
           <div style="flex:1;min-width:180px">
@@ -228,7 +230,7 @@ footer strong{color:rgba(255,255,255,.5)}
       </a>
 
       <!-- Programa Construindo Juntos — featured -->
-      <a class="card featured" href="diagnostico.html">
+      <a class="card featured" href="programa/">
         <div class="card-icon icon-gold">📊</div>
         <div class="card-label">Programa</div>
         <div class="card-title">Programa Construindo Juntos</div>
@@ -241,7 +243,7 @@ footer strong{color:rgba(255,255,255,.5)}
       </a>
 
       <!-- Questionário de Diagnóstico - Palestra -->
-      <a class="card" href="pre-diagnostico.html">
+      <a class="card" href="programa/pre-diagnostico.html">
         <div class="card-icon icon-gold">📋</div>
         <div class="card-label">Antes das Entrevistas</div>
         <div class="card-title">Pré-Diagnóstico Organizacional</div>
@@ -249,7 +251,7 @@ footer strong{color:rgba(255,255,255,.5)}
         <span class="card-btn">Acessar →</span>
       </a>
 
-      <a class="card" href="questionario.html">
+      <a class="card" href="eventos/questionario.html">
         <div class="card-icon icon-blue">📝</div>
         <div class="card-label">Questionário</div>
         <div class="card-title">Questionário de Diagnóstico — Palestra</div>
@@ -258,7 +260,7 @@ footer strong{color:rgba(255,255,255,.5)}
       </a>
 
       <!-- PDI -->
-      <a class="card" href="pdi.html">
+      <a class="card" href="ferramentas/pdi.html">
         <div class="card-icon icon-green">🎯</div>
         <div class="card-label">Desenvolvimento</div>
         <div class="card-title">PDI — Plano de Desenvolvimento Individual</div>
@@ -267,7 +269,7 @@ footer strong{color:rgba(255,255,255,.5)}
       </a>
 
       <!-- Recrutamento & Seleção -->
-      <a class="card" href="recrutamento.html">
+      <a class="card" href="ferramentas/recrutamento.html">
         <div class="card-icon icon-teal">🔍</div>
         <div class="card-label">Gestão de Pessoas</div>
         <div class="card-title">Recrutamento &amp; Seleção</div>
@@ -276,7 +278,7 @@ footer strong{color:rgba(255,255,255,.5)}
       </a>
 
       <!-- Apostila -->
-      <a class="card" href="apostila.html">
+      <a class="card" href="ferramentas/apostila.html">
         <div class="card-icon icon-purple">📚</div>
         <div class="card-label">Capacitação</div>
         <div class="card-title">Apostila — Liderança com Propósito</div>
@@ -285,7 +287,7 @@ footer strong{color:rgba(255,255,255,.5)}
       </a>
 
       <!-- Admin -->
-      <a class="card admin-card" href="admin.html">
+      <a class="card admin-card" href="admin/">
         <div style="display:flex;align-items:center;gap:20px;flex-wrap:wrap">
           <div class="card-icon icon-admin" style="margin-bottom:0;flex-shrink:0">🔐</div>
           <div style="flex:1;min-width:180px">

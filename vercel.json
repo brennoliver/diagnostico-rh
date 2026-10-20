@@ -1,0 +1,38 @@
+{
+  "redirects": [
+    { "source": "/diagnostico.html", "destination": "/programa/", "permanent": false },
+    { "source": "/Diagnostico_Organizacional_RH.html", "destination": "/programa/", "permanent": false },
+    { "source": "/admin.html", "destination": "/admin/", "permanent": false },
+    { "source": "/pre-diagnostico.html", "destination": "/programa/pre-diagnostico.html", "permanent": false },
+    { "source": "/questionarios-rhcp.html", "destination": "/programa/questionarios-rhcp.html", "permanent": false },
+    { "source": "/confirmacao.html", "destination": "/eventos/confirmacao.html", "permanent": false },
+    { "source": "/pre-palestra-executivo.html", "destination": "/eventos/pre-palestra-executivo.html", "permanent": false },
+    { "source": "/pesquisa-experiencia.html", "destination": "/eventos/pesquisa-experiencia.html", "permanent": false },
+    { "source": "/questionario.html", "destination": "/eventos/questionario.html", "permanent": false },
+    { "source": "/pdi.html", "destination": "/ferramentas/pdi.html", "permanent": false },
+    { "source": "/recrutamento.html", "destination": "/ferramentas/recrutamento.html", "permanent": false },
+    { "source": "/apostila.html", "destination": "/ferramentas/apostila.html", "permanent": false },
+    { "source": "/lideres.html", "destination": "/apresentacoes/lideres.html", "permanent": false },
+    { "source": "/lideres-slides.html", "destination": "/apresentacoes/lideres-slides.html", "permanent": false },
+    { "source": "/pertencimento-slides.html", "destination": "/apresentacoes/pertencimento-slides.html", "permanent": false },
+    { "source": "/treinamentos-slides.html", "destination": "/apresentacoes/treinamentos-slides.html", "permanent": false },
+    { "source": "/acompanhamento-slides.html", "destination": "/apresentacoes/acompanhamento-slides.html", "permanent": false },
+    { "source": "/site.html", "destination": "https://rhcomproposito.com.br", "permanent": false }
+  ],
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        { "key": "X-Content-Type-Options", "value": "nosniff" },
+        { "key": "Referrer-Policy", "value": "strict-origin-when-cross-origin" },
+        { "key": "X-Robots-Tag", "value": "noindex, nofollow" }
+      ]
+    },
+    {
+      "source": "/admin/(.*)",
+      "headers": [
+        { "key": "X-Frame-Options", "value": "DENY" }
+      ]
+    }
+  ]
+}

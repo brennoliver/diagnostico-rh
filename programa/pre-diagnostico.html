@@ -3,17 +3,18 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Pré-Diagnóstico Organizacional | RH com Propósito</title>
+<meta name="robots" content="noindex, nofollow">
+  <title>Pré-Diagnóstico Organizacional — RH com Propósito</title>
   <meta name="description" content="Questionário enviado antes da nossa primeira conversa para que o encontro seja mais produtivo e direcionado às reais necessidades do seu negócio.">
   <meta property="og:title" content="Pré-Diagnóstico Organizacional — RH com Propósito">
   <meta property="og:description" content="Preencha antes da nossa primeira conversa. Leva cerca de 10 minutos.">
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="RH com Propósito">
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Lato:wght@400;700&display=swap" rel="stylesheet">
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
-  <style>
+    <link rel="stylesheet" href="../css/base.css">
+<style>
     *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-    :root{--gold:#C89B3C;--gold-l:#D4A84A;--green:#1A5C45;--dark:#070F09}
+    :root{--gold:var(--rh-gold);--gold-l:#D4A84A;--green:var(--rh-green);--dark:var(--rh-dark)}
     body{min-height:100vh;background:linear-gradient(145deg,var(--dark) 0%,var(--green) 55%,#0F3D2A 100%);font-family:'Lato',sans-serif;color:white;padding-bottom:80px}
 
     /* Topbar */
@@ -411,15 +412,9 @@
 <div class="toast toast-s" id="t-ok"></div>
 <div class="toast toast-e" id="t-err"></div>
 
+<script src="../js/config.js"></script>
+<script src="../js/api.js"></script>
 <script>
-const SB_URL = 'https://jngyyterkatblntpsjbm.supabase.co';
-const SB_KEY = 'sb_publishable_30rUV3wLjGCDd4DggNYePQ_CwkdB1br';
-let _sb = null;
-function getSb() {
-  if (_sb) return _sb;
-  if (!window.supabase) return null;
-  try { _sb = window.supabase.createClient(SB_URL, SB_KEY); return _sb; } catch { return null; }
-}
 const TOTAL  = 9;
 
 let cur = 1;
@@ -552,36 +547,27 @@ async function submitForm() {
   const btn = document.getElementById('btn-submit');
   btn.disabled = true; btn.textContent = '⏳  Enviando...';
 
-  const sb = getSb();
-  if (!sb) {
-    btn.disabled = false; btn.textContent = '✅  Enviar Pré-Diagnóstico';
-    toast('e', '❌ Não foi possível conectar. Use a opção de imprimir.');
-    return;
-  }
-
   try {
-    const { error } = await sb.from('responses').insert({
+    await RH.salvarResposta({
       section: 'pre_diagnostico',
       company: d.empresa,
       nome: d.responsavel || '',
       cargo_setor: d.cargo || '',
       data_resposta: new Date().toISOString().split('T')[0],
-      r1: JSON.stringify(d)
+      r1: d
     });
-    if (error) throw error;
     localStorage.removeItem('prediag');
     btn.textContent = '✅  Enviado!';
     document.getElementById('success-msg').style.display = 'block';
     toast('ok', '✅ Pré-diagnóstico enviado com sucesso!');
-    const w3f = localStorage.getItem('w3f_key');
-    if (w3f) sendEmail(w3f, d);
+    sendEmail(d);
   } catch(err) {
     btn.disabled = false; btn.textContent = '✅  Enviar Pré-Diagnóstico';
     toast('e', '❌ Falha ao enviar. Use a opção de imprimir como alternativa.');
   }
 }
 
-async function sendEmail(key, d) {
+async function sendEmail(d) {
   const body = [
     `Empresa: ${d.empresa} | Segmento: ${d.segmento} | Cidade: ${d.cidade}`,
     `Responsável: ${d.responsavel} — ${d.cargo}`,
@@ -613,12 +599,7 @@ async function sendEmail(key, d) {
     `Info adicional: ${d.adicional}`,
     `Como conheceu: ${d.como_conheceu}`,
   ].join('\n');
-  try {
-    await fetch('https://api.web3forms.com/submit', {
-      method:'POST', headers:{'Content-Type':'application/json',Accept:'application/json'},
-      body: JSON.stringify({ access_key:key, subject:`[RH com Propósito] Pré-Diagnóstico — ${d.empresa}`, message:body, from_name:'Pré-Diagnóstico RH com Propósito' })
-    });
-  } catch(e) {}
+  await RH.enviarEmail({ subject:`[RH com Propósito] Pré-Diagnóstico — ${d.empresa}`, message:body, from_name:'Pré-Diagnóstico RH com Propósito' });
 }
 
 /* ── TOAST ── */

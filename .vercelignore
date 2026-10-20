@@ -1,0 +1,6 @@
+# Não publicar: documentação, SQL e páginas antigas (cobertas por redirect no vercel.json)
+README.md
+supabase/
+.claude/
+Diagnostico_Organizacional_RH.html
+site.html
