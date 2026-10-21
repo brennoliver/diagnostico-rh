@@ -40,24 +40,34 @@
     const sem = A.semCadastro(respostas, clientes);
     const hoje = new Date().toLocaleDateString('pt-BR', { weekday: 'long', day: 'numeric', month: 'long' });
 
+    const semanas = A.porSemana(respostas);
+    const sat = respostas.filter(r => r.section === 'pesquisa_experiencia');
+    const kpi = (href, ico, rotulo, valor, sub, extra = '', ouro = false) => `<a class="card kpi" href="${href}">
+      <div class="kpi-top"><span class="kpi-label">${rotulo}</span><span class="kpi-ico${ouro ? ' gold' : ''}">${ico}</span></div>
+      <div class="kpi-value"${typeof valor === 'number' ? ` data-contar="${valor}"` : ''}>${valor}</div><div class="kpi-sub">${sub}</div>${extra}</a>`;
+
     main.innerHTML = `<div class="page">
-      ${cabecalho({ eyebrow: esc(hoje), titulo: `${A.saudacao()}, ${RH_CONFIG.consultora}`, sub: 'Aqui está o resumo do seu trabalho.',
-        acoes: '<button class="btn btn-sec" data-novo-cliente>+ Novo cliente</button><button class="btn" data-enviar-form>Enviar formulário</button>' })}
+      <section class="hero">
+        <span class="hero-folha" data-logo="simbolo" data-tema="escuro"></span>
+        <div class="eyebrow">${esc(hoje)}</div>
+        <h1>${A.saudacao()}, ${esc(RH_CONFIG.consultora)}</h1>
+        <p>${ult7 ? `Chegaram <strong style="color:#fff">${A.plural(ult7, 'resposta nova', 'respostas novas')}</strong> nos últimos 7 dias.` : 'Nenhuma resposta nova nesta semana — que tal enviar a pesquisa de satisfação?'} ${sem.length ? `${A.plural(sem.length, 'empresa ainda precisa', 'empresas ainda precisam')} ser ${sem.length === 1 ? 'cadastrada' : 'cadastradas'}.` : ''}</p>
+        <div class="hero-acoes"><button class="btn btn-gold" data-enviar-form>Enviar formulário</button><button class="btn btn-glass" data-novo-cliente>+ Novo cliente</button>${sem.length ? '<a class="btn btn-glass" href="#/clientes">Organizar empresas</a>' : ''}</div>
+      </section>
       <div class="grid grid-4">
-        <a class="card kpi" href="#/respostas" style="text-decoration:none"><div class="kpi-label">Respostas</div><div class="kpi-value">${respostas.length}</div><div class="kpi-sub">${ult7 ? `+${ult7} nos últimos 7 dias` : 'nenhuma nesta semana'}</div></a>
-        <a class="card kpi" href="#/clientes" style="text-decoration:none"><div class="kpi-label">Clientes</div><div class="kpi-value">${clientes.length}</div><div class="kpi-sub">${A.plural(ativos, 'ativo', 'ativos')}</div></a>
-        <a class="card kpi" href="#/formularios" style="text-decoration:none"><div class="kpi-label">Formulários</div><div class="kpi-value">${F.lista().length}</div><div class="kpi-sub">prontos para enviar</div></a>
-        <a class="card kpi" href="#/satisfacao" style="text-decoration:none"><div class="kpi-label">NPS</div><div class="kpi-value">${nps ? nps.score : '—'}</div><div class="kpi-sub">${nps ? A.plural(nps.n, 'avaliação', 'avaliações') : 'sem avaliações ainda'}</div></a>
+        ${kpi('#/respostas', '📥', 'Respostas', respostas.length, ult7 ? `<span class="trend up">+${ult7}</span> nos últimos 7 dias` : '<span class="trend flat">0</span> nesta semana', A.spark(semanas))}
+        ${kpi('#/clientes', '🏢', 'Clientes', clientes.length, A.plural(ativos, 'ativo', 'ativos'), A.spark(A.porSemana(respostas.filter(r => A.clienteDe(r, idx)))))}
+        ${kpi('#/formularios', '📝', 'Formulários', F.lista().length, 'prontos para enviar', '', true)}
+        ${kpi('#/satisfacao', '⭐', 'NPS', nps ? nps.score : '—', nps ? A.plural(nps.n, 'avaliação', 'avaliações') : 'sem avaliações ainda', sat.length ? A.spark(A.porSemana(sat), '#C89B3C') : '', true)}
       </div>
-      ${sem.length ? `<div class="alert alert-warn" style="margin-top:16px">🏢 ${A.plural(sem.length, 'empresa respondeu', 'empresas responderam')} e ainda não ${sem.length === 1 ? 'está cadastrada' : 'estão cadastradas'} como cliente. <a href="#/clientes">Organizar agora</a></div>` : ''}
-      <div class="grid grid-2" style="margin-top:16px;align-items:start">
-        <div class="card"><div class="card-head"><h2>Respostas recentes</h2><a class="small" href="#/respostas">Ver todas</a></div>
-          <div class="list">${respostas.slice(0, 8).map(r => itemResposta(r, A.clienteDe(r, idx))).join('') || A.vazio('📭', 'Nenhuma resposta ainda', 'Envie um formulário para começar.')}</div></div>
+      <div class="grid grid-2" style="margin-top:18px;align-items:start">
+        <div class="card"><div class="card-head"><h2>Respostas recentes</h2><a class="small" href="#/respostas">Ver todas →</a></div>
+          <div class="list">${respostas.slice(0, 7).map(r => itemResposta(r, A.clienteDe(r, idx))).join('') || A.vazio('📭', 'Nenhuma resposta ainda', 'Envie um formulário para começar.')}</div></div>
         <div class="card"><div class="card-head"><h2>Atalhos</h2></div><div class="list">
-          <button class="list-item" data-atalho="pesquisa_experiencia"><span class="list-icon">⭐</span><span class="list-main"><span class="list-title">Enviar pesquisa de satisfação</span><span class="list-sub">Depois de cada serviço ou encontro</span></span><span class="list-end">→</span></button>
-          <button class="list-item" data-atalho="pre_diagnostico"><span class="list-icon">📋</span><span class="list-main"><span class="list-title">Enviar pré-diagnóstico</span><span class="list-sub">Antes da primeira conversa com um cliente novo</span></span><span class="list-end">→</span></button>
-          <a class="list-item" href="#/programa"><span class="list-icon">🌱</span><span class="list-main"><span class="list-title">Programa Construindo Juntos</span><span class="list-sub">Progresso, relatório e cartilha por cliente</span></span><span class="list-end">→</span></a>
-          <a class="list-item" href="#/materiais"><span class="list-icon">📚</span><span class="list-main"><span class="list-title">Materiais e apresentações</span><span class="list-sub">Apostila, slides e guia do consultor</span></span><span class="list-end">→</span></a>
+          <button class="list-item" data-atalho="pesquisa_experiencia"><span class="list-icon">⭐</span><span class="list-main"><span class="list-title">Enviar pesquisa de satisfação</span><span class="list-sub">Depois de cada serviço ou encontro</span></span><span class="seta">→</span></button>
+          <button class="list-item" data-atalho="pre_diagnostico"><span class="list-icon">📋</span><span class="list-main"><span class="list-title">Enviar pré-diagnóstico</span><span class="list-sub">Antes da primeira conversa com um cliente novo</span></span><span class="seta">→</span></button>
+          <a class="list-item" href="#/programa"><span class="list-icon">🌱</span><span class="list-main"><span class="list-title">Programa Construindo Juntos</span><span class="list-sub">Progresso, relatório e cartilha por cliente</span></span><span class="seta">→</span></a>
+          <a class="list-item" href="#/materiais"><span class="list-icon">📚</span><span class="list-main"><span class="list-title">Materiais e apresentações</span><span class="list-sub">Apostila, slides e guia do consultor</span></span><span class="seta">→</span></a>
         </div></div>
       </div></div>`;
     ligarRespostas(main, respostas, () => A.recarregar());
@@ -142,7 +152,7 @@
       const lista = clientes.filter(c => (filtro === 'todos' || c.status === filtro) && (!k || A.chavesCliente(c).some(x => x.includes(k)) || A.chave(c.contato).includes(k)));
       main.querySelector('#lista').innerHTML = lista.length ? `<div class="table-wrap"><table class="table"><thead><tr><th>Cliente</th><th>Contato</th><th class="num">Respostas</th><th>Última</th><th>Situação</th></tr></thead><tbody>
         ${lista.map(c => { const rs = porCliente.get(c.id); return `<tr class="click" data-cli="${c.id}">
-          <td><strong>${esc(c.nome)}</strong><div class="small muted">${esc([c.segmento, c.cidade].filter(Boolean).join(' · '))}</div></td>
+          <td><div class="cell-ident"><span class="avatar">${esc(A.iniciais(c.nome))}</span><div><strong>${esc(c.nome)}</strong><div class="small muted">${esc([c.segmento, c.cidade].filter(Boolean).join(' · '))}</div></div></div></td>
           <td>${esc(c.contato || '—')}<div class="small muted">${esc(c.telefone || c.email || '')}</div></td>
           <td class="num">${rs.length}</td><td class="small muted">${rs.length ? esc(A.relativo(rs[0].created_at)) : '—'}</td><td>${badgeStatus(c.status)}</td></tr>`; }).join('')}
         </tbody></table></div>` : A.vazio('🏢', clientes.length ? 'Nenhum cliente encontrado' : 'Nenhum cliente cadastrado', clientes.length ? 'Tente outra busca.' : 'Cadastre seus clientes para organizar as respostas por empresa.');
@@ -357,7 +367,7 @@
 
       alvo.innerHTML = `<div class="grid grid-3" style="align-items:start">
         <div class="card card-pad"><div class="kpi-label">NPS — recomendação</div>
-          ${nps ? `<div class="nps-big" style="color:${zCor};margin:10px 0 4px">${nps.score}</div><div class="small" style="color:${zCor};font-weight:800;margin-bottom:14px">${zTxt}</div>
+          ${nps ? `${A.medidor(nps.score)}<div style="text-align:center;margin-top:-34px"><div class="nps-big gauge-num" style="color:${zCor}" data-contar="${nps.score}">${nps.score}</div><div class="small" style="color:${zCor};font-weight:900;margin-bottom:16px">${zTxt}</div></div>
           <div class="nps-split" aria-hidden="true"><span style="width:${nps.detratores / nps.n * 100}%;background:#C2410C"></span><span style="width:${nps.neutros / nps.n * 100}%;background:#D9A441"></span><span style="width:${nps.promotores / nps.n * 100}%;background:var(--ok)"></span></div>
           <div class="row-between small muted" style="margin-top:8px"><span>😞 ${nps.detratores} detratores</span><span>😐 ${nps.neutros}</span><span>😍 ${nps.promotores} promotores</span></div>
           <p class="small muted" style="margin-top:12px">NPS = % de notas 9–10 menos % de notas 0–6.</p>` : '<p class="muted" style="margin-top:10px">Sem notas no período.</p>'}</div>
@@ -399,7 +409,7 @@
           const rs = A.doCliente(c, respostas);
           const n = ids => rs.filter(r => ids.includes(r.section)).length;
           const p = (progs[A.chavePrograma(c.nome)] || {}).media || 0;
-          return `<tr class="click" data-cli="${c.id}"><td><strong>${esc(c.nome)}</strong></td>
+          return `<tr class="click" data-cli="${c.id}"><td><div class="cell-ident"><span class="avatar">${esc(A.iniciais(c.nome))}</span><strong>${esc(c.nome)}</strong></div></td>
             <td><div class="row" style="flex-wrap:nowrap"><div class="progress" style="flex:1"><span style="width:${p}%"></span></div><span class="small" style="font-weight:800;min-width:38px;text-align:right">${p}%</span></div></td>
             <td class="num">${n(['pre_diagnostico', 'direcao', 'gestores', 'colaboradores', 'rhcp_direcao', 'rhcp_gestores', 'rhcp_colaboradores'])}</td><td class="num">${n(['identidade', 'cartilha'])}</td></tr>`;
         }).join('')}</tbody></table></div>` : A.vazio('🌱', 'Cadastre um cliente para acompanhar o programa', '', '<a class="btn" href="#/clientes">Ir para clientes</a>')}</div></div>`;
@@ -426,7 +436,7 @@
           <button class="btn btn-sm" data-enviar-f="${fid}">Enviar</button></span></div>`; }).join('')}</div></div>
       <div class="grid grid-2" style="align-items:start">
         <div class="card"><div class="card-head"><h2>Progresso por etapa</h2><span class="badge badge-green" id="p-media">${media()}%</span></div>
-          ${ETAPAS.map(([k, nome], i) => `<div class="etapa" style="grid-template-columns:auto 1fr"><span class="etapa-n">${i + 1}</span><div>
+          ${ETAPAS.map(([k, nome], i) => `<div class="etapa" style="grid-template-columns:auto 1fr"><span class="etapa-n${(prog.pct[k] || 0) === 100 ? ' feita' : ''}" id="n-${k}">${(prog.pct[k] || 0) === 100 ? '✓' : i + 1}</span><div>
             <div class="row-between"><strong>${esc(nome)}</strong><span class="pct" id="pct-${k}">${prog.pct[k] || 0}%</span></div>
             <input type="range" min="0" max="100" step="5" value="${prog.pct[k] || 0}" data-etapa="${k}" aria-label="Progresso: ${esc(nome)}">
             <textarea class="textarea" rows="1" style="min-height:38px;margin-top:6px;font-size:13.5px" placeholder="Observações" data-obs="${k}">${esc(prog.obs[k] || '')}</textarea></div></div>`).join('')}
@@ -442,7 +452,8 @@
     const salvarProg = A.debounce(async () => { try { await A.salvarDado(c.nome, 'progresso', { ...prog, media: media() }); aviso('#p-salvo', true); } catch { aviso('#p-salvo', false); } }, 700);
     const salvarCom = A.debounce(async () => { try { await A.salvarDado(c.nome, 'comunicacao', com); aviso('#s4-salvo', true); } catch { aviso('#s4-salvo', false); } }, 700);
     main.querySelectorAll('[data-etapa]').forEach(r => r.addEventListener('input', () => {
-      prog.pct[r.dataset.etapa] = +r.value; main.querySelector('#pct-' + r.dataset.etapa).textContent = r.value + '%'; main.querySelector('#p-media').textContent = media() + '%'; salvarProg();
+      prog.pct[r.dataset.etapa] = +r.value; main.querySelector('#pct-' + r.dataset.etapa).textContent = r.value + '%';
+      const n = main.querySelector('#n-' + r.dataset.etapa), feita = +r.value === 100; n.classList.toggle('feita', feita); n.textContent = feita ? '✓' : ETAPAS.findIndex(e => e[0] === r.dataset.etapa) + 1; main.querySelector('#p-media').textContent = media() + '%'; salvarProg();
     }));
     main.querySelectorAll('[data-obs]').forEach(t => t.addEventListener('input', () => { prog.obs[t.dataset.obs] = t.value; salvarProg(); }));
     main.querySelectorAll('[data-s4]').forEach(cb => cb.addEventListener('change', () => { const k = 's4-' + cb.dataset.s4; com.itens[k] = { ...(com.itens[k] || {}), sim: cb.checked }; salvarCom(); }));

@@ -485,7 +485,7 @@
       if (interno) extras.push('<a class="btn btn-sec btn-lg" href="../app/#/respostas/' + encodeURIComponent(form.id) + '">Ver no painel</a>');
       const copia = root.querySelector('#pf-form').outerHTML;
       root.innerHTML = `<div class="pf-end">
-        <div class="pf-end-ico">🌿</div>
+        <div class="pf-end-ico">${RH.logo ? RH.logo('simbolo', 'escuro') : '🌿'}</div>
         <h1>Respostas enviadas!</h1>
         <p>${esc(form.agradecimento || 'Obrigada pela sua participação. Suas respostas foram recebidas e contribuirão para o desenvolvimento da equipe.')}</p>
         <div class="row" style="justify-content:center">${extras.join('')}</div>

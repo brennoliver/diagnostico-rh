@@ -13,18 +13,26 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700;900&family=Playfair+Display:ital,wght@0,600;0,700;1,600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="../css/rh.css">
+<link rel="icon" href="../img/favicon.svg" type="image/svg+xml">
+<script src="../js/logo.js"></script>
 </head>
 <body>
 
+<div class="pf-faixa no-print" aria-hidden="true">
+  <span class="folha-solta" data-logo="simbolo" data-tema="escuro" style="width:240px;right:-30px;top:40px;--r:-16deg"></span>
+  <span class="folha-solta" data-logo="simbolo" data-tema="escuro" style="width:90px;left:6%;top:190px;--r:30deg;animation-delay:-4s"></span>
+</div>
+
 <header class="pf-top no-print">
-  <span class="brand"><span class="brand-mark">RH</span><span class="brand-text"><strong>RH com Propósito</strong><span>Cristiele Rodrigues</span></span></span>
+  <span class="logo" data-logo="completa" data-tema="escuro" aria-label="RH com Propósito"></span>
+  <span class="badge badge-glass">Cristiele Rodrigues · Consultoria</span>
 </header>
 
 <main class="pf" id="pf">
-  <div class="loading"><div class="spinner"></div>Carregando…</div>
+  <div class="loading" style="color:rgba(255,255,255,.8)"><div class="spinner"></div>Carregando…</div>
 </main>
 
-<footer class="pf-foot"><strong>RH com Propósito</strong> · Cristiele Rodrigues<br>Porque todo resultado começa com pessoas.</footer>
+<footer class="pf-foot"><span class="logo" data-logo="compacta" data-tema="claro"></span><strong>RH com Propósito</strong> · Cristiele Rodrigues<br>Porque todo resultado começa com pessoas.</footer>
 
 <script src="../js/config.js"></script>
 <script src="../js/api.js"></script>
@@ -40,6 +48,7 @@
   const empresa = p.get('empresa') || '';
 
   if (!form) {
+    document.documentElement.style.setProperty('--faixa', '220px');
     raiz.innerHTML = '<div class="pf-end"><div class="pf-end-ico">🔎</div><h1>Formulário não encontrado</h1><p>Confira o link recebido ou fale com a consultora.</p></div>';
     return;
   }
@@ -55,12 +64,25 @@
     } catch { interno = false; }
   }
   if (form.interno && !interno) {
+    document.documentElement.style.setProperty('--faixa', '220px');
     raiz.innerHTML = `<div class="pf-end"><div class="pf-end-ico">🔒</div><h1>Formulário de uso interno</h1>
       <p>Este formulário é preenchido pela consultora.</p>
       <a class="btn btn-lg" href="../?volta=${encodeURIComponent(location.pathname + location.search)}">Entrar</a></div>`;
     return;
   }
   RHF.renderizar(raiz, form, { empresa, interno });
+
+  // A faixa verde do topo termina logo abaixo do título; o primeiro cartão a sobrepõe
+  const faixa = () => {
+    const h = raiz.querySelector('.pf-hero') || raiz.querySelector('.pf-end');
+    if (!h) return;
+    const r = h.getBoundingClientRect(), topo = r.top + scrollY;
+    const fim = h.classList.contains('pf-end') ? topo + 140 : topo + r.height + (raiz.querySelector('.pf-steps') ? 30 : 56);
+    document.documentElement.style.setProperty('--faixa', Math.round(fim) + 'px');
+  };
+  faixa();
+  addEventListener('resize', faixa);
+  new MutationObserver(faixa).observe(raiz, { childList: true });
 
   function carregar(src) {
     return new Promise((ok, erro) => {

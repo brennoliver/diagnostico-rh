@@ -161,10 +161,56 @@ window.App = (function () {
 
   A.barras = (contagem, total) => {
     if (!total) return '<p class="muted small">Ainda sem respostas.</p>';
-    return '<div class="bars">' + contagem.map(c => {
+    const max = Math.max(...contagem.map(c => c.n));
+    return '<div class="bars">' + contagem.map((c, i) => {
       const pct = Math.round((c.n / total) * 100);
-      return `<div class="bar-row"><span class="bar-label">${esc(c.rotulo)}</span><span class="bar-count">${c.n} · ${pct}%</span><div class="bar-track"><div class="bar-fill" style="width:${pct}%"></div></div></div>`;
+      return `<div class="bar-row${c.n && c.n === max ? ' top' : ''}"><span class="bar-label">${esc(c.rotulo)}</span><span class="bar-count">${c.n} · ${pct}%</span><div class="bar-track"><div class="bar-fill" style="width:${pct}%;animation-delay:${i * 60}ms"></div></div></div>`;
     }).join('') + '</div>';
+  };
+
+  // ── Elementos visuais ────────────────────────────────
+  A.iniciais = nome => (RH.normalizarEmpresa(nome).split(' ').filter(p => p.length > 2 || /^[A-Z]/.test(p)).slice(0, 2).map(p => p[0]).join('') || '?').toUpperCase();
+
+  // Minigráfico de área: respostas por semana nas últimas n semanas
+  A.porSemana = (respostas, n = 10) => {
+    const agora = Date.now(), sem = 7 * 864e5;
+    const v = Array(n).fill(0);
+    respostas.forEach(r => { const i = n - 1 - Math.floor((agora - new Date(r.created_at || A.dataResp(r)).getTime()) / sem); if (i >= 0 && i < n) v[i]++; });
+    return v;
+  };
+  A.spark = (valores, cor = '#2E7D58') => {
+    const w = 200, h = 36, max = Math.max(1, ...valores), passo = w / (valores.length - 1);
+    const pts = valores.map((v, i) => [i * passo, h - 4 - (v / max) * (h - 8)]);
+    const linha = pts.map((p, i) => (i ? 'L' : 'M') + p[0].toFixed(1) + ' ' + p[1].toFixed(1)).join(' ');
+    const id = 'sg' + Math.random().toString(36).slice(2, 8);
+    return `<svg class="spark" viewBox="0 0 ${w} ${h}" preserveAspectRatio="none" aria-hidden="true"><defs><linearGradient id="${id}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${cor}" stop-opacity=".28"/><stop offset="1" stop-color="${cor}" stop-opacity="0"/></linearGradient></defs>
+      <path d="${linha} L${w} ${h} L0 ${h} Z" fill="url(#${id})"/><path d="${linha}" fill="none" stroke="${cor}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" vector-effect="non-scaling-stroke"/></svg>`;
+  };
+
+  // Medidor semicircular do NPS (-100 a 100)
+  A.medidor = score => {
+    const ang = Math.PI * (1 - (score + 100) / 200);
+    const x = 100 + 80 * Math.cos(ang), y = 100 - 80 * Math.sin(ang);
+    const cor = score >= 75 ? '#1E7A4F' : score >= 50 ? '#2E7D58' : score >= 0 ? '#C89B3C' : '#B93A0C';
+    return `<svg class="gauge" viewBox="0 0 200 112" aria-hidden="true"><defs><linearGradient id="gg" x1="0" x2="1"><stop offset="0" stop-color="#E0612A"/><stop offset=".5" stop-color="#E6C982"/><stop offset="1" stop-color="#1E7A4F"/></linearGradient></defs>
+      <path d="M20 100 A80 80 0 0 1 180 100" fill="none" stroke="#EFEBE3" stroke-width="16" stroke-linecap="round"/>
+      <path d="M20 100 A80 80 0 0 1 180 100" fill="none" stroke="url(#gg)" stroke-width="16" stroke-linecap="round" opacity=".9"/>
+      <circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="11" fill="#fff" stroke="${cor}" stroke-width="5"/></svg>`;
+  };
+
+  // Números que contam até o valor e trilhas dos controles deslizantes
+  A.animar = raiz => {
+    raiz.querySelectorAll('[data-contar]').forEach(el => {
+      const fim = +el.dataset.contar;
+      if (isNaN(fim) || matchMedia('(prefers-reduced-motion: reduce)').matches) { el.textContent = el.dataset.contar; return; }
+      const t0 = performance.now(), dur = 900;
+      const passo = t => { const p = Math.min(1, (t - t0) / dur); el.textContent = Math.round(fim * (1 - Math.pow(1 - p, 3))); if (p < 1) requestAnimationFrame(passo); };
+      requestAnimationFrame(passo);
+    });
+    raiz.querySelectorAll('input[type=range]').forEach(r => {
+      const pinta = () => r.style.setProperty('--v', r.value + '%');
+      pinta(); r.addEventListener('input', pinta);
+    });
   };
 
   A.vazio = (icone, titulo, texto = '', acao = '') => `<div class="empty"><div class="empty-icon">${icone}</div><strong>${esc(titulo)}</strong>${esc(texto)}${acao ? `<div style="margin-top:14px">${acao}</div>` : ''}</div>`;
@@ -243,7 +289,7 @@ window.App = (function () {
       <link rel="stylesheet" href="${location.origin}/css/rh.css">
       <style>body{background:#fff;padding:32px;max-width:820px;margin:0 auto}.badge{border:1px solid #ddd}a{color:inherit;text-decoration:none}
       .doc-head{display:flex;justify-content:space-between;align-items:center;border-bottom:2px solid var(--green);padding-bottom:12px;margin-bottom:22px}</style></head>
-      <body><div class="doc-head"><span class="brand"><span class="brand-mark">RH</span><span class="brand-text"><strong>RH com Propósito</strong><span>Cristiele Rodrigues</span></span></span><span class="small muted">${new Date().toLocaleDateString('pt-BR')}</span></div>
+      <body><div class="doc-head"><span style="width:120px;display:block">${RH.logo ? RH.logo('completa', 'claro') : 'RH com Propósito'}</span><span class="small muted">${new Date().toLocaleDateString('pt-BR')}</span></div>
       <h1 class="serif" style="font-size:24px;margin-bottom:16px">${esc(titulo)}</h1>${html}
       <script>setTimeout(() => print(), 500)<\/script></body></html>`);
     w.document.close();
@@ -270,6 +316,8 @@ window.App = (function () {
     window.scrollTo(0, 0);
     try {
       await A.telas[nome](main, params, A.query());
+      A.animar(main);
+      if (RH.aplicarLogo) RH.aplicarLogo(main);
       const h1 = main.querySelector('h1');
       document.title = (h1 ? h1.textContent + ' — ' : '') + 'RH com Propósito';
     } catch (e) {
