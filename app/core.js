@@ -75,6 +75,36 @@ window.App = (function () {
     if (cache.respostas) cache.respostas = cache.respostas.filter(r => r.id !== id);
   };
 
+  // ── Eventos ──────────────────────────────────────────
+  A.eventos = async (forcar = false) => {
+    if (cache.eventos && !forcar) return cache.eventos;
+    const { data, error } = await sb().from('eventos').select('*').order('data', { ascending: false, nullsFirst: false });
+    if (error) throw new Error('Não foi possível carregar os eventos: ' + error.message);
+    return (cache.eventos = data);
+  };
+  A.salvarEvento = async ev => {
+    const dados = { ...ev };
+    delete dados.id; delete dados.created_at; delete dados.updated_at;
+    const q = ev.id ? sb().from('eventos').update(dados).eq('id', ev.id) : sb().from('eventos').insert(dados);
+    const { data, error } = await q.select().single();
+    if (error) throw new Error('Não foi possível salvar o evento: ' + error.message);
+    cache.eventos = null;
+    return data;
+  };
+  A.excluirEvento = async id => {
+    const { error } = await sb().from('eventos').delete().eq('id', id);
+    if (error) throw new Error('Não foi possível excluir: ' + error.message);
+    cache.eventos = null;
+  };
+  // Liga respostas já recebidas a um evento (ou desliga, com null)
+  A.vincularAoEvento = async (ids, eventoId) => {
+    const { error } = await sb().from('responses').update({ evento_id: eventoId }).in('id', ids);
+    if (error) throw new Error('Não foi possível vincular: ' + error.message);
+    (cache.respostas || []).forEach(r => { if (ids.includes(r.id)) r.evento_id = eventoId; });
+  };
+  A.dataEvento = ev => ev.data ? new Date(ev.data + 'T12:00:00').toLocaleDateString('pt-BR', { day: '2-digit', month: 'short', year: 'numeric' }).replace('.', '') : 'Sem data';
+  A.eventoFuturo = ev => ev.data && ev.data >= RH.hoje();
+
   A.lerDado = async (empresa, chave) => {
     const { data, error } = await sb().from('programa_dados').select('valor').eq('empresa', A.chavePrograma(empresa)).eq('chave', chave).maybeSingle();
     if (error) throw new Error(error.message);
@@ -118,8 +148,9 @@ window.App = (function () {
   };
 
   // ── Links dos formulários ────────────────────────────
-  A.link = (formId, empresa) => location.origin + '/r/' + formId + '.html' + (empresa ? '?empresa=' + encodeURIComponent(empresa) : '');
-  A.linkPreencher = (formId, empresa) => '/f/?f=' + encodeURIComponent(formId) + (empresa ? '&empresa=' + encodeURIComponent(empresa) : '');
+  const params = (empresa, evento) => [empresa && 'empresa=' + encodeURIComponent(empresa), evento && 'evento=' + encodeURIComponent(evento)].filter(Boolean);
+  A.link = (formId, empresa, evento) => { const p = params(empresa, evento); return location.origin + '/r/' + formId + '.html' + (p.length ? '?' + p.join('&') : ''); };
+  A.linkPreencher = (formId, empresa, evento) => '/f/?' + ['f=' + encodeURIComponent(formId), ...params(empresa, evento)].join('&');
 
   // ── Interface ────────────────────────────────────────
   A.toast = msg => {
@@ -217,15 +248,17 @@ window.App = (function () {
   A.ic = (nome, tamanho = 18) => RH.icone(nome, { tamanho });
 
   // ── Enviar formulário ────────────────────────────────
-  A.abrirEnvio = async ({ formId = '', empresa = '' } = {}) => {
+  A.abrirEnvio = async ({ formId = '', empresa = '', evento = null } = {}) => {
     const clientes = await A.clientes().catch(() => []);
+    const doEvento = evento && evento.formularios && evento.formularios.length ? evento.formularios : null;
     const opcoes = (window.RH_CATEGORIAS || []).map(cat => {
-      const fs = F.lista().filter(f => f.categoria === cat.id && !f.interno);
+      const fs = F.lista().filter(f => f.categoria === cat.id && !f.interno && (!doEvento || doEvento.includes(f.id)));
       return fs.length ? `<optgroup label="${esc(cat.titulo)}">${fs.map(f => `<option value="${f.id}"${f.id === formId ? ' selected' : ''}>${esc(f.titulo)}</option>`).join('')}</optgroup>` : '';
     }).join('');
     const m = A.modal({
-      titulo: 'Enviar formulário',
+      titulo: evento ? 'Enviar formulário do evento' : 'Enviar formulário',
       corpo: `
+        ${evento ? `<div class="alert alert-ok" style="margin-bottom:16px">${RH.icone('agenda', { tamanho: 15 })} As respostas ficam ligadas ao evento <strong>${esc(evento.nome)}</strong>.</div>` : ''}
         <div class="field"><label class="label" for="ev-form">Formulário</label><select class="select" id="ev-form">${opcoes}</select></div>
         <div class="field"><label class="label" for="ev-emp">Cliente</label>
           <input class="input" id="ev-emp" list="ev-lista" placeholder="Nome da empresa (opcional)" value="${esc(empresa)}" autocomplete="off">
@@ -239,7 +272,7 @@ window.App = (function () {
     const atualizar = () => {
       const f = F.get($('#ev-form').value);
       const emp = RH.normalizarEmpresa($('#ev-emp').value);
-      const link = A.link(f.id, emp);
+      const link = A.link(f.id, emp, evento && evento.id);
       $('#ev-link').value = link;
       if (!$('#ev-msg').dataset.editado) {
         $('#ev-msg').value = `Olá! Tudo bem?\n\nSegue o link do formulário *${f.tituloPublico || f.titulo}*${emp ? ' da ' + emp : ''}. Leva cerca de ${f.tempo || 'alguns minutos'} e as respostas são confidenciais.\n\n${link}\n\nObrigada!\n${RH_CONFIG.consultora} · RH com Propósito`;
@@ -249,7 +282,7 @@ window.App = (function () {
       const msg = $('#ev-msg').value;
       $('#ev-wa').href = 'https://wa.me/?text=' + encodeURIComponent(msg);
       $('#ev-email').href = 'mailto:?subject=' + encodeURIComponent((f.tituloPublico || f.titulo) + ' — RH com Propósito') + '&body=' + encodeURIComponent(msg);
-      $('#ev-abrir').href = A.linkPreencher(f.id, emp);
+      $('#ev-abrir').href = A.linkPreencher(f.id, emp, evento && evento.id);
     };
     $('#ev-form').addEventListener('change', () => { delete $('#ev-msg').dataset.editado; atualizar(); });
     $('#ev-emp').addEventListener('input', atualizar);
@@ -299,6 +332,7 @@ window.App = (function () {
   // ── Navegação ────────────────────────────────────────
   const ROTAS = [
     [/^\/$/, 'inicio'], [/^\/clientes$/, 'clientes'], [/^\/clientes\/([^/]+)$/, 'cliente'],
+    [/^\/eventos$/, 'eventos'], [/^\/eventos\/([^/]+)$/, 'evento'],
     [/^\/formularios$/, 'formularios'], [/^\/respostas(?:\/([^/]+))?$/, 'respostas'],
     [/^\/satisfacao$/, 'satisfacao'], [/^\/programa$/, 'programa'], [/^\/programa\/([^/]+)$/, 'programaCliente'],
     [/^\/materiais$/, 'materiais'], [/^\/conta$/, 'conta'], [/^\/mais$/, 'mais']

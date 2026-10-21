@@ -11,9 +11,9 @@ Site estático (HTML + JavaScript puro, sem build) publicado na Vercel. Os dados
 ```
 index.html                Login (com "esqueci minha senha")
 app/                      Área da consultora (login obrigatório)
-  index.html  core.js  telas.js
-                          Início · Clientes · Formulários · Respostas · Satisfação ·
-                          Programa · Materiais · Minha conta
+  index.html  core.js  telas.js  eventos.js
+                          Início · Clientes · Eventos · Formulários · Respostas ·
+                          Satisfação · Programa · Materiais · Minha conta
   guia.html               Guia do consultor: mapa de condução, manual e checklists
 f/index.html              Página única que exibe qualquer formulário: f/?f=<id>&empresa=<nome>
 r/<id>.html               Links curtos enviados ao cliente (prévia no WhatsApp) → f/
@@ -51,11 +51,13 @@ Não renomeie o `id` de um formulário nem de um campo que já tenha respostas: 
 - `responses`: todas as respostas. O público só insere; ler, editar e apagar exige login de um e-mail em `admin_users` (RLS).
 - `clientes`: cadastro de clientes. As respostas são ligadas ao cliente pelo nome da empresa e pelas *outras grafias* cadastradas (sem diferenciar maiúsculas e acentos).
 - `programa_dados`: progresso do Programa e avaliação da comunicação, por cliente.
+- `eventos`: palestras e encontros (data, local, formulários do evento, presença marcada no dia e participantes incluídos à mão). Respostas enviadas pelo link de um evento levam `?evento=<id>` e ficam com `responses.evento_id`; respostas antigas podem ser vinculadas pela página do evento.
 - `empresas`, `contagem_secoes`, `respostas_detalhadas`: views para relatórios em SQL.
 
 Migrações em `supabase/` (rodar em ordem no SQL Editor; podem ser repetidas):
 1. `001_seguranca.sql`: políticas de acesso, administradoras, views.
 2. `002_clientes.sql`: tabela de clientes.
+3. `003_eventos.sql`: eventos e a coluna `evento_id` nas respostas.
 
 **Administradora nova**: crie o usuário em Authentication → Users e rode
 `insert into admin_users (email) values ('email@exemplo.com');`
