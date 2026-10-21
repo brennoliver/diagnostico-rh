@@ -15,6 +15,7 @@
 <link rel="stylesheet" href="../css/rh.css">
 <link rel="icon" href="../img/favicon.svg" type="image/svg+xml">
 <script src="../js/logo.js"></script>
+<script src="../js/icones.js"></script>
 </head>
 <body>
 
@@ -49,7 +50,7 @@
 
   if (!form) {
     document.documentElement.style.setProperty('--faixa', '220px');
-    raiz.innerHTML = '<div class="pf-end"><div class="pf-end-ico">🔎</div><h1>Formulário não encontrado</h1><p>Confira o link recebido ou fale com a consultora.</p></div>';
+    raiz.innerHTML = '<div class="pf-end"><div class="pf-end-ico">' + RH.icone('busca', { tamanho: 36 }) + '</div><h1>Formulário não encontrado</h1><p>Confira o link recebido ou fale com a consultora.</p></div>';
     return;
   }
   document.title = (form.tituloPublico || form.titulo) + ' — RH com Propósito';
@@ -65,7 +66,7 @@
   }
   if (form.interno && !interno) {
     document.documentElement.style.setProperty('--faixa', '220px');
-    raiz.innerHTML = `<div class="pf-end"><div class="pf-end-ico">🔒</div><h1>Formulário de uso interno</h1>
+    raiz.innerHTML = `<div class="pf-end"><div class="pf-end-ico">${RH.icone('cadeado', { tamanho: 36 })}</div><h1>Formulário de uso interno</h1>
       <p>Este formulário é preenchido pela consultora.</p>
       <a class="btn btn-lg" href="../?volta=${encodeURIComponent(location.pathname + location.search)}">Entrar</a></div>`;
     return;

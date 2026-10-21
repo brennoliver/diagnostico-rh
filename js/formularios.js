@@ -15,11 +15,11 @@
 // sub:     campo complementar exibido junto da pergunta anterior.
 // ═══════════════════════════════════════════════════
 window.RH_CATEGORIAS = [
-  { id: 'programa',      titulo: 'Programa Construindo Juntos', descricao: 'Diagnóstico organizacional, identidade e cultura.' },
-  { id: 'eventos',       titulo: 'Palestras e eventos',         descricao: 'Antes, durante e depois dos encontros.' },
-  { id: 'satisfacao',    titulo: 'Satisfação',                  descricao: 'Pesquisas pós-serviço.' },
-  { id: 'desenvolvimento', titulo: 'Desenvolvimento',           descricao: 'Planos individuais.' },
-  { id: 'recrutamento',  titulo: 'Recrutamento & Seleção',      descricao: 'Do briefing da vaga à integração.' }
+  { id: 'programa',      icone: 'broto',      titulo: 'Programa Construindo Juntos', descricao: 'Diagnóstico organizacional, identidade e cultura.' },
+  { id: 'eventos',       icone: 'agenda',     titulo: 'Palestras e eventos',         descricao: 'Antes, durante e depois dos encontros.' },
+  { id: 'satisfacao',    icone: 'estrela',    titulo: 'Satisfação',                  descricao: 'Pesquisas pós-serviço.' },
+  { id: 'desenvolvimento', icone: 'alvo',     titulo: 'Desenvolvimento',           descricao: 'Planos individuais.' },
+  { id: 'recrutamento',  icone: 'maleta',     titulo: 'Recrutamento & Seleção',      descricao: 'Do briefing da vaga à integração.' }
 ];
 
 (function () {
@@ -39,12 +39,12 @@ window.RH_CATEGORIAS = [
 
   // ─────────────────────────── PROGRAMA ───────────────────────────
   {
-    id: 'pre_diagnostico', categoria: 'programa', icone: '📋',
+    id: 'pre_diagnostico', categoria: 'programa', icone: 'prancheta',
     titulo: 'Pré-Diagnóstico Organizacional',
     descricao: 'Enviado ao cliente antes das entrevistas — equipe, liderança, cultura e objetivos.',
     publico: 'Responsável pela empresa', tempo: '10 minutos', passoAPasso: true,
     intro: 'Antes da nossa primeira conversa, gostaria de conhecer um pouco mais sobre sua empresa. Este questionário foi elaborado para que nosso encontro seja mais produtivo, direcionado às reais necessidades do seu negócio.\n\nDesde já, obrigada pela confiança.',
-    agradecimento: 'Suas respostas foram enviadas com sucesso. Obrigada pela confiança. Até nossa próxima conversa. 🌿',
+    agradecimento: 'Suas respostas foram enviadas com sucesso. Obrigada pela confiança. Até nossa próxima conversa.',
     mapa: { company: ['empresa'], nome: ['responsavel'], cargo_setor: ['cargo'] },
     secoes: [
       { titulo: 'Informações da empresa', campos: [
@@ -100,7 +100,7 @@ window.RH_CATEGORIAS = [
   },
 
   {
-    id: 'direcao', categoria: 'programa', icone: '🏛️', etapa: 'Seção 1',
+    id: 'direcao', categoria: 'programa', icone: 'instituicao', etapa: 'Seção 1',
     titulo: 'Reunião com a Direção',
     descricao: 'Visão estratégica e expectativas para a empresa.',
     publico: 'Diretores e sócios', tempo: '10 minutos',
@@ -125,7 +125,7 @@ window.RH_CATEGORIAS = [
   },
 
   {
-    id: 'gestores', categoria: 'programa', icone: '👥', etapa: 'Seção 2',
+    id: 'gestores', categoria: 'programa', icone: 'pessoas', etapa: 'Seção 2',
     titulo: 'Entrevista com Gestores',
     descricao: 'Desafios de liderança e gestão de equipes.',
     publico: 'Gestores e líderes', tempo: '10 minutos',
@@ -149,7 +149,7 @@ window.RH_CATEGORIAS = [
   },
 
   {
-    id: 'colaboradores', categoria: 'programa', icone: '💬', etapa: 'Seção 3',
+    id: 'colaboradores', categoria: 'programa', icone: 'conversa', etapa: 'Seção 3',
     titulo: 'Conversa com Colaboradores',
     descricao: 'Percepção da equipe sobre a empresa e o trabalho.',
     publico: 'Colaboradores', tempo: '8 minutos',
@@ -173,7 +173,7 @@ window.RH_CATEGORIAS = [
   },
 
   {
-    id: 'identidade', categoria: 'programa', icone: '🏢', etapa: 'Seção 4',
+    id: 'identidade', categoria: 'programa', icone: 'clientes', etapa: 'Seção 4',
     titulo: 'Identidade Organizacional',
     descricao: 'História, cultura, missão, visão, valores e compromisso da empresa.',
     publico: 'Direção', tempo: '20 minutos',
@@ -198,7 +198,7 @@ window.RH_CATEGORIAS = [
   },
 
   {
-    id: 'cartilha', categoria: 'programa', icone: '📘', etapa: 'Seção 5',
+    id: 'cartilha', categoria: 'programa', icone: 'caderno', etapa: 'Seção 5',
     titulo: 'Cartilha de Cultura',
     descricao: 'Conteúdo da Cartilha de Cultura Organizacional — gera o documento pronto para imprimir.',
     publico: 'Direção', tempo: '25 minutos', passoAPasso: true, aoEnviar: 'cartilha',
@@ -239,7 +239,7 @@ window.RH_CATEGORIAS = [
   },
 
   {
-    id: 'rhcp_direcao', categoria: 'programa', icone: '🏛️', etapa: 'Diagnóstico 3.5',
+    id: 'rhcp_direcao', categoria: 'programa', icone: 'instituicao', etapa: 'Diagnóstico 3.5',
     titulo: 'Questionário RHCP — Direção',
     descricao: '10 questões objetivas e subjetivas para diretores e sócios.',
     publico: 'Diretores e sócios', tempo: '15 minutos', numerar: true, imprimivel: true,
@@ -274,7 +274,7 @@ window.RH_CATEGORIAS = [
   },
 
   {
-    id: 'rhcp_gestores', categoria: 'programa', icone: '👥', etapa: 'Diagnóstico 3.7',
+    id: 'rhcp_gestores', categoria: 'programa', icone: 'pessoas', etapa: 'Diagnóstico 3.7',
     titulo: 'Questionário RHCP — Gestores',
     descricao: '10 questões para líderes: equipe, comunicação, feedback e processos.',
     publico: 'Gestores e líderes', tempo: '15 minutos', numerar: true, imprimivel: true,
@@ -308,7 +308,7 @@ window.RH_CATEGORIAS = [
   },
 
   {
-    id: 'rhcp_colaboradores', categoria: 'programa', icone: '💬', etapa: 'Diagnóstico 3.8',
+    id: 'rhcp_colaboradores', categoria: 'programa', icone: 'conversa', etapa: 'Diagnóstico 3.8',
     titulo: 'Questionário RHCP — Colaboradores',
     descricao: '10 questões sobre clima, liderança, comunicação e percepção geral.',
     publico: 'Colaboradores', tempo: '12 minutos', numerar: true, imprimivel: true,
@@ -344,7 +344,7 @@ window.RH_CATEGORIAS = [
 
   // ─────────────────────────── EVENTOS ───────────────────────────
   {
-    id: 'pre_palestra_executivo', categoria: 'eventos', icone: '🎤',
+    id: 'pre_palestra_executivo', categoria: 'eventos', icone: 'microfone',
     titulo: 'Pré-Palestra Executivo',
     descricao: 'Conversa com a direção antes da palestra — orienta a personalização do encontro.',
     publico: 'Direção executiva', tempo: '10 a 15 minutos', numerar: true,
@@ -387,7 +387,7 @@ window.RH_CATEGORIAS = [
   },
 
   {
-    id: 'questionario', categoria: 'eventos', icone: '📝',
+    id: 'questionario', categoria: 'eventos', icone: 'formularios',
     titulo: 'Questionário de Diagnóstico — Palestra',
     descricao: 'Levantamento de diagnóstico em contexto de palestras e eventos (14 perguntas).',
     publico: 'Direção', tempo: '10 minutos', passoAPasso: true, numerar: true,
@@ -424,20 +424,20 @@ window.RH_CATEGORIAS = [
   },
 
   {
-    id: 'confirmacao_evento', categoria: 'eventos', icone: '🎉',
+    id: 'confirmacao_evento', categoria: 'eventos', icone: 'agenda',
     titulo: 'Confirmação de Presença',
     descricao: 'Convite do evento do Projeto Construindo Juntos — sorteio de brindes, prêmio surpresa e coffee break.',
     publico: 'Convidados', tempo: '1 minuto',
-    tituloPublico: 'Você é o nosso convidado especial! ✨',
-    intro: 'Estamos preparando um momento pensado especialmente para você.\n🎁 Sorteio de vários brindes · 🏆 Prêmio surpresa · ☕ Coffee break',
-    agradecimento: 'Obrigado! Estamos felizes em contar com a sua presença. Prepare-se para um momento incrível. Até lá! 🌿',
+    tituloPublico: 'Você é o nosso convidado especial!',
+    intro: 'Estamos preparando um momento pensado especialmente para você: sorteio de vários brindes, prêmio surpresa e coffee break.',
+    agradecimento: 'Obrigado! Estamos felizes em contar com a sua presença. Prepare-se para um momento incrível. Até lá!',
     mapa: { nome: ['nome'], cargo_setor: ['setor'] },
     secoes: [
       { titulo: 'Confirme sua presença', campos: [
         { id: 'nome', tipo: 'texto', rotulo: 'Nome completo', placeholder: 'Seu nome completo', obrigatorio: true },
         { id: 'setor', tipo: 'texto', rotulo: 'Setor', placeholder: 'Ex: Financeiro, RH, Operações…', obrigatorio: true },
         { id: 'participacao', tipo: 'radio', rotulo: 'Você irá participar do evento?', obrigatorio: true, opcoes: ['Sim', 'Não'],
-          rotulosOpcoes: { 'Sim': '✅ Sim, estarei presente!', 'Não': '❌ Não poderei comparecer' } },
+          rotulosOpcoes: { 'Sim': 'Sim, estarei presente!', 'Não': 'Não poderei comparecer' } },
         { id: 'motivo', tipo: 'textarea', rotulo: 'Motivo da ausência (opcional)', placeholder: 'Se quiser, nos conte o motivo…', linhas: 3, mostrarSe: { participacao: 'Não' } }
       ]}
     ]
@@ -445,12 +445,12 @@ window.RH_CATEGORIAS = [
 
   // ─────────────────────────── SATISFAÇÃO ───────────────────────────
   {
-    id: 'pesquisa_experiencia', categoria: 'satisfacao', icone: '⭐',
+    id: 'pesquisa_experiencia', categoria: 'satisfacao', icone: 'estrela',
     titulo: 'Pesquisa de Experiência',
     descricao: 'Enviada após o serviço — percepção da experiência, envolvimento da equipe e NPS.',
     publico: 'Clientes', tempo: '2 minutos', numerar: true, satisfacao: { nps: 'q8_nps', geral: 'q1_avaliacao', escala: 'q2_organizacao', frase: 'q9_frase', comentarios: ['q5_valor', 'q6_impacto', 'q7_melhoria'] },
     intro: 'Sua percepção é muito importante para nós. Esta pesquisa tem como objetivo compreender como foi a experiência da empresa com o RH com Propósito e identificar oportunidades para tornar nossos próximos encontros ainda mais significativos.',
-    agradecimento: 'Sua percepção foi registrada com sucesso. Cada resposta nos ajuda a construir encontros cada vez mais significativos.\n\nPorque todo resultado começa com pessoas. 💚',
+    agradecimento: 'Sua percepção foi registrada com sucesso. Cada resposta nos ajuda a construir encontros cada vez mais significativos.\n\nPorque todo resultado começa com pessoas.',
     encerramento: 'Obrigada por fazer parte dessa construção. Cada encontro nos ajuda a reafirmar aquilo em que acreditamos: porque todo resultado começa com pessoas.',
     mapa: { company: ['empresa'], nome: ['nome'], cargo_setor: ['cargo'] },
     secoes: [
@@ -479,7 +479,7 @@ window.RH_CATEGORIAS = [
 
   // ─────────────────────────── DESENVOLVIMENTO ───────────────────────────
   {
-    id: 'pdi', categoria: 'desenvolvimento', icone: '🎯',
+    id: 'pdi', categoria: 'desenvolvimento', icone: 'alvo',
     titulo: 'PDI — Plano de Desenvolvimento Individual',
     descricao: 'Transforma os resultados do diagnóstico em ações práticas de desenvolvimento.',
     publico: 'Líder e colaborador', tempo: '20 minutos', passoAPasso: true, imprimivel: true,

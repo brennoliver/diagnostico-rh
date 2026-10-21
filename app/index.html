@@ -12,6 +12,7 @@
 <link rel="stylesheet" href="../css/rh.css">
 <link rel="icon" href="../img/favicon.svg" type="image/svg+xml">
 <script src="../js/logo.js"></script>
+<script src="../js/icones.js"></script>
 </head>
 <body>
 <div class="app hidden" id="app">
@@ -19,20 +20,20 @@
     <a href="#/" class="side-logo logo" data-logo="completa" data-tema="escuro" aria-label="Início"></a>
     <nav class="nav">
       <div class="nav-label">Dia a dia</div>
-      <a href="#/" data-nav="/"><span class="nav-ico">🏠</span>Início</a>
-      <a href="#/clientes" data-nav="/clientes"><span class="nav-ico">🏢</span>Clientes</a>
-      <a href="#/formularios" data-nav="/formularios"><span class="nav-ico">📝</span>Formulários</a>
-      <a href="#/respostas" data-nav="/respostas"><span class="nav-ico">📥</span>Respostas</a>
-      <a href="#/satisfacao" data-nav="/satisfacao"><span class="nav-ico">⭐</span>Satisfação</a>
+      <a href="#/" data-nav="/"><span class="nav-ico" data-ic="inicio"></span>Início</a>
+      <a href="#/clientes" data-nav="/clientes"><span class="nav-ico" data-ic="clientes"></span>Clientes</a>
+      <a href="#/formularios" data-nav="/formularios"><span class="nav-ico" data-ic="formularios"></span>Formulários</a>
+      <a href="#/respostas" data-nav="/respostas"><span class="nav-ico" data-ic="respostas"></span>Respostas</a>
+      <a href="#/satisfacao" data-nav="/satisfacao"><span class="nav-ico" data-ic="estrela"></span>Satisfação</a>
       <div class="nav-sep"></div>
       <div class="nav-label">Consultoria</div>
-      <a href="#/programa" data-nav="/programa"><span class="nav-ico">🌱</span>Programa</a>
-      <a href="#/materiais" data-nav="/materiais"><span class="nav-ico">📚</span>Materiais</a>
+      <a href="#/programa" data-nav="/programa"><span class="nav-ico" data-ic="broto"></span>Programa</a>
+      <a href="#/materiais" data-nav="/materiais"><span class="nav-ico" data-ic="livro"></span>Materiais</a>
     </nav>
     <div class="side-foot">
-      <button class="btn btn-gold btn-block" data-enviar>Enviar formulário</button>
+      <button class="btn btn-gold btn-block" data-enviar><span data-ic="enviar" data-tam="16"></span> Enviar formulário</button>
       <a class="side-user" href="#/conta"><span class="avatar">CR</span><span style="min-width:0;flex:1"><strong>Cristiele Rodrigues</strong><span data-email></span></span></a>
-      <button class="btn btn-ghost btn-sm btn-block" data-sair style="color:rgba(233,241,236,.65);margin-top:6px">Sair</button>
+      <button class="btn btn-ghost btn-sm btn-block" data-sair style="color:rgba(233,241,236,.65);margin-top:6px"><span data-ic="sair" data-tam="16"></span> Sair</button>
     </div>
   </aside>
 
@@ -44,11 +45,11 @@
   <main class="main" id="main"></main>
 
   <nav class="bottom-nav" aria-label="Menu">
-    <a href="#/" data-nav="/"><span class="nav-ico">🏠</span>Início</a>
-    <a href="#/clientes" data-nav="/clientes"><span class="nav-ico">🏢</span>Clientes</a>
-    <a href="#/formularios" data-nav="/formularios"><span class="nav-ico">📝</span>Formulários</a>
-    <a href="#/respostas" data-nav="/respostas"><span class="nav-ico">📥</span>Respostas</a>
-    <a href="#/mais" data-nav="/mais"><span class="nav-ico">☰</span>Mais</a>
+    <a href="#/" data-nav="/"><span class="nav-ico" data-ic="inicio"></span>Início</a>
+    <a href="#/clientes" data-nav="/clientes"><span class="nav-ico" data-ic="clientes"></span>Clientes</a>
+    <a href="#/formularios" data-nav="/formularios"><span class="nav-ico" data-ic="formularios"></span>Formulários</a>
+    <a href="#/respostas" data-nav="/respostas"><span class="nav-ico" data-ic="respostas"></span>Respostas</a>
+    <a href="#/mais" data-nav="/mais"><span class="nav-ico" data-ic="menu"></span>Mais</a>
   </nav>
 </div>
 
