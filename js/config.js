@@ -12,11 +12,11 @@ window.RH_CONFIG = {
 
   // Materiais de apoio exibidos em "Materiais"
   materiais: [
-    { titulo: 'Apostila — Liderança com Propósito', descricao: 'Material do workshop de liderança: conteúdo, atividades práticas e dinâmicas.', url: '/materiais/apostila.html', publico: true, icone: '📚' },
-    { titulo: 'Líderes que Inspiram — material de leitura', descricao: 'Os 4 módulos do treinamento de liderança, com reflexões e atividade final.', url: '/materiais/lideres.html', publico: true, icone: '📖' },
-    { titulo: 'Líderes que Inspiram', descricao: 'Apresentação do treinamento de liderança — 22 slides.', url: '/apresentacoes/lideres-slides.html', icone: '🌟' },
-    { titulo: 'Construindo Pertencimento', descricao: 'Programa de engajamento — 14 slides com os 4 módulos.', url: '/apresentacoes/pertencimento-slides.html', icone: '🤝' },
-    { titulo: 'Treinamentos e Workshops', descricao: 'Etapa 5 — os 5 workshops comportamentais.', url: '/apresentacoes/treinamentos-slides.html', icone: '🎓' },
-    { titulo: 'Acompanhamento Estratégico', descricao: 'Etapa 6 — presença contínua durante 6 meses.', url: '/apresentacoes/acompanhamento-slides.html', icone: '🌿' }
+    { titulo: 'Apostila — Liderança com Propósito', descricao: 'Material do workshop de liderança: conteúdo, atividades práticas e dinâmicas.', url: '/materiais/apostila.html', publico: true, icone: 'livro' },
+    { titulo: 'Líderes que Inspiram — material de leitura', descricao: 'Os 4 módulos do treinamento de liderança, com reflexões e atividade final.', url: '/materiais/lideres.html', publico: true, icone: 'caderno' },
+    { titulo: 'Líderes que Inspiram', descricao: 'Apresentação do treinamento de liderança — 22 slides.', url: '/apresentacoes/lideres-slides.html', icone: 'apresentacao' },
+    { titulo: 'Construindo Pertencimento', descricao: 'Programa de engajamento — 14 slides com os 4 módulos.', url: '/apresentacoes/pertencimento-slides.html', icone: 'apresentacao' },
+    { titulo: 'Treinamentos e Workshops', descricao: 'Etapa 5 — os 5 workshops comportamentais.', url: '/apresentacoes/treinamentos-slides.html', icone: 'apresentacao' },
+    { titulo: 'Acompanhamento Estratégico', descricao: 'Etapa 6 — presença contínua durante 6 meses.', url: '/apresentacoes/acompanhamento-slides.html', icone: 'apresentacao' }
   ]
 };

@@ -7,7 +7,7 @@ window.RH_FORMULARIOS = (window.RH_FORMULARIOS || []).concat([
   "titulo": "Briefing Inicial da Vaga",
   "modulo": "Módulo 1",
   "categoria": "recrutamento",
-  "icone": "🔍",
+  "icone": "selecao",
   "descricao": "Levantamento inicial das necessidades de contratação",
   "mapa": {
    "company": [
@@ -178,7 +178,7 @@ window.RH_FORMULARIOS = (window.RH_FORMULARIOS || []).concat([
   "titulo": "Reunião com o Gestor da Vaga",
   "modulo": "Módulo 2",
   "categoria": "recrutamento",
-  "icone": "🔍",
+  "icone": "selecao",
   "descricao": "Alinhamento aprofundado sobre a necessidade de contratação",
   "mapa": {
    "company": [
@@ -317,7 +317,7 @@ window.RH_FORMULARIOS = (window.RH_FORMULARIOS || []).concat([
   "titulo": "Perfil do Cargo / Persona da Vaga",
   "modulo": "Módulo 3",
   "categoria": "recrutamento",
-  "icone": "🔍",
+  "icone": "selecao",
   "descricao": "Construção detalhada do perfil ideal para a posição",
   "mapa": {
    "company": [
@@ -532,7 +532,7 @@ window.RH_FORMULARIOS = (window.RH_FORMULARIOS || []).concat([
   "titulo": "Proposta Comercial",
   "modulo": "Módulo 4",
   "categoria": "recrutamento",
-  "icone": "🔍",
+  "icone": "selecao",
   "descricao": "Formalização das condições comerciais do processo seletivo",
   "mapa": {
    "company": [
@@ -681,7 +681,7 @@ window.RH_FORMULARIOS = (window.RH_FORMULARIOS || []).concat([
   "titulo": "Planejamento e Controle da Divulgação",
   "modulo": "Módulo 5",
   "categoria": "recrutamento",
-  "icone": "🔍",
+  "icone": "selecao",
   "descricao": "Estratégia de atração e divulgação da vaga",
   "mapa": {
    "company": [
@@ -814,7 +814,7 @@ window.RH_FORMULARIOS = (window.RH_FORMULARIOS || []).concat([
   "titulo": "Triagem de Currículos",
   "modulo": "Módulo 6",
   "categoria": "recrutamento",
-  "icone": "🔍",
+  "icone": "selecao",
   "descricao": "Avaliação e classificação dos candidatos recebidos",
   "mapa": {
    "company": [
@@ -1088,7 +1088,7 @@ window.RH_FORMULARIOS = (window.RH_FORMULARIOS || []).concat([
   "titulo": "Pré-Entrevista",
   "modulo": "Módulo 7",
   "categoria": "recrutamento",
-  "icone": "🔍",
+  "icone": "selecao",
   "descricao": "Triagem por telefone / online com o candidato",
   "mapa": {
    "company": [
@@ -1258,7 +1258,7 @@ window.RH_FORMULARIOS = (window.RH_FORMULARIOS || []).concat([
   "titulo": "Entrevista por Competências",
   "modulo": "Módulo 8",
   "categoria": "recrutamento",
-  "icone": "🔍",
+  "icone": "selecao",
   "descricao": "Roteiro estruturado de entrevista comportamental (método STAR)",
   "mapa": {
    "company": [
@@ -1530,7 +1530,7 @@ window.RH_FORMULARIOS = (window.RH_FORMULARIOS || []).concat([
   "titulo": "Relatório do Candidato",
   "modulo": "Módulo 10",
   "categoria": "recrutamento",
-  "icone": "🔍",
+  "icone": "selecao",
   "descricao": "Histórico preenchido pelo candidato · Avaliação pela consultora",
   "mapa": {
    "company": [
@@ -1811,7 +1811,7 @@ window.RH_FORMULARIOS = (window.RH_FORMULARIOS || []).concat([
   "titulo": "Apresentação dos Finalistas ao Cliente",
   "modulo": "Módulo 11",
   "categoria": "recrutamento",
-  "icone": "🔍",
+  "icone": "selecao",
   "descricao": "Comparativo e decisão final entre os candidatos aprovados",
   "mapa": {
    "company": [
@@ -2099,7 +2099,7 @@ window.RH_FORMULARIOS = (window.RH_FORMULARIOS || []).concat([
   "titulo": "Contratação e Formalização",
   "modulo": "Módulo 12",
   "categoria": "recrutamento",
-  "icone": "🔍",
+  "icone": "selecao",
   "descricao": "Checklist de admissão e formalização do candidato aprovado",
   "mapa": {
    "company": [
@@ -2257,7 +2257,7 @@ window.RH_FORMULARIOS = (window.RH_FORMULARIOS || []).concat([
   "titulo": "Integração e Acompanhamento (Onboarding)",
   "modulo": "Módulo 13",
   "categoria": "recrutamento",
-  "icone": "🔍",
+  "icone": "selecao",
   "descricao": "Monitoramento da adaptação do novo colaborador",
   "mapa": {
    "company": [

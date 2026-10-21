@@ -139,7 +139,7 @@ window.App = (function () {
     const back = document.createElement('div');
     back.className = 'modal-back';
     back.innerHTML = `<div class="modal${largo ? ' modal-wide' : ''}" role="dialog" aria-modal="true" aria-label="${esc(titulo)}">
-      <div class="modal-head"><h2>${esc(titulo)}</h2><button class="btn btn-ghost btn-icon" data-fechar aria-label="Fechar">✕</button></div>
+      <div class="modal-head"><h2>${esc(titulo)}</h2><button class="btn btn-ghost btn-icon" data-fechar aria-label="Fechar">${RH.icone('fechar')}</button></div>
       <div class="modal-body">${corpo}</div>${rodape ? `<div class="modal-foot">${rodape}</div>` : ''}</div>`;
     const anterior = document.activeElement;
     const fechar = () => { back.remove(); document.removeEventListener('keydown', esc_); anterior && anterior.focus && anterior.focus(); };
@@ -213,7 +213,8 @@ window.App = (function () {
     });
   };
 
-  A.vazio = (icone, titulo, texto = '', acao = '') => `<div class="empty"><div class="empty-icon">${icone}</div><strong>${esc(titulo)}</strong>${esc(texto)}${acao ? `<div style="margin-top:14px">${acao}</div>` : ''}</div>`;
+  A.vazio = (icone, titulo, texto = '', acao = '') => `<div class="empty"><div class="empty-icon">${RH.icone(icone, { tamanho: 28 })}</div><strong>${esc(titulo)}</strong>${esc(texto)}${acao ? `<div style="margin-top:14px">${acao}</div>` : ''}</div>`;
+  A.ic = (nome, tamanho = 18) => RH.icone(nome, { tamanho });
 
   // ── Enviar formulário ────────────────────────────────
   A.abrirEnvio = async ({ formId = '', empresa = '' } = {}) => {
@@ -232,7 +233,7 @@ window.App = (function () {
           <p class="small muted" style="margin-top:6px">O nome da empresa já vai preenchido para quem responder e as respostas aparecem no cadastro do cliente.</p></div>
         <div class="field"><label class="label" for="ev-link">Link</label><div class="row" style="flex-wrap:nowrap"><input class="input" id="ev-link" readonly><button class="btn btn-sec" id="ev-copiar">Copiar</button></div></div>
         <div class="field"><label class="label" for="ev-msg">Mensagem</label><textarea class="textarea" id="ev-msg" rows="5"></textarea></div>`,
-      rodape: `<a class="btn btn-sec" id="ev-abrir" target="_blank" rel="noopener">Abrir formulário ↗</a><a class="btn btn-sec" id="ev-email">✉️ E-mail</a><a class="btn btn-wa" id="ev-wa" target="_blank" rel="noopener">WhatsApp</a>`
+      rodape: `<a class="btn btn-sec" id="ev-abrir" target="_blank" rel="noopener">${RH.icone('abrir',{tamanho:16})} Abrir</a><a class="btn btn-sec" id="ev-email">${RH.icone('email',{tamanho:16})} E-mail</a><a class="btn btn-wa" id="ev-wa" target="_blank" rel="noopener">${RH.icone('whatsapp',{tamanho:16})} WhatsApp</a>`
     });
     const $ = s => m.el.querySelector(s);
     const atualizar = () => {
@@ -241,7 +242,7 @@ window.App = (function () {
       const link = A.link(f.id, emp);
       $('#ev-link').value = link;
       if (!$('#ev-msg').dataset.editado) {
-        $('#ev-msg').value = `Olá! Tudo bem? 😊\n\nSegue o link do formulário *${f.tituloPublico || f.titulo}*${emp ? ' da ' + emp : ''}. Leva cerca de ${f.tempo || 'alguns minutos'} e as respostas são confidenciais.\n\n${link}\n\nObrigada!\n${RH_CONFIG.consultora} · RH com Propósito`;
+        $('#ev-msg').value = `Olá! Tudo bem?\n\nSegue o link do formulário *${f.tituloPublico || f.titulo}*${emp ? ' da ' + emp : ''}. Leva cerca de ${f.tempo || 'alguns minutos'} e as respostas são confidenciais.\n\n${link}\n\nObrigada!\n${RH_CONFIG.consultora} · RH com Propósito`;
       } else {
         $('#ev-msg').value = $('#ev-msg').value.replace(/https?:\/\/\S+\/r\/\S+/, link);
       }
@@ -265,13 +266,13 @@ window.App = (function () {
     const corpo = form ? F.htmlResposta(form, row) : `<pre style="white-space:pre-wrap">${esc(JSON.stringify(row, null, 2))}</pre>`;
     const cab = `<div class="row" style="margin-bottom:18px">
         <span class="badge badge-green">${esc(form ? form.titulo : row.section)}</span>
-        ${row.company ? (cli ? `<a class="badge badge-gold" href="#/clientes/${cli.id}" data-fechar>🏢 ${esc(cli.nome)}</a>` : `<span class="badge badge-gold">🏢 ${esc(row.company)}</span>`) : ''}
-        <span class="badge">📅 ${esc(A.dataBR(A.dataResp(row)))}</span></div>
+        ${row.company ? (cli ? `<a class="badge badge-gold" href="#/clientes/${cli.id}" data-fechar>${RH.icone('clientes',{tamanho:13})} ${esc(cli.nome)}</a>` : `<span class="badge badge-gold">${RH.icone('clientes',{tamanho:13})} ${esc(row.company)}</span>`) : ''}
+        <span class="badge">${RH.icone('calendario',{tamanho:13})} ${esc(A.dataBR(A.dataResp(row)))}</span></div>
       ${row.nome ? `<h3 class="serif" style="font-size:22px;margin-bottom:${row.cargo_setor ? 2 : 16}px">${esc(row.nome)}</h3>` : ''}
       ${row.cargo_setor ? `<p class="muted" style="margin-bottom:16px">${esc(row.cargo_setor)}</p>` : ''}`;
     const m = A.modal({
       titulo: 'Resposta', largo: true, corpo: cab + corpo,
-      rodape: `<button class="btn btn-danger" data-excluir>Excluir</button><span class="spacer"></span><button class="btn btn-sec" data-imprimir>🖨️ Imprimir / PDF</button><button class="btn" data-fechar>Fechar</button>`
+      rodape: `<button class="btn btn-danger" data-excluir>Excluir</button><span class="spacer"></span><button class="btn btn-sec" data-imprimir>${RH.icone('imprimir',{tamanho:16})} Imprimir / PDF</button><button class="btn" data-fechar>Fechar</button>`
     });
     m.el.querySelector('[data-imprimir]').addEventListener('click', () => A.imprimir(form ? form.titulo : row.section, cab + corpo));
     m.el.querySelector('[data-excluir]').addEventListener('click', async () => {
@@ -322,7 +323,7 @@ window.App = (function () {
       document.title = (h1 ? h1.textContent + ' — ' : '') + 'RH com Propósito';
     } catch (e) {
       console.error(e);
-      main.innerHTML = `<div class="page"><div class="card">${A.vazio('⚠️', 'Algo deu errado', e.message, '<button class="btn" onclick="location.reload()">Tentar de novo</button>')}</div></div>`;
+      main.innerHTML = `<div class="page"><div class="card">${A.vazio('alerta', 'Algo deu errado', e.message, '<button class="btn" onclick="location.reload()">Tentar de novo</button>')}</div></div>`;
     }
   }
   A.recarregar = rotear;

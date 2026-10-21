@@ -93,8 +93,8 @@ body{font-family:'Lato',sans-serif;background:#d8d8d8;color:var(--text)}
 
 <!-- PRINT TOOLBAR -->
 <div class="print-bar no-print">
-  <button class="print-btn gold" onclick="window.print()">🖨️ Imprimir / Salvar PDF</button>
-  <button class="print-btn" onclick="this.closest('.print-bar').style.display='none'">✕ Fechar barra</button>
+  <button class="print-btn gold" onclick="window.print()">Imprimir / Salvar PDF</button>
+  <button class="print-btn" onclick="this.closest('.print-bar').style.display='none'">Fechar barra</button>
 </div>
 
 <!-- 1. CAPA -->

@@ -272,15 +272,15 @@
         const num = form.numerar && !s.identificacao && !c.sub && c.tipo !== 'consentimento' ? ++numero : 0;
         return blocoCampo(c, num, j === 0);
       }).join('');
-      const badge = s.interno ? '<span class="badge badge-gold" style="margin-bottom:8px">🔒 Uso interno da consultora</span>' : '';
+      const badge = s.interno ? `<span class="badge badge-gold" style="margin-bottom:8px">${RH.icone('cadeado',{tamanho:13})} Uso interno da consultora</span>` : '';
       return `<section class="pf-sec${s.interno ? ' pf-sec-interno' : ''}" data-sec="${i}">
         <div class="pf-sec-head">${badge}<h2>${esc(s.titulo)}</h2>${s.descricao ? `<p>${esc(s.descricao)}</p>` : ''}</div>
         <div class="pf-grid">${campos}</div></section>`;
     }).join('');
 
     const cat = F.categoria(form.categoria);
-    const meta = [form.tempo ? `<span class="badge">⏱ ${esc(form.tempo)}</span>` : '', '<span class="badge badge-green">🔒 Respostas confidenciais</span>',
-      empresa ? `<span class="badge badge-gold">🏢 ${esc(empresa)}</span>` : '', interno ? '<span class="badge badge-blue">Modo consultora</span>' : ''].join('');
+    const meta = [form.tempo ? `<span class="badge">${RH.icone('relogio',{tamanho:13})} ${esc(form.tempo)}</span>` : '', `<span class="badge badge-green">${RH.icone('escudo',{tamanho:13})} Respostas confidenciais</span>`,
+      empresa ? `<span class="badge badge-gold">${RH.icone('clientes',{tamanho:13})} ${esc(empresa)}</span>` : '', interno ? '<span class="badge badge-blue">Modo consultora</span>' : ''].join('');
 
     root.innerHTML = `
       <div class="pf-hero">
@@ -294,7 +294,7 @@
       <form id="pf-form" novalidate>${secoesHtml}</form>
       ${form.encerramento ? `<p class="pf-closing">${esc(form.encerramento)}</p>` : ''}
       <div class="alert alert-error hidden" id="pf-erro" role="alert"></div>
-      ${form.imprimivel ? '<p class="no-print" style="text-align:center;margin-top:18px"><button type="button" class="btn btn-ghost btn-sm" id="pf-imprimir">🖨️ Imprimir formulário</button></p>' : ''}
+      ${form.imprimivel ? `<p class="no-print" style="text-align:center;margin-top:18px"><button type="button" class="btn btn-ghost btn-sm" id="pf-imprimir">${RH.icone('imprimir')} Imprimir formulário</button></p>` : ''}
       <nav class="pf-nav no-print"><div class="pf-nav-in">
         <span class="pf-draft hidden" id="pf-salvo">Rascunho salvo</span><span class="spacer"></span>
         ${passo ? '<button type="button" class="btn btn-sec btn-lg" id="pf-voltar">Voltar</button>' : ''}
@@ -480,12 +480,12 @@
 
     function telaFinal(row) {
       const extras = [];
-      if (form.aoEnviar === 'cartilha') extras.push('<button class="btn btn-gold btn-lg" id="pf-cartilha">🎨 Baixar a Cartilha de Cultura</button>');
-      extras.push('<button class="btn btn-sec btn-lg" id="pf-print">🖨️ Imprimir minhas respostas</button>');
+      if (form.aoEnviar === 'cartilha') extras.push(`<button class="btn btn-gold btn-lg" id="pf-cartilha">${RH.icone('baixar')} Baixar a Cartilha de Cultura</button>`);
+      extras.push(`<button class="btn btn-sec btn-lg" id="pf-print">${RH.icone('imprimir')} Imprimir minhas respostas</button>`);
       if (interno) extras.push('<a class="btn btn-sec btn-lg" href="../app/#/respostas/' + encodeURIComponent(form.id) + '">Ver no painel</a>');
       const copia = root.querySelector('#pf-form').outerHTML;
       root.innerHTML = `<div class="pf-end">
-        <div class="pf-end-ico">${RH.logo ? RH.logo('simbolo', 'escuro') : '🌿'}</div>
+        <div class="pf-end-ico">${RH.logo('simbolo', 'escuro')}</div>
         <h1>Respostas enviadas!</h1>
         <p>${esc(form.agradecimento || 'Obrigada pela sua participação. Suas respostas foram recebidas e contribuirão para o desenvolvimento da equipe.')}</p>
         <div class="row" style="justify-content:center">${extras.join('')}</div>
