@@ -47,6 +47,8 @@
   const p = new URLSearchParams(location.search);
   const form = RHF.get(p.get('f'));
   const empresa = p.get('empresa') || '';
+  // link enviado a partir de um evento: a resposta fica ligada a ele
+  const evento = /^[0-9a-f-]{36}$/i.test(p.get('evento') || '') ? p.get('evento') : '';
 
   if (!form) {
     document.documentElement.style.setProperty('--faixa', '220px');
@@ -71,7 +73,7 @@
       <a class="btn btn-lg" href="../?volta=${encodeURIComponent(location.pathname + location.search)}">Entrar</a></div>`;
     return;
   }
-  RHF.renderizar(raiz, form, { empresa, interno });
+  RHF.renderizar(raiz, form, { empresa, interno, evento });
 
   // A faixa verde do topo termina logo abaixo do título; o primeiro cartão a sobrepõe
   const faixa = () => {

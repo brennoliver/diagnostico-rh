@@ -43,10 +43,13 @@
     return F.nps(respostas.filter(r => r.section === 'pesquisa_experiencia').map(r => F.valores(f, r).v.q8_nps).filter(v => v !== '' && v != null));
   };
   const desktop = () => matchMedia('(min-width: 1100px)').matches;
+  // compartilhados com app/eventos.js
+  A.ui = { cabecalho, stat, anel, badgeStatus, itemResposta, ligarRespostas, desktop };
 
   // ═════════════════════════ INÍCIO ═════════════════════════
   T.inicio = async main => {
-    const [respostas, clientes] = await Promise.all([A.respostas(), A.clientes()]);
+    const [respostas, clientes, eventos] = await Promise.all([A.respostas(), A.clientes(), A.eventos().catch(() => [])]);
+    const proximos = eventos.filter(A.eventoFuturo).sort((a, b) => a.data.localeCompare(b.data));
     const idx = A.indice(clientes);
     const ult7 = respostas.filter(r => A.dentroDe(r, 7)).length;
     const nps = npsDe(respostas);
@@ -81,9 +84,11 @@
         <div class="card" style="grid-column:span 2"><div class="card-head"><h2>Respostas recentes</h2><a class="small" href="#/respostas">Ver todas</a></div>
           <div class="list">${respostas.slice(0, 6).map(r => itemResposta(r, A.clienteDe(r, idx))).join('') || A.vazio('respostas', 'Nenhuma resposta ainda', 'Envie um formulário para começar.')}</div></div>
         <div class="stack" style="gap:18px">
+          ${proximos.length ? `<div class="card"><div class="card-head"><h2>Próximos eventos</h2><a class="small" href="#/eventos">Ver todos</a></div><div class="list">${A.cartoesEventos(proximos, respostas, clientes)}</div></div>` : ''}
           <div class="card"><div class="card-head"><h2>Atalhos</h2></div><div class="list">
             ${atalho('data-atalho="pesquisa_experiencia"', 'estrela', 'Pesquisa de satisfação', 'Depois de cada serviço')}
             ${atalho('data-atalho="pre_diagnostico"', 'prancheta', 'Pré-diagnóstico', 'Para um cliente novo')}
+            ${atalho('data-novo-evento', 'agenda', 'Novo evento', 'Convite, presença e pesquisa')}
             ${atalho('href="#/programa"', 'broto', 'Programa', 'Progresso e relatório')}
             ${atalho('href="#/materiais"', 'livro', 'Materiais', 'Apostila, slides e guia')}
           </div></div>
@@ -95,6 +100,7 @@
     main.querySelector('[data-enviar-form]').addEventListener('click', () => A.abrirEnvio());
     main.querySelector('[data-novo-cliente]').addEventListener('click', () => editarCliente({}));
     main.querySelectorAll('[data-atalho]').forEach(b => b.addEventListener('click', () => A.abrirEnvio({ formId: b.dataset.atalho })));
+    main.querySelector('[data-novo-evento]').addEventListener('click', () => A.editarEvento());
   };
 
   // ═════════════════════════ CLIENTES ═════════════════════════
@@ -216,9 +222,10 @@
   };
 
   T.cliente = async (main, [id], q) => {
-    const [respostas, clientes] = await Promise.all([A.respostas(), A.clientes()]);
+    const [respostas, clientes, todosEventos] = await Promise.all([A.respostas(), A.clientes(), A.eventos().catch(() => [])]);
     const c = clientes.find(x => x.id === id);
     if (!c) { main.innerHTML = `<div class="page"><div class="card">${A.vazio('busca', 'Cliente não encontrado', '', '<a class="btn" href="#/clientes">Ver clientes</a>')}</div></div>`; return; }
+    const eventosCli = todosEventos.filter(e => e.cliente_id === c.id);
     const rs = A.doCliente(c, respostas);
     const porForm = F.lista().map(f => ({ f, rs: rs.filter(r => r.section === f.id) })).filter(x => x.rs.length);
     const fone = (c.telefone || '').replace(/\D/g, '');
@@ -243,7 +250,7 @@
         </div>
       </section>
       <div class="stat-strip">${stat('respostas', rs.length, 'Respostas')}${stat('formularios', porForm.length, 'Formulários')}${stat('calendario', rs.length ? A.relativo(rs[0].created_at) : '—', 'Última resposta')}${stat('broto', p + '%', 'Programa', true)}</div>
-      <div class="tabs" style="margin-bottom:16px"><button class="tab" data-aba="respostas">Respostas</button><button class="tab" data-aba="formularios">Por formulário</button><button class="tab" data-aba="dados">Dados</button></div>
+      <div class="tabs" style="margin-bottom:16px"><button class="tab" data-aba="respostas">Respostas</button><button class="tab" data-aba="formularios">Por formulário</button><button class="tab" data-aba="eventos">Eventos${eventosCli.length ? ' (' + eventosCli.length + ')' : ''}</button><button class="tab" data-aba="dados">Dados</button></div>
       <div id="c-aba"></div>
     </div>`;
 
@@ -255,6 +262,9 @@
           : `<div class="card">${A.vazio('respostas', 'Nenhuma resposta ainda', 'Envie um formulário para este cliente.', `<button class="btn" data-enviar-vazio>${ic('enviar', 16)} Enviar formulário</button>`)}</div>`;
         ligarRespostas(alvo, rs, () => A.recarregar());
         alvo.querySelector('[data-enviar-vazio]')?.addEventListener('click', () => A.abrirEnvio({ empresa: c.nome }));
+      } else if (aba === 'eventos') {
+        alvo.innerHTML = `<div class="card"><div class="card-head"><h2>Eventos</h2><button class="btn btn-sm" data-novo-ev>${ic('mais', 15)} Novo evento</button></div><div class="list">${eventosCli.length ? A.cartoesEventos(eventosCli, respostas, clientes, 50) : A.vazio('agenda', 'Nenhum evento para esta empresa')}</div></div>`;
+        alvo.querySelector('[data-novo-ev]').addEventListener('click', () => A.editarEvento({ cliente_id: c.id }));
       } else if (aba === 'formularios') {
         alvo.innerHTML = `<div class="card"><div class="list">${porForm.map(({ f, rs }) => `<a class="list-item" href="#/respostas/${f.id}?cliente=${c.id}"><span class="list-icon">${ic(f.icone)}</span>
           <span class="list-main"><span class="list-title">${esc(f.titulo)}</span><span class="list-sub">última ${esc(A.relativo(rs[0].created_at))}</span></span><span class="badge badge-green">${rs.length}</span><span class="seta">${ic('direita', 18)}</span></a>`).join('')
@@ -319,10 +329,11 @@
   const PERIODOS = [['0', 'Tudo'], ['30', '30 dias'], ['90', '90 dias'], ['365', '12 meses']];
 
   T.respostas = async (main, [formId], q) => {
-    const [respostas, clientes] = await Promise.all([A.respostas(), A.clientes()]);
+    const [respostas, clientes, eventos] = await Promise.all([A.respostas(), A.clientes(), A.eventos().catch(() => [])]);
     const idx = A.indice(clientes);
     const form = formId ? F.get(formId) : null;
-    const estado = { cliente: q.get('cliente') || '', periodo: q.get('periodo') || '0', busca: '', aba: q.get('aba') || (form ? 'resumo' : 'lista'), sel: null };
+    const estado = { cliente: q.get('cliente') || '', periodo: q.get('periodo') || '0', busca: '', aba: q.get('aba') || (form ? 'resumo' : 'lista'), sel: null, evento: q.get('evento') || '' };
+    const evento = eventos.find(e => e.id === estado.evento);
 
     const opcoesForm = (window.RH_CATEGORIAS || []).map(cat => `<optgroup label="${esc(cat.titulo)}">${F.lista().filter(f => f.categoria === cat.id).map(f =>
       `<option value="${f.id}"${f.id === formId ? ' selected' : ''}>${esc(f.titulo)}</option>`).join('')}</optgroup>`).join('');
@@ -335,7 +346,8 @@
         <div><label class="label" for="r-form">Formulário</label><select class="select" id="r-form"><option value="">Todos os formulários</option>${opcoesForm}</select></div>
         <div><label class="label" for="r-cli">Cliente</label><select class="select" id="r-cli"><option value="">Todos os clientes</option>${clientes.map(c => `<option value="${c.id}"${c.id === estado.cliente ? ' selected' : ''}>${esc(c.nome)}</option>`).join('')}<option value="_sem"${estado.cliente === '_sem' ? ' selected' : ''}>Sem cliente cadastrado</option></select></div>
         <div><label class="label" for="r-busca">Buscar</label><div class="search"><input class="input" id="r-busca" placeholder="Nome, empresa ou texto"></div></div></div>
-        <div class="chips" style="margin-top:14px" id="r-per">${PERIODOS.map(([k, t]) => `<button class="chip${k === estado.periodo ? ' active' : ''}" data-p="${k}">${t}</button>`).join('')}</div></div>
+        <div class="row" style="margin-top:14px"><div class="chips" id="r-per">${PERIODOS.map(([k, t]) => `<button class="chip${k === estado.periodo ? ' active' : ''}" data-p="${k}">${t}</button>`).join('')}</div>
+          ${evento ? `<span class="spacer"></span><a class="badge badge-gold" href="#/eventos/${evento.id}">${ic('agenda', 13)} Evento: ${esc(evento.nome)}</a><a class="btn btn-ghost btn-sm" href="#/respostas${form ? '/' + form.id : ''}">${ic('fechar', 14)} Tirar filtro</a>` : ''}</div></div>
       ${form ? `<div class="tabs" style="margin-bottom:18px"><button class="tab" data-aba="resumo">${ic('grafico', 15)} Resumo</button><button class="tab" data-aba="lista">${ic('lista', 15)} Respostas</button></div>` : ''}
       <div id="r-conteudo"></div></div>`;
 
@@ -343,6 +355,7 @@
       const k = A.chave(estado.busca);
       return respostas.filter(r => {
         if (form && r.section !== form.id) return false;
+        if (estado.evento && r.evento_id !== estado.evento) return false;
         if (estado.cliente === '_sem' && A.clienteDe(r, idx)) return false;
         if (estado.cliente && estado.cliente !== '_sem' && A.clienteDe(r, idx)?.id !== estado.cliente) return false;
         if (!A.dentroDe(r, +estado.periodo)) return false;
@@ -419,7 +432,7 @@
       b.closest('[data-abertos]').querySelectorAll('.quote.hidden').forEach(q => q.classList.remove('hidden')); b.remove();
     }));
 
-    main.querySelector('#r-form').addEventListener('change', e => A.ir('/respostas' + (e.target.value ? '/' + e.target.value : '') + (estado.cliente ? '?cliente=' + estado.cliente : '')));
+    main.querySelector('#r-form').addEventListener('change', e => A.ir('/respostas' + (e.target.value ? '/' + e.target.value : '') + '?' + [estado.cliente && 'cliente=' + estado.cliente, estado.evento && 'evento=' + estado.evento].filter(Boolean).join('&')));
     main.querySelector('#r-cli').addEventListener('change', e => { estado.cliente = e.target.value; desenhar(); });
     main.querySelector('#r-busca').addEventListener('input', A.debounce(e => { estado.busca = e.target.value; desenhar(); }, 200));
     main.querySelectorAll('[data-p]').forEach(b => b.addEventListener('click', () => { estado.periodo = b.dataset.p; main.querySelectorAll('[data-p]').forEach(x => x.classList.toggle('active', x === b)); desenhar(); }));
@@ -427,7 +440,7 @@
     main.querySelector('[data-atualizar]').addEventListener('click', async () => { await A.respostas(true); A.recarregar(); });
     main.querySelector('[data-enviar-f]')?.addEventListener('click', () => {
       const cli = clientes.find(c => c.id === estado.cliente);
-      A.abrirEnvio({ formId: form.id, empresa: cli ? cli.nome : '' });
+      A.abrirEnvio({ formId: form.id, empresa: cli ? cli.nome : '', evento });
     });
     main.querySelector('[data-csv]')?.addEventListener('click', () => {
       const blob = new Blob([F.csv(form, filtradas())], { type: 'text/csv;charset=utf-8' });
@@ -666,6 +679,7 @@
   T.mais = async main => {
     const item = (href, icone, titulo, sub) => `<a class="list-item" href="${href}"><span class="list-icon">${ic(icone)}</span><span class="list-main"><span class="list-title">${titulo}</span><span class="list-sub">${sub}</span></span><span class="seta">${ic('direita', 18)}</span></a>`;
     main.innerHTML = `<div class="page">${cabecalho({ icone: 'menu', titulo: 'Mais' })}<div class="card"><div class="list">
+      ${item('#/eventos', 'agenda', 'Eventos', 'Convites, presença e satisfação')}
       ${item('#/satisfacao', 'estrela', 'Satisfação', 'NPS e comentários dos clientes')}
       ${item('#/programa', 'broto', 'Programa Construindo Juntos', 'Progresso, relatório e cartilha')}
       ${item('#/materiais', 'livro', 'Materiais', 'Apostila, slides e guia')}

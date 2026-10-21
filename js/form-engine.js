@@ -171,7 +171,7 @@
   };
 
   // ── Montagem da linha para "responses" ────────────────
-  F.montarLinha = (form, vals, empresaUrl) => {
+  F.montarLinha = (form, vals, empresaUrl, eventoId) => {
     const row = { section: form.id };
     const json = {};
     F.campos(form).forEach(c => {
@@ -190,6 +190,7 @@
     });
     Object.entries(form.colunasFixas || {}).forEach(([col, v]) => { if (!row[col]) row[col] = v; });
     if (!row.company && empresaUrl) row.company = empresaUrl;
+    if (eventoId) row.evento_id = eventoId;
     return row;
   };
 
@@ -460,7 +461,7 @@
       const btn = $('#pf-avancar');
       btn.disabled = true; btn.textContent = 'Enviando…';
       $('#pf-erro').classList.add('hidden');
-      const row = F.montarLinha(form, vals, empresa);
+      const row = F.montarLinha(form, vals, empresa, opts.evento);
       try {
         await RH.salvarResposta(row);
       } catch (e) {
