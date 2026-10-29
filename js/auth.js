@@ -23,7 +23,12 @@
     async entrar(email, senha) {
       const sb = RH.supabase();
       const { error } = await sb.auth.signInWithPassword({ email: email.trim(), password: senha });
-      if (error) throw new Error('E-mail ou senha incorretos.');
+      if (error) {
+        if (error.code === 'email_not_confirmed') throw new Error('Este e-mail ainda não foi confirmado.');
+        if (error.code === 'invalid_credentials' || error.status === 400) throw new Error('E-mail ou senha incorretos.');
+        // sem resposta do servidor (fora do ar, pausado ou sem internet)
+        throw new Error('Não foi possível conectar ao servidor agora. Tente de novo em alguns minutos.');
+      }
       if (!(await verificarAdmin())) {
         await sb.auth.signOut();
         throw new Error('Este usuário não tem acesso de administradora.');
