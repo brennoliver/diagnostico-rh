@@ -653,6 +653,28 @@
     main.querySelectorAll('[data-copiar]').forEach(b => b.addEventListener('click', () => A.copiar(b.dataset.copiar)));
   };
 
+  // ═════════════════════════ PORTFÓLIOS ═════════════════════════
+  T.portfolios = async main => {
+    const lista = RH_CONFIG.portfolios || [];
+    const mensagem = p => {
+      let t = `${p.titulo} | RH com Propósito\nConheça as experiências: ${location.origin + p.url}`;
+      if (p.formulario) t += `\n\nPara receber uma proposta, responda: ${A.link(p.formulario)}`;
+      return t;
+    };
+    const card = (p, i) => `<div class="card mat-card">
+      <a class="capa capa-foto" href="${p.url}" target="_blank" rel="noopener" aria-label="Abrir ${esc(p.titulo)}"><img src="${p.capa}" alt="" loading="lazy"></a>
+      <div class="mat-corpo">${p.campanha ? `<div class="kpi-label">${esc(p.campanha)}</div>` : ''}<h3>${esc(p.titulo)}</h3><p>${esc(p.descricao)}</p>
+        <div class="form-card-meta"><span class="badge badge-green">${ic('link', 13)} Link aberto para clientes</span>${p.formulario ? `<span class="badge">${ic('formularios', 13)} Com formulário de interesse</span>` : ''}</div>
+        <div class="form-card-actions" style="margin-top:auto"><a class="btn btn-sm" href="${p.url}" target="_blank" rel="noopener">${ic('apresentacao', 15)} Abrir</a>
+          <button class="btn btn-sec btn-sm" data-copiar="${esc(location.origin + p.url)}">${ic('copiar', 15)} Copiar</button>
+          <a class="btn btn-wa btn-sm" target="_blank" rel="noopener" title="Enviar pelo WhatsApp" href="https://wa.me/?text=${encodeURIComponent(mensagem(p))}">${ic('whatsapp', 15)}</a>
+          <a class="btn btn-sec btn-sm" title="Enviar por e-mail" href="mailto:?subject=${encodeURIComponent(p.titulo + ' | RH com Propósito')}&body=${encodeURIComponent(mensagem(p))}">${ic('email', 15)}</a></div></div></div>`;
+    main.innerHTML = `<div class="page">
+      ${cabecalho({ icone: 'maleta', titulo: 'Portfólios', sub: 'Apresentações comerciais para enviar a empresas e clientes.' })}
+      ${lista.length ? `<div class="grid grid-3">${lista.map(card).join('')}</div>` : A.vazio('maleta', 'Nenhum portfólio ainda', 'Os portfólios ficam em js/config.js.')}</div>`;
+    main.querySelectorAll('[data-copiar]').forEach(b => b.addEventListener('click', () => A.copiar(b.dataset.copiar)));
+  };
+
   // ═════════════════════════ CONTA / MAIS ═════════════════════════
   T.conta = async main => {
     main.innerHTML = `<div class="page" style="max-width:680px">
@@ -682,6 +704,7 @@
       ${item('#/eventos', 'agenda', 'Eventos', 'Convites, presença e satisfação')}
       ${item('#/satisfacao', 'estrela', 'Satisfação', 'NPS e comentários dos clientes')}
       ${item('#/programa', 'broto', 'Programa Construindo Juntos', 'Progresso, relatório e cartilha')}
+      ${item('#/portfolios', 'maleta', 'Portfólios', 'Apresentações comerciais para clientes')}
       ${item('#/materiais', 'livro', 'Materiais', 'Apostila, slides e guia')}
       ${item('#/conta', 'usuario', 'Minha conta', esc(A.email))}
     </div></div></div>`;

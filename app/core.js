@@ -335,7 +335,7 @@ window.App = (function () {
     [/^\/eventos$/, 'eventos'], [/^\/eventos\/([^/]+)$/, 'evento'],
     [/^\/formularios$/, 'formularios'], [/^\/respostas(?:\/([^/]+))?$/, 'respostas'],
     [/^\/satisfacao$/, 'satisfacao'], [/^\/programa$/, 'programa'], [/^\/programa\/([^/]+)$/, 'programaCliente'],
-    [/^\/materiais$/, 'materiais'], [/^\/conta$/, 'conta'], [/^\/mais$/, 'mais']
+    [/^\/portfolios$/, 'portfolios'], [/^\/materiais$/, 'materiais'], [/^\/conta$/, 'conta'], [/^\/mais$/, 'mais']
   ];
   A.ir = caminho => { location.hash = '#' + caminho; };
   A.query = () => new URLSearchParams((location.hash.split('?')[1]) || '');
