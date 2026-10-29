@@ -175,6 +175,7 @@ body::after {
 .s-over .hint { max-width: 30ch; text-align: right; }
 .over { display: grid; grid-template-columns: repeat(3, 1fr); gap: clamp(10px, 1.2vw, 18px); margin-top: clamp(20px, 4vh, 44px); }
 .xcard {
+  text-decoration: none;
   position: relative; text-align: left; border: 0; cursor: pointer; font: inherit;
   background: var(--c); color: var(--cream); border-radius: 18px; overflow: hidden;
   padding: clamp(16px, 2.4vh, 26px) clamp(16px, 1.6vw, 24px);
@@ -810,14 +811,15 @@ const fmt = m => m < 60 ? `${m} min` : `${Math.floor(m / 60)}h${m % 60 ? String(
 
 const over = document.getElementById('over');
 EXP.forEach((e, i) => {
-  const b = document.createElement('button');
+  const b = document.createElement('a');
+  b.href = `#s${4 + i}`;
   b.className = `xcard r r${Math.min(i + 3, 7)}`;
   b.style.setProperty('--c', e.color);
   b.innerHTML = `<svg class="leafbg mark" aria-hidden="true"><use href="#leaf"/></svg>
     <span class="go"><svg class="ico"><use href="#i-arrow"/></svg></span>
     <span class="n">${e.n}</span><span class="t">${e.title}</span>
     <span class="d"><svg class="ico"><use href="#i-clock"/></svg>${e.dur}</span>`;
-  b.onclick = () => stacked.matches ? slides[3 + i].scrollIntoView({ behavior: 'smooth' }) : show(3 + i);
+  b.onclick = ev => { ev.preventDefault(); stacked.matches ? slides[3 + i].scrollIntoView({ behavior: 'smooth' }) : show(3 + i); };
   over.appendChild(b);
 });
 
@@ -835,6 +837,7 @@ renderFits();
 
 // ─── Deck controller ─────────────────────────────────────────
 const slides = [...document.querySelectorAll('.slide')];
+slides.forEach((s, i) => { s.id = 's' + (i + 1); });
 const total = slides.length;
 const $ = id => document.getElementById(id);
 const pad = n => String(n).padStart(2, '0');

@@ -57,7 +57,8 @@ Não renomeie o `id` de um formulário nem de um campo que já tenha respostas: 
 Apresentações comerciais que a Cristiele envia para empresas (abrem sem login). Para incluir um novo:
 1. Salve o HTML em `portfolios/` (ex.: `portfolios/treinamentos-2027.html`) com as tags `og:` no `<head>`, como em `encerramento-2026.html`.
 2. Gere a capa em 1200×630 (o primeiro slide) e salve em `img/portfolios/`.
-3. Acrescente o item em `portfolios` no `js/config.js`. Com `formulario`, o envio por WhatsApp/e-mail já leva o link do formulário de interesse.
+3. Versão em PDF (opcional): abra o portfólio no Chrome, *Imprimir → Salvar como PDF*, com *Gráficos de plano de fundo* ligado e margens *Nenhuma*. O CSS de impressão já gera uma página 16:9 por slide e mantém os links. Salve em `portfolios/` com o mesmo nome.
+4. Acrescente o item em `portfolios` no `js/config.js` (com `pdf`, se houver). Com `formulario`, o envio por WhatsApp/e-mail já leva o link do formulário de interesse.
 
 ## Banco de dados (VPS)
 
