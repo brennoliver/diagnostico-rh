@@ -356,9 +356,9 @@ a.card:hover,.card.hover:hover{transform:translateY(-3px);box-shadow:var(--shado
 .section-title::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,var(--line),transparent)}
 .bottom-nav{position:fixed;left:10px;right:10px;bottom:10px;display:grid;grid-template-columns:repeat(5,1fr);background:rgba(11,46,34,.92);backdrop-filter:blur(14px);border:1px solid rgba(255,255,255,.08);border-radius:22px;padding:6px 4px calc(6px + env(safe-area-inset-bottom));z-index:40;box-shadow:0 18px 40px -12px rgba(8,36,26,.6)}
 @media(min-width:900px){.bottom-nav{display:none}}
-.bottom-nav a{display:flex;flex-direction:column;align-items:center;gap:2px;padding:7px 2px;text-decoration:none;color:rgba(233,241,236,.65);font-size:11px;font-weight:800;border-radius:16px;transition:all .18s}
-.bottom-nav a .nav-ico{font-size:19px}
-.bottom-nav a.active{color:#fff;background:rgba(255,255,255,.12)}
+.bottom-nav a,.bottom-nav button{display:flex;font-family:inherit;border:0;background:none;cursor:pointer;flex-direction:column;align-items:center;gap:2px;padding:7px 2px;text-decoration:none;color:rgba(233,241,236,.65);font-size:11px;font-weight:800;border-radius:16px;transition:all .18s}
+.bottom-nav .nav-ico{font-size:19px}
+.bottom-nav a.active,.bottom-nav button.active{color:#fff;background:rgba(255,255,255,.12)}
 
 /* Catálogo de formulários */
 .form-card{display:flex;flex-direction:column;gap:12px;padding:20px;transition:transform .22s var(--ease),box-shadow .22s,border-color .22s}

@@ -90,6 +90,8 @@ docker compose exec db psql -U supabase_admin -d postgres -c "insert into admin_
 
 ## Publicar
 
+Ao mudar arquivos da área (`app/`, `js/`, `css/`), troque o `?v=...` em `app/index.html` para o celular não usar uma versão guardada.
+
 A Vercel está ligada ao repositório no GitHub: tudo o que entra no branch `master` vai para o ar sozinho em cerca de um minuto. Outros branches geram só uma prévia.
 
 Os endereços antigos (`admin.html`, `diagnostico.html?dl=…`, `eventos/…`, `ferramentas/…`) são redirecionados pelo `vercel.json`.
