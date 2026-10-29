@@ -658,6 +658,7 @@
     const lista = RH_CONFIG.portfolios || [];
     const mensagem = p => {
       let t = `${p.titulo} | RH com Propósito\nConheça as experiências: ${location.origin + p.url}`;
+      if (p.pdf) t += `\nVersão em PDF: ${location.origin + p.pdf}`;
       if (p.formulario) t += `\n\nPara receber uma proposta, responda: ${A.link(p.formulario)}`;
       return t;
     };
@@ -666,7 +667,8 @@
       <div class="mat-corpo">${p.campanha ? `<div class="kpi-label">${esc(p.campanha)}</div>` : ''}<h3>${esc(p.titulo)}</h3><p>${esc(p.descricao)}</p>
         <div class="form-card-meta"><span class="badge badge-green">${ic('link', 13)} Link aberto para clientes</span>${p.formulario ? `<span class="badge">${ic('formularios', 13)} Com formulário de interesse</span>` : ''}</div>
         <div class="form-card-actions" style="margin-top:auto"><a class="btn btn-sm" href="${p.url}" target="_blank" rel="noopener">${ic('apresentacao', 15)} Abrir</a>
-          <button class="btn btn-sec btn-sm" data-copiar="${esc(location.origin + p.url)}">${ic('copiar', 15)} Copiar</button>
+          ${p.pdf ? `<a class="btn btn-sec btn-sm" href="${p.pdf}" target="_blank" rel="noopener" title="Versão em PDF, com links">${ic('documento', 15)} PDF</a>` : ''}
+          <button class="btn btn-sec btn-sm" title="Copiar link" data-copiar="${esc(location.origin + p.url)}">${ic('copiar', 15)}</button>
           <a class="btn btn-wa btn-sm" target="_blank" rel="noopener" title="Enviar pelo WhatsApp" href="https://wa.me/?text=${encodeURIComponent(mensagem(p))}">${ic('whatsapp', 15)}</a>
           <a class="btn btn-sec btn-sm" title="Enviar por e-mail" href="mailto:?subject=${encodeURIComponent(p.titulo + ' | RH com Propósito')}&body=${encodeURIComponent(mensagem(p))}">${ic('email', 15)}</a></div></div></div>`;
     main.innerHTML = `<div class="page">

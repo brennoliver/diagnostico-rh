@@ -13,9 +13,9 @@ window.RH_CONFIG = {
 
   // Portfólios comerciais exibidos em "Portfólios" (páginas públicas em /portfolios).
   // capa: imagem 1200×630, usada no cartão e na prévia do WhatsApp.
-  // formulario: formulário de interesse enviado junto com o portfólio (opcional).
+  // pdf: versão em PDF com links (opcional). formulario: formulário de interesse enviado junto (opcional).
   portfolios: [
-    { titulo: 'Encerrar Ciclos, Celebrar Pessoas', descricao: 'Experiências de final de ano 2026: seis caminhos, formatos, local, investimento e como contratar.', url: '/portfolios/encerramento-2026.html', capa: '/img/portfolios/encerramento-2026.jpg', campanha: 'Final de ano 2026', formulario: 'encerramento_2026' }
+    { titulo: 'Encerrar Ciclos, Celebrar Pessoas', descricao: 'Experiências de final de ano 2026: seis caminhos, formatos, local, investimento e como contratar.', url: '/portfolios/encerramento-2026.html', pdf: '/portfolios/encerramento-2026.pdf', capa: '/img/portfolios/encerramento-2026.jpg', campanha: 'Final de ano 2026', formulario: 'encerramento_2026' }
   ],
 
   // Materiais de apoio exibidos em "Materiais"
