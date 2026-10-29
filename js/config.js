@@ -1,12 +1,13 @@
 // ═══════════════════════════════════════════════════
 // RH com Propósito — configuração central
 // Chaves públicas por design: o que protege os dados é o RLS do
-// Supabase (supabase/001_seguranca.sql), não o segredo destas chaves.
+// banco (supabase/001_seguranca.sql), não o segredo destas chaves.
+// Banco, login e API rodam na VPS (componentes do Supabase em /opt/rh-db).
 // Os formulários ficam em js/formularios.js e js/formularios-rs.js.
 // ═══════════════════════════════════════════════════
 window.RH_CONFIG = {
-  supabaseUrl: 'https://jngyyterkatblntpsjbm.supabase.co',
-  supabaseKey: 'sb_publishable_30rUV3wLjGCDd4DggNYePQ_CwkdB1br',
+  supabaseUrl: 'https://rh-api.179-236-73-24.sslip.io',
+  supabaseKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYW5vbiIsImlzcyI6InN1cGFiYXNlIiwiaWF0IjoxNzkzMjcyNTgzLCJleHAiOjIxMDg2MzI1ODN9.ovVc5PNV6hKpPtfd-TfPSfbAmTOAwE2SAz3E6i9me1U',
   web3formsKey: '1993f0e1-d865-477b-97bd-7a854f842224',
   consultora: 'Cristiele',
 
