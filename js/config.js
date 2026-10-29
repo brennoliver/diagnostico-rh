@@ -15,7 +15,8 @@ window.RH_CONFIG = {
   // capa: imagem 1200×630, usada no cartão e na prévia do WhatsApp.
   // pdf: versão em PDF com links (opcional). formulario: formulário de interesse enviado junto (opcional).
   portfolios: [
-    { titulo: 'Encerrar Ciclos, Celebrar Pessoas', descricao: 'Experiências de final de ano 2026: seis caminhos, formatos, local, investimento e como contratar.', url: '/portfolios/encerramento-2026.html', pdf: '/portfolios/encerramento-2026.pdf', capa: '/img/portfolios/encerramento-2026.jpg', campanha: 'Final de ano 2026', formulario: 'encerramento_2026' }
+    { titulo: 'Encerrar Ciclos, Celebrar Pessoas', descricao: 'Experiências de final de ano 2026: seis caminhos, formatos, local, investimento e como contratar.', url: '/portfolios/encerramento-2026.html', pdf: '/portfolios/encerramento-2026.pdf', capa: '/img/portfolios/encerramento-2026.jpg', campanha: 'Final de ano 2026', formulario: 'encerramento_2026' },
+    { titulo: 'Campanhas e Experiências 2027', descricao: 'Calendário com uma campanha por mês, campanhas especiais e como funcionam as experiências.', url: '/portfolios/campanhas-2027.html', pdf: '/portfolios/campanhas-2027.pdf', capa: '/img/portfolios/campanhas-2027.jpg', campanha: 'Calendário 2027', formulario: 'campanhas_2027' }
   ],
 
   // Materiais de apoio exibidos em "Materiais"

@@ -94,6 +94,31 @@ window.RH_CATEGORIAS = [
     ]
   }),
 
+  interesse({
+    id: 'campanhas_2027',
+    titulo: 'Campanhas e Experiências 2027',
+    tituloPublico: 'Campanhas e Experiências 2027 | RH com Propósito',
+    descricao: 'Interesse das empresas no calendário de campanhas 2027 — base para propostas personalizadas.',
+    intro: 'Muito além de uma campanha, uma experiência com propósito!\n\nO RH com Propósito planeja campanhas e experiências de acordo com a realidade de cada empresa: o público, a quantidade de participantes, os turnos de trabalho e os objetivos da ação.\n\nResponda às perguntas abaixo para construirmos juntos o calendário da sua empresa em 2027!',
+    imagem: 'img/portfolios/campanhas-2027.jpg',
+    perguntas: [
+      { titulo: 'Sobre as campanhas', campos: [
+        { id: 'campanhas', tipo: 'checkbox', rotulo: 'Quais campanhas despertam interesse?', ajuda: 'Pode marcar mais de uma opção.', obrigatorio: true, outro: true,
+          opcoes: ['Janeiro Branco', 'Fevereiro · Conexões que Fortalecem', 'Março · Mês da Mulher', 'Abril · Segurança e Saúde no Trabalho', 'Maio · Mês do Trabalhador', 'Junho · São João com Propósito', 'Julho · Liderança com Propósito', 'Agosto Lilás', 'Setembro Amarelo', 'Outubro Rosa', 'Novembro Azul', 'Dezembro · Celebrar com Propósito', 'SIPAT', 'Maio Amarelo', 'Junho Vermelho', 'Dia do Amigo', 'Dia da Consciência Negra', 'Natal Solidário', 'Outros'] },
+        { id: 'frequencia', tipo: 'radio', rotulo: 'Como a empresa pretende realizar as ações?', obrigatorio: true,
+          opcoes: ['Uma campanha pontual', 'Algumas campanhas ao longo do ano', 'O calendário completo de 2027', 'Ainda não definido'] },
+        { id: 'formatos', tipo: 'checkbox', rotulo: 'Quais formatos interessam mais?', ajuda: 'Pode marcar mais de uma opção.',
+          opcoes: ['Palestras interativas e rodas de conversa', 'Dinâmicas e desafios em equipe', 'Experiências de reflexão e integração', 'Materiais personalizados e lembranças simbólicas', 'Participação de profissionais especializados', 'Gostaria de receber sugestões do RHCP'] }
+      ]},
+      { titulo: 'Organização', campos: [
+        { id: 'turnos', tipo: 'radio', rotulo: 'Como funcionam os turnos de trabalho?', opcoes: ['Um único turno', 'Mais de um turno ou revezamento', 'A definir'] },
+        { id: 'tempo', tipo: 'radio', rotulo: 'Quanto tempo a empresa tem disponível para cada encontro?', opcoes: ['30 minutos', '1 hora', '1h30', '2 horas ou mais', 'Ainda não definido'] },
+        { id: 'local', tipo: 'radio', rotulo: 'Onde a empresa deseja realizar as ações?', opcoes: ['Em espaço próprio da empresa', 'Em espaço disponibilizado pelo RH com Propósito', 'Ainda não definido'] },
+        { id: 'observacoes', tipo: 'textarea', rotulo: 'Existe alguma necessidade ou informação importante que gostaria de compartilhar?', ajuda: 'Opcional.', placeholder: 'Conte o que for importante para a proposta...' }
+      ]}
+    ]
+  }),
+
   // ─────────────────────────── PROGRAMA ───────────────────────────
   {
     id: 'pre_diagnostico', categoria: 'programa', icone: 'prancheta',
