@@ -44,6 +44,11 @@ Cada formulário é um objeto em `js/formularios.js`. O mesmo objeto define o qu
 
 Não renomeie o `id` de um formulário nem de um campo que já tenha respostas: é por ele que as respostas antigas são encontradas.
 
+**Campanhas e formulários de interesse.** O molde `interesse({...})` em `js/formularios.js` já traz os dados da empresa, o aviso de privacidade com autorização de contato e a mensagem final. Para uma campanha nova (por exemplo, treinamentos de 2027):
+1. Copie o bloco `encerramento_2026`, troque `id` (ex.: `treinamentos_2027`), títulos, texto de apresentação e as `perguntas` do meio.
+2. Para a imagem de prévia no WhatsApp/Instagram, acrescente um tipo em `tools/imagem-previa.html`, capture em 1200×630, salve em `img/` e aponte `imagem` no formulário.
+3. Rode `node tools/gerar-atalhos.mjs`. Se quiser um link curto (como `/encerramento`), acrescente o redirecionamento no `vercel.json`.
+
 **Partes internas.** Seções ou campos com `interno: true` só aparecem quando a Cristiele abre o formulário logada (botão *Preencher*). Formulários inteiros com `interno: true` não podem ser enviados a clientes.
 
 ## Banco de dados (Supabase)

@@ -362,7 +362,8 @@
     function condicionais() {
       $$('[data-se]').forEach(el => {
         const cond = JSON.parse(el.dataset.se);
-        el.classList.toggle('hidden', !Object.entries(cond).every(([k, x]) => vals[k] === x));
+        // { campo: 'valor' } ou { campo: ['valor1', 'valor2'] } (qualquer um deles)
+        el.classList.toggle('hidden', !Object.entries(cond).every(([k, x]) => Array.isArray(x) ? x.includes(vals[k]) : vals[k] === x));
       });
     }
 

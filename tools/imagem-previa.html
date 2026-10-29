@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<!-- Modelo das imagens de prévia (1200x630) dos links. Abra pelo servidor local em /tools/imagem-previa.html?tipo=encerramento e capture a tela em 1200x630. Para uma campanha nova, acrescente um "tipo" no script abaixo. -->
+<html lang="pt-BR"><head><meta charset="UTF-8">
+<link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700;900&family=Playfair+Display:ital,wght@0,600;0,700;1,600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/rh.css">
+<script src="../js/logo.js"></script>
+<style>
+html,body{margin:0;width:1200px;height:630px;overflow:hidden}
+body::before{display:none}
+.og{position:relative;width:1200px;height:630px;background:var(--grad-ink);color:#fff;overflow:hidden;isolation:isolate;display:flex;flex-direction:column;justify-content:space-between;padding:64px 76px}
+.og::before{content:'';position:absolute;inset:0;z-index:-1;background:radial-gradient(700px 420px at 92% 0%,rgba(230,201,130,.32),transparent 65%),radial-gradient(640px 460px at 0% 100%,rgba(46,125,88,.7),transparent 70%)}
+.og .logo{width:150px}
+.folha{position:absolute;z-index:-1;opacity:.16}
+.folha svg path{fill:#E6C982}
+.eyebrow{color:var(--gold-300);font-size:22px;letter-spacing:4px;margin-bottom:16px}
+h1{font-family:var(--serif);font-size:76px;line-height:1.05;color:#fff;max-width:900px}
+h1 em{color:var(--gold-300);font-style:italic}
+.sub{font-size:28px;color:rgba(248,241,235,.85);margin-top:20px;max-width:820px;line-height:1.35}
+.rodape{display:flex;justify-content:space-between;align-items:center;font-size:22px;color:rgba(248,241,235,.8);font-weight:700}
+.cta{background:var(--grad-gold);color:#241805;padding:16px 30px;border-radius:16px;font-weight:900;font-size:24px;box-shadow:var(--shadow-gold)}
+</style></head>
+<body><div class="og" id="og"></div>
+<script>
+const tipo = new URLSearchParams(location.search).get('tipo');
+const og = document.getElementById('og');
+const folhas = `<span class="folha" data-logo="simbolo" data-tema="escuro" style="width:420px;right:-60px;top:40px;transform:rotate(-14deg)"></span>
+  <span class="folha" data-logo="simbolo" data-tema="escuro" style="width:150px;left:46%;bottom:-30px;transform:rotate(28deg)"></span>`;
+og.innerHTML = tipo === 'encerramento'
+  ? `${folhas}<span class="logo" data-logo="completa" data-tema="escuro"></span>
+     <div><div class="eyebrow">ENCERRAMENTO DE ANO 2026</div><h1>Celebre conquistas e <em>reconheça pessoas.</em></h1>
+     <p class="sub">Experiências personalizadas para encerrar o ano com a sua equipe.</p></div>
+     <div class="rodape"><span>RH com Propósito · Cristiele Rodrigues</span><span class="cta">Responda e receba sua proposta</span></div>`
+  : `${folhas}<span class="logo" data-logo="completa" data-tema="escuro"></span>
+     <div><div class="eyebrow">RH COM PROPÓSITO</div><h1>Porque todo resultado <em>começa com pessoas.</em></h1>
+     <p class="sub">Suas respostas são confidenciais e nos ajudam a construir um trabalho sob medida.</p></div>
+     <div class="rodape"><span>Cristiele Rodrigues · Consultoria em RH</span><span class="cta">Responder</span></div>`;
+RH.aplicarLogo();
+</script></body></html>
