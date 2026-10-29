@@ -368,7 +368,15 @@ window.App = (function () {
     A.$('#app').classList.remove('hidden');
     A.$$('[data-email]').forEach(e => { e.textContent = A.email; });
     A.$$('[data-sair]').forEach(b => b.addEventListener('click', () => RH.auth.sair()));
-    A.$$('[data-enviar]').forEach(b => b.addEventListener('click', () => A.abrirEnvio()));
+    A.$$('[data-enviar]').forEach(b => b.addEventListener('click', () => { menu(false); A.abrirEnvio(); }));
+    // menu lateral como gaveta no celular
+    const app = A.$('#app'), botaoMenu = A.$('[data-abrir-menu]');
+    const menu = aberto => { app.classList.toggle('menu-aberto', aberto); botaoMenu.setAttribute('aria-expanded', aberto); };
+    botaoMenu.addEventListener('click', () => menu(true));
+    A.$('[data-fechar-menu]').addEventListener('click', () => menu(false));
+    A.$$('.side a').forEach(a => a.addEventListener('click', () => menu(false)));
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') menu(false); });
+    window.addEventListener('hashchange', () => menu(false));
     window.addEventListener('hashchange', rotear);
     rotear();
   };
