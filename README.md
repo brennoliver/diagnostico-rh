@@ -13,12 +13,13 @@ index.html                Login (com "esqueci minha senha")
 app/                      Área da consultora (login obrigatório)
   index.html  core.js  telas.js  eventos.js
                           Início · Clientes · Eventos · Formulários · Respostas ·
-                          Satisfação · Programa · Materiais · Minha conta
+                          Satisfação · Programa · Portfólios · Materiais · Minha conta
   guia.html               Guia do consultor: mapa de condução, manual e checklists
 f/index.html              Página única que exibe qualquer formulário: f/?f=<id>&empresa=<nome>
 r/<id>.html               Links curtos enviados ao cliente (prévia no WhatsApp) → f/
 direcao.html, gestores.html, colaboradores.html
                           Links curtos antigos, já enviados a clientes → f/
+portfolios/               Portfólios comerciais (públicos), listados em Portfólios
 materiais/                Apostila e material de leitura (públicos)
 apresentacoes/            Slides (login obrigatório)
 js/config.js              Chaves públicas, nome da consultora, lista de materiais
@@ -50,6 +51,13 @@ Não renomeie o `id` de um formulário nem de um campo que já tenha respostas: 
 3. Rode `node tools/gerar-atalhos.mjs`. Se quiser um link curto (como `/encerramento`), acrescente o redirecionamento no `vercel.json`.
 
 **Partes internas.** Seções ou campos com `interno: true` só aparecem quando a Cristiele abre o formulário logada (botão *Preencher*). Formulários inteiros com `interno: true` não podem ser enviados a clientes.
+
+## Portfólios
+
+Apresentações comerciais que a Cristiele envia para empresas (abrem sem login). Para incluir um novo:
+1. Salve o HTML em `portfolios/` (ex.: `portfolios/treinamentos-2027.html`) com as tags `og:` no `<head>`, como em `encerramento-2026.html`.
+2. Gere a capa em 1200×630 (o primeiro slide) e salve em `img/portfolios/`.
+3. Acrescente o item em `portfolios` no `js/config.js`. Com `formulario`, o envio por WhatsApp/e-mail já leva o link do formulário de interesse.
 
 ## Banco de dados (VPS)
 

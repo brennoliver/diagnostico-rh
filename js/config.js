@@ -11,6 +11,13 @@ window.RH_CONFIG = {
   web3formsKey: '1993f0e1-d865-477b-97bd-7a854f842224',
   consultora: 'Cristiele',
 
+  // Portfólios comerciais exibidos em "Portfólios" (páginas públicas em /portfolios).
+  // capa: imagem 1200×630, usada no cartão e na prévia do WhatsApp.
+  // formulario: formulário de interesse enviado junto com o portfólio (opcional).
+  portfolios: [
+    { titulo: 'Encerrar Ciclos, Celebrar Pessoas', descricao: 'Experiências de final de ano 2026: seis caminhos, formatos, local, investimento e como contratar.', url: '/portfolios/encerramento-2026.html', capa: '/img/portfolios/encerramento-2026.jpg', campanha: 'Final de ano 2026', formulario: 'encerramento_2026' }
+  ],
+
   // Materiais de apoio exibidos em "Materiais"
   materiais: [
     { titulo: 'Apostila — Liderança com Propósito', descricao: 'Material do workshop de liderança: conteúdo, atividades práticas e dinâmicas.', url: '/materiais/apostila.html', publico: true, icone: 'livro' },
