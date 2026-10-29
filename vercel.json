@@ -44,6 +44,7 @@
     { "source": "/pertencimento-slides.html", "destination": "/apresentacoes/pertencimento-slides.html", "permanent": false },
     { "source": "/treinamentos-slides.html", "destination": "/apresentacoes/treinamentos-slides.html", "permanent": false },
     { "source": "/acompanhamento-slides.html", "destination": "/apresentacoes/acompanhamento-slides.html", "permanent": false },
+    { "source": "/encerramento", "destination": "/r/encerramento_2026.html", "permanent": false },
     { "source": "/site.html", "destination": "https://rhcomproposito.com.br", "permanent": false }
   ],
   "headers": [

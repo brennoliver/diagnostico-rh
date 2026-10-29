@@ -19,7 +19,8 @@ window.RH_CATEGORIAS = [
   { id: 'eventos',       icone: 'agenda',     titulo: 'Palestras e eventos',         descricao: 'Antes, durante e depois dos encontros.' },
   { id: 'satisfacao',    icone: 'estrela',    titulo: 'Satisfação',                  descricao: 'Pesquisas pós-serviço.' },
   { id: 'desenvolvimento', icone: 'alvo',     titulo: 'Desenvolvimento',           descricao: 'Planos individuais.' },
-  { id: 'recrutamento',  icone: 'maleta',     titulo: 'Recrutamento & Seleção',      descricao: 'Do briefing da vaga à integração.' }
+  { id: 'recrutamento',  icone: 'maleta',     titulo: 'Recrutamento & Seleção',      descricao: 'Do briefing da vaga à integração.' },
+  { id: 'campanhas',     icone: 'brilho',     titulo: 'Campanhas e propostas',       descricao: 'Formulários de interesse para montar propostas personalizadas.' }
 ];
 
 (function () {
@@ -35,7 +36,63 @@ window.RH_CATEGORIAS = [
   ];
   const escala5 = (esq, dir) => ({ tipo: 'escala', min: 1, max: 5, rotulosEscala: [esq, dir] });
 
+  // ── Molde de formulário de interesse (campanhas, encerramentos, treinamentos) ──
+  // Já traz os dados da empresa, o aviso de privacidade com autorização de
+  // contato e a mensagem final. Para uma campanha nova, copie o bloco
+  // "encerramento_2026" lá embaixo e troque id, títulos, textos e "perguntas".
+  const PRIVACIDADE = 'Usamos estas informações apenas para preparar e apresentar a proposta à sua empresa. Os dados ficam guardados com segurança na base do RH com Propósito e não são compartilhados com terceiros. Você pode pedir a exclusão a qualquer momento.';
+  const interesse = ({ perguntas, ...cfg }) => ({
+    categoria: 'campanhas', icone: 'brilho', tempo: '3 minutos', passoAPasso: true, numerar: true,
+    publico: 'Empresas interessadas',
+    agradecimento: 'Obrigada pelo interesse em viver essa experiência com o RH com Propósito!\n\nCom as informações recebidas, nossa equipe poderá elaborar uma proposta personalizada, considerando as necessidades e a realidade da sua empresa.\n\nPorque todo resultado começa com pessoas.',
+    mapa: { company: ['empresa'], nome: ['responsavel'], cargo_setor: ['cargo'] },
+    ...cfg,
+    secoes: [
+      { titulo: 'Dados da empresa', campos: [
+        { id: 'empresa', tipo: 'texto', rotulo: 'Nome da empresa', placeholder: 'Nome da empresa', obrigatorio: true, preencherComEmpresa: true },
+        { id: 'responsavel', tipo: 'texto', rotulo: 'Nome do responsável', placeholder: 'Seu nome', obrigatorio: true, largura: 2 },
+        { id: 'cargo', tipo: 'texto', rotulo: 'Cargo ou função', placeholder: 'Ex.: Diretora, Gerente de RH', largura: 2 },
+        { id: 'whatsapp', tipo: 'telefone', rotulo: 'WhatsApp para contato', placeholder: '(00) 00000-0000', obrigatorio: true, largura: 2 },
+        { id: 'cidade', tipo: 'texto', rotulo: 'Cidade/UF', placeholder: 'Ex.: Estância/SE', largura: 2 },
+        { id: 'colaboradores', tipo: 'radio', rotulo: 'Quantos colaboradores participarão?', opcoes: ['Até 20', 'De 21 a 50', 'De 51 a 100', 'De 101 a 200', 'Acima de 200'], obrigatorio: true }
+      ]},
+      ...perguntas,
+      { titulo: 'Privacidade e contato', descricao: PRIVACIDADE, campos: [
+        { id: 'autorizado', tipo: 'consentimento', rotulo: 'Autorizo o RH com Propósito a entrar em contato pelo WhatsApp informado para apresentar a proposta.', obrigatorio: true }
+      ]}
+    ]
+  });
+
   window.RH_FORMULARIOS = (window.RH_FORMULARIOS || []).concat([
+
+  // ─────────────────────────── CAMPANHAS ───────────────────────────
+  interesse({
+    id: 'encerramento_2026',
+    titulo: 'Encerramento de Ano 2026',
+    tituloPublico: 'Encerramento de Ano 2026 | RH com Propósito',
+    descricao: 'Interesse das empresas nas ações de encerramento de ano — base para propostas personalizadas.',
+    intro: 'O ano está chegando ao fim, e esse é o momento de celebrar conquistas, reconhecer pessoas e fortalecer os laços entre as equipes!\n\nO RH com Propósito prepara experiências personalizadas, respeitando o perfil de cada empresa, a quantidade de colaboradores e o tempo disponível.\n\nResponda às perguntas abaixo para construirmos juntos um encerramento de ano especial!',
+    imagem: 'img/og-encerramento.png',
+    perguntas: [
+      { titulo: 'Sobre a experiência', campos: [
+        { id: 'objetivo', tipo: 'checkbox', rotulo: 'Qual é o principal objetivo da ação?', ajuda: 'Pode marcar mais de uma opção.', obrigatorio: true, outro: true,
+          opcoes: ['Celebrar as conquistas de 2026', 'Reconhecer e valorizar os colaboradores', 'Fortalecer a união da equipe', 'Motivar para 2027', 'Proporcionar um momento de descontração', 'Outros'] },
+        { id: 'experiencia', tipo: 'radio', rotulo: 'Qual tipo de experiência desperta mais interesse?', obrigatorio: true,
+          opcoes: ['Palestra interativa', 'Dinâmicas de integração', 'Reconhecimento e homenagens', 'Confraternização com Propósito', 'Gostaria de receber sugestões do RHCP'] },
+        { id: 'tempo', tipo: 'radio', rotulo: 'Quanto tempo a empresa tem disponível?', opcoes: ['30 minutos', '1 hora', '1h30', '2 horas ou mais', 'Ainda não definido'] },
+        { id: 'turmas', tipo: 'radio', rotulo: 'A empresa tem interesse em realizar a ação dividindo os colaboradores em turmas?', opcoes: ['Sim', 'Não', 'Gostaria de avaliar essa possibilidade'] },
+        { id: 'qtd_turmas', tipo: 'texto', rotulo: 'Caso a ação seja dividida em turmas, quantas turmas seriam necessárias?', ajuda: 'Opcional.', placeholder: 'Ex.: 3 turmas',
+          mostrarSe: { turmas: ['Sim', 'Gostaria de avaliar essa possibilidade'] } }
+      ]},
+      { titulo: 'Organização do evento', campos: [
+        { id: 'data_prevista', tipo: 'data', rotulo: 'Qual a data prevista para a realização?', largura: 2 },
+        { id: 'turno', tipo: 'radio', rotulo: 'Qual o turno de preferência?', opcoes: ['Manhã', 'Tarde', 'Noite', 'Mais de um turno', 'A definir'] },
+        { id: 'local', tipo: 'radio', rotulo: 'Onde a empresa deseja realizar a ação?', opcoes: ['Em espaço próprio da empresa', 'Em espaço disponibilizado pelo RH com Propósito', 'Ainda não definido'] },
+        { id: 'confraternizacao', tipo: 'radio', rotulo: 'A empresa já possui uma confraternização programada?', opcoes: ['Sim, queremos incluir uma ação do RHCP', 'Não, queremos organizar um encerramento especial', 'Ainda estamos planejando'] },
+        { id: 'observacoes', tipo: 'textarea', rotulo: 'Existe alguma necessidade ou informação importante que gostaria de compartilhar?', ajuda: 'Opcional.', placeholder: 'Conte o que for importante para a proposta...' }
+      ]}
+    ]
+  }),
 
   // ─────────────────────────── PROGRAMA ───────────────────────────
   {

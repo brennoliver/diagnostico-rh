@@ -11,6 +11,8 @@ const ctx = { window: {} };
 vm.createContext(ctx);
 for (const f of ['js/formularios.js', 'js/formularios-rs.js']) vm.runInContext(readFileSync(f, 'utf8'), ctx);
 
+// Endereço público do site (para a imagem de prévia, que precisa de URL completa)
+const SITE = 'https://rh-hub-omega.vercel.app';
 const esc = s => String(s).replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;');
 mkdirSync('r', { recursive: true });
 for (const f of readdirSync('r')) if (f.endsWith('.html')) unlinkSync('r/' + f);
@@ -21,6 +23,7 @@ for (const form of ctx.window.RH_FORMULARIOS) {
   const titulo = (form.tituloPublico || form.titulo) + ' — RH com Propósito';
   const desc = (form.descricao || form.intro || '').replace(/\s+/g, ' ').slice(0, 180);
   const alvo = `../f/?f=${form.id}`;
+  const imagem = `${SITE}/${form.imagem || 'img/og.png'}`;
   writeFileSync(`r/${form.id}.html`, `<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -33,7 +36,11 @@ for (const form of ctx.window.RH_FORMULARIOS) {
 <meta property="og:site_name" content="RH com Propósito">
 <meta property="og:title" content="${esc(titulo)}">
 <meta property="og:description" content="${esc(desc)}">
-<meta name="twitter:card" content="summary">
+<meta property="og:image" content="${imagem}">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="${imagem}">
 <meta name="twitter:title" content="${esc(titulo)}">
 <meta name="twitter:description" content="${esc(desc)}">
 <!-- Gerado por tools/gerar-atalhos.mjs -->
