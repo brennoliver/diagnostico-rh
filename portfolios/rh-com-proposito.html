@@ -152,16 +152,18 @@ body::after {
   background: var(--paper-2);
   overflow: hidden;
 }
+/* folha no canto inferior esquerdo, fora do rosto */
 .s-cover .visual .leafbg {
-  position: absolute; width: 120%; left: -10%; top: 4%;
-  color: var(--sage); opacity: .45;
+  position: absolute; width: 58%; left: -16%; bottom: -10%;
+  color: var(--sage); opacity: .4;
 }
 .photo {
   background-image: var(--photo);
   background-repeat: no-repeat;
   mix-blend-mode: multiply;
 }
-.s-cover .photo { position: absolute; inset: 0; background-size: cover; background-position: 50% 18%; }
+/* da cabeça até a cintura */
+.s-cover .photo { position: absolute; left: 0; right: 0; top: -17%; height: 175%; background-size: cover; background-position: 51% 0; }
 
 /* ─── 02 QUEM SOU EU ────────────────────────────────────────── */
 .s-about { gap: clamp(32px, 6vw, 110px); align-items: center; }
@@ -807,7 +809,7 @@ body::after {
 </main>
 
 <nav class="bar" id="bar" aria-label="Navegação da apresentação">
-  <span class="count" id="count"><b>01</b> / 15</span>
+  <span class="count" id="count"><b>01</b> / 16</span>
   <span class="title" id="title"></span>
   <span class="track"><span class="fill" id="fill"></span></span>
   <span class="btns">
