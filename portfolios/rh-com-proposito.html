@@ -395,7 +395,8 @@ body::after {
 /* ─── 15 ENCERRAMENTO ───────────────────────────────────────── */
 .s-end { padding: 0; }
 .s-end .visual { flex: 0 0 38%; position: relative; background: var(--paper-2); overflow: hidden; }
-.s-end .photo { position: absolute; inset: 0; background-size: cover; background-position: 50% 16%; }
+/* igual à capa: da cabeça até a cintura */
+.s-end .photo { position: absolute; left: 0; right: 0; top: -17%; height: 175%; background-size: cover; background-position: 51% 0; }
 .s-end .main {
   flex: 1; display: flex; flex-direction: column; justify-content: center;
   padding: var(--pad-y) var(--pad-x) calc(var(--pad-y) + 40px) clamp(32px, 5vw, 96px);
