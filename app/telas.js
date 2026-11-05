@@ -467,51 +467,139 @@
         <div class="chips">${PERIODOS.map(([k, t]) => `<button class="chip${k === '0' ? ' active' : ''}" data-p="${k}">${t}</button>`).join('')}</div></div>
       <div id="s-conteudo"></div></div>`;
 
+    // ── Detalhes: todo número, barra, linha e comentário abre a lista de avaliações por trás dele ──
+    let ctx = null;
+    const temNota = x => x.v.q8_nps !== '' && x.v.q8_nps != null;
+    const corNota = n => n <= 6 ? '#B93A0C' : n <= 8 ? '#B98A2E' : 'var(--ok)';
+    const GRUPOS = [
+      ['Promotores', 'Deram nota 9 ou 10: recomendam o RH com Propósito com entusiasmo.', n => n >= 9],
+      ['Neutros', 'Deram nota 7 ou 8: ficaram satisfeitos, mas sem entusiasmo para recomendar.', n => n >= 7 && n <= 8],
+      ['Detratores', 'Deram nota de 0 a 6: são as avaliações que pedem atenção e um contato.', n => n <= 6]
+    ];
+    const clic = (chave, titulo = 'Ver detalhes') => ` data-det="${esc(chave)}" role="button" tabindex="0" title="${esc(titulo)}"`;
+    const media = itens => { const ns = itens.map(x => Number(x.v.q2_organizacao)).filter(Boolean); return ns.length ? (ns.reduce((a, b) => a + b, 0) / ns.length).toFixed(1).replace('.', ',') : '—'; };
+    const npsItens = itens => F.nps(itens.filter(temNota).map(x => x.v.q8_nps));
+    const pct = (a, b) => b ? Math.round(a / b * 100) : 0;
+    const barrasGrupos = (itens, ligar) => {
+      const n = npsItens(itens);
+      if (!n) return '<p class="muted small">Sem notas de recomendação.</p>';
+      return A.barras([{ rotulo: 'Promotores (9–10)', n: n.promotores }, { rotulo: 'Neutros (7–8)', n: n.neutros }, { rotulo: 'Detratores (0–6)', n: n.detratores }], n.n, ligar ? 'grupo' : '');
+    };
+    const contagemDe = (id, itens) => (F.estatisticas(form, itens.map(x => x.r)).find(e => e.campo.id === id) || { contagem: [], total: 0 });
+    const bloco = (titulo, html) => `<div class="det-bloco"><div class="kpi-label">${esc(titulo)}</div><div style="margin-top:12px">${html}</div></div>`;
+
+    const detalhe = chave => {
+      const { vs, est, grupos } = ctx;
+      const p = chave.indexOf(':'), tipo = p < 0 ? chave : chave.slice(0, p), arg = p < 0 ? '' : chave.slice(p + 1);
+      const comNota = vs.filter(temNota);
+      if (tipo === 'todas') return { titulo: 'Todas as avaliações', texto: 'Avaliações do cliente e do período selecionados. Toque em uma para ver a resposta completa.', itens: vs,
+        extra: bloco('Recomendação (NPS)', barrasGrupos(vs, true)) + bloco('Avaliação geral', A.barras(est.q1_avaliacao.contagem, est.q1_avaliacao.total, 'q1_avaliacao')) };
+      if (tipo === 'nps') { const n = npsItens(vs);
+        return { titulo: 'NPS — recomendação', itens: comNota,
+          texto: `O NPS é o percentual de promotores (notas 9 e 10) menos o percentual de detratores (notas 0 a 6) e vai de -100 a 100. Aqui: ${pct(n.promotores, n.n)}% de promotores − ${pct(n.detratores, n.n)}% de detratores = <strong>${n.score}</strong>. Acima de 75 é zona de excelência; de 50 a 74, zona de qualidade.`,
+          extra: bloco('Grupos', barrasGrupos(vs, true)) + bloco('Notas dadas', A.barras(est.q8_nps.contagem.map(c => ({ ...c, rotulo: 'Nota ' + c.opcao })).filter(c => c.n).reverse(), est.q8_nps.total, c => 'nota:' + c.opcao)) }; }
+      if (tipo === 'grupo') { const [nome, desc, f] = GRUPOS[+arg]; const itens = comNota.filter(x => f(+x.v.q8_nps));
+        return { titulo: nome, texto: `${desc} São ${itens.length} de ${comNota.length} notas (${pct(itens.length, comNota.length)}%).`, itens }; }
+      if (tipo === 'nota') { const n = +arg; const itens = comNota.filter(x => +x.v.q8_nps === n);
+        return { titulo: `Nota ${n} de recomendação`, texto: `${A.plural(itens.length, 'pessoa deu', 'pessoas deram')} nota ${n} (${pct(itens.length, comNota.length)}% das notas). Quem dá nota ${n} conta como <strong>${n >= 9 ? 'promotor' : n >= 7 ? 'neutro' : 'detrator'}</strong> no NPS.`, itens }; }
+      if (tipo === 'org') { const e = est.q2_organizacao; const itens = vs.filter(x => Number(x.v.q2_organizacao));
+        return { titulo: 'Organização e preparação', texto: `${esc(e.campo.rotulo)} Média de <strong>${media(vs)}</strong> em uma escala de 1 a 5.`, itens,
+          extra: bloco('Notas de 1 a 5', A.barras(e.contagem.slice(), e.total, 'q2_organizacao')) }; }
+      if (tipo === 'emp') { const g = grupos.get(arg); if (!g) return null; const n = npsItens(g.itens);
+        return { titulo: g.nome, texto: `${A.plural(g.itens.length, 'avaliação', 'avaliações')} no período. NPS ${n ? n.score : '—'} · organização ${media(g.itens)} de 5.`, itens: g.itens,
+          extra: bloco('Recomendação (NPS)', barrasGrupos(g.itens, false)) + bloco('Avaliação geral', A.barras(contagemDe('q1_avaliacao', g.itens).contagem, contagemDe('q1_avaliacao', g.itens).total)),
+          rodape: g.cli ? `<a class="btn btn-sec" href="#/clientes/${g.cli.id}" data-fechar>${ic('clientes', 16)} Abrir cliente</a>` : '' }; }
+      const e = est[tipo];
+      if (e) { const c = e.contagem[+arg]; if (!c) return null;
+        const itens = vs.filter(x => String(x.v[tipo]) === c.opcao || (c.opcao === 'Outro' && /^outro/i.test(x.v[tipo])));
+        return { titulo: `“${c.rotulo}”`, texto: `${esc(e.campo.rotulo)}<br>${A.plural(c.n, 'pessoa respondeu', 'pessoas responderam')} “${esc(c.rotulo)}”: ${pct(c.n, e.total)}% de ${e.total}.`, itens }; }
+      return null;
+    };
+
+    const resumo = itens => { const n = npsItens(itens); const exc = itens.filter(x => x.v.q1_avaliacao === 'Excelente').length;
+      return `<div class="stat-strip det-strip">${stat('respostas', itens.length, itens.length === 1 ? 'Avaliação' : 'Avaliações')}${stat('estrela', n ? n.score : '—', 'NPS do grupo', true)}${stat('feliz', pct(exc, itens.length) + '%', 'Avaliação excelente')}${stat('grafico', media(itens), 'Organização (1 a 5)')}</div>`; };
+
+    const linhaAval = x => {
+      const cli = A.clienteDe(x.r, idx), tem = temNota(x), frase = x.v.q9_frase || x.v.q5_valor || x.v.q6_impacto || '';
+      const curta = frase.length > 120 ? frase.slice(0, 120).trim() + '…' : frase;
+      return `<button class="list-item" data-resp="${esc(x.r.id)}"><span class="nota-pill" style="background:${tem ? corNota(+x.v.q8_nps) : 'var(--line)'}" title="Nota de recomendação">${tem ? esc(x.v.q8_nps) : '–'}</span>
+        <span class="list-main"><span class="list-title">${esc([x.r.nome, cli ? cli.nome : x.r.company].filter(Boolean).join(' · ') || 'Sem identificação')}</span>
+        <span class="list-sub">${esc([x.v.q1_avaliacao, curta && `“${curta}”`].filter(Boolean).join(' · '))}</span></span>
+        <span class="list-end">${esc(A.dataBR(A.dataResp(x.r)))}</span></button>`;
+    };
+
+    const abrirDet = chave => {
+      const d = ctx && detalhe(chave);
+      if (!d) return;
+      const m = A.modal({ titulo: d.titulo, largo: true,
+        corpo: `${d.texto ? `<p class="det-texto">${d.texto}</p>` : ''}${resumo(d.itens)}${d.extra ? `<div class="det-blocos">${d.extra}</div>` : ''}
+          <h3 class="det-h">${A.plural(d.itens.length, 'avaliação', 'avaliações')} <span class="small muted">· toque para ver a resposta completa</span></h3>
+          ${d.itens.length ? `<div class="card det-lista"><div class="list">${d.itens.map(linhaAval).join('')}</div></div>` : '<p class="muted">Nenhuma avaliação.</p>'}`,
+        rodape: `${d.rodape || ''}<span class="spacer"></span><button class="btn" data-fechar>Fechar</button>` });
+      ligarDet(m.el, m.fechar);
+      A.animar(m.el);
+    };
+
+    const ligarDet = (raiz, fecharAntes) => {
+      raiz.addEventListener('click', e => {
+        const r = e.target.closest('[data-resp]');
+        if (r) { const row = todas.find(x => String(x.id) === r.dataset.resp); if (row) A.abrirResposta(row, () => A.recarregar()); return; }
+        const d = e.target.closest('[data-det]');
+        if (d) { fecharAntes && fecharAntes(); abrirDet(d.dataset.det); }
+      });
+      raiz.addEventListener('keydown', e => {
+        if ((e.key === 'Enter' || e.key === ' ') && e.target.matches('[data-det], div[data-resp]')) { e.preventDefault(); e.target.click(); }
+      });
+    };
+    ligarDet(main.querySelector('#s-conteudo'));
+
     const desenhar = () => {
       const rs = todas.filter(r => A.dentroDe(r, +estado.periodo) && (!estado.cliente || A.clienteDe(r, idx)?.id === estado.cliente));
       const alvo = main.querySelector('#s-conteudo');
-      if (!rs.length) { alvo.innerHTML = `<div class="card">${A.vazio('estrela', 'Nenhuma avaliação no período', 'Envie a Pesquisa de Experiência depois de cada serviço.', `<button class="btn" data-enviar-p2>${ic('enviar', 16)} Enviar pesquisa</button>`)}</div>`;
+      if (!rs.length) { ctx = null; alvo.innerHTML = `<div class="card">${A.vazio('estrela', 'Nenhuma avaliação no período', 'Envie a Pesquisa de Experiência depois de cada serviço.', `<button class="btn" data-enviar-p2>${ic('enviar', 16)} Enviar pesquisa</button>`)}</div>`;
         alvo.querySelector('[data-enviar-p2]').addEventListener('click', () => A.abrirEnvio({ formId: form.id })); return; }
       const vs = rs.map(r => ({ r, v: F.valores(form, r).v }));
-      const notas = vs.map(x => x.v.q8_nps).filter(v => v !== '' && v != null).map(Number);
+      const notas = vs.filter(temNota).map(x => Number(x.v.q8_nps));
       const nps = F.nps(notas);
       const est = Object.fromEntries(F.estatisticas(form, rs).map(e => [e.campo.id, e]));
       const zona = s => s >= 75 ? ['Zona de excelência', 'var(--ok)'] : s >= 50 ? ['Zona de qualidade', 'var(--green)'] : s >= 0 ? ['Zona de aperfeiçoamento', 'var(--warn)'] : ['Zona crítica', 'var(--danger)'];
       const [zTxt, zCor] = nps ? zona(nps.score) : ['', ''];
       const org = est.q2_organizacao;
-      const excelente = est.q1_avaliacao.total ? Math.round(est.q1_avaliacao.contagem[0].n / est.q1_avaliacao.total * 100) : 0;
+      const excelente = pct(est.q1_avaliacao.contagem[0].n, est.q1_avaliacao.total);
       const hist = Array.from({ length: 11 }, (_, n) => notas.filter(x => x === n).length);
       const maxH = Math.max(1, ...hist);
       const citacoes = (id, titulo, icone) => {
         const itens = vs.filter(x => x.v[id]);
         if (!itens.length) return '';
         return `<div class="card"><div class="card-head"><h3><span class="row" style="gap:8px">${ic(icone, 17)} ${esc(titulo)}</span></h3><span class="badge">${itens.length}</span></div><div class="card-body stack">
-          ${itens.map(x => { const cli = A.clienteDe(x.r, idx); return `<div class="quote"><p>${esc(x.v[id])}</p><cite>${esc([x.r.nome, cli ? cli.nome : x.r.company, A.dataBR(A.dataResp(x.r))].filter(Boolean).join(' · '))}</cite></div>`; }).join('')}</div></div>`;
+          ${itens.map(x => { const cli = A.clienteDe(x.r, idx); return `<div class="quote clicavel" data-resp="${esc(x.r.id)}" role="button" tabindex="0" title="Ver a resposta completa"><p>${esc(x.v[id])}</p><cite>${esc([x.r.nome, cli ? cli.nome : x.r.company, A.dataBR(A.dataResp(x.r))].filter(Boolean).join(' · '))}${temNota(x) ? ` · nota ${esc(x.v.q8_nps)}` : ''}</cite></div>`; }).join('')}</div></div>`;
       };
       const grupos = new Map();
-      vs.forEach(x => { const cli = A.clienteDe(x.r, idx); const k = cli ? cli.id : A.chave(x.r.company) || '_'; const g = grupos.get(k) || { nome: cli ? cli.nome : (x.r.company || 'Sem empresa'), itens: [] }; g.itens.push(x); grupos.set(k, g); });
+      vs.forEach(x => { const cli = A.clienteDe(x.r, idx); const k = cli ? cli.id : A.chave(x.r.company) || '_'; const g = grupos.get(k) || { k, cli, nome: cli ? cli.nome : (x.r.company || 'Sem empresa'), itens: [] }; g.itens.push(x); grupos.set(k, g); });
+      ctx = { vs, est, grupos };
       const linhas = [...grupos.values()].map(g => {
-        const n = F.nps(g.itens.map(x => x.v.q8_nps).filter(v => v !== '' && v != null));
-        const ns = g.itens.map(x => Number(x.v.q2_organizacao)).filter(Boolean);
-        return `<tr><td><div class="cell-ident"><span class="avatar">${esc(A.iniciais(g.nome))}</span><strong>${esc(g.nome)}</strong></div></td><td class="num">${g.itens.length}</td><td class="num">${n ? n.score : '—'}</td><td class="num">${ns.length ? (ns.reduce((a, b) => a + b, 0) / ns.length).toFixed(1).replace('.', ',') : '—'}</td></tr>`;
+        const n = npsItens(g.itens);
+        return `<tr class="clicavel"${clic('emp:' + g.k, 'Ver as avaliações de ' + g.nome)}><td><div class="cell-ident"><span class="avatar">${esc(A.iniciais(g.nome))}</span><strong>${esc(g.nome)}</strong></div></td><td class="num">${g.itens.length}</td><td class="num">${n ? n.score : '—'}</td><td class="num">${media(g.itens)}</td><td class="num det-seta">${ic('seta', 15)}</td></tr>`;
       }).join('');
+      const statC = (chave, html) => html.replace('<div class="stat"', `<div class="stat clicavel"${clic(chave)}`);
 
-      alvo.innerHTML = `<div class="stat-strip">${stat('estrela', nps ? nps.score : '—', 'NPS', true)}${stat('respostas', rs.length, 'Avaliações')}${stat('feliz', excelente + '%', 'Avaliação excelente')}${stat('grafico', org.media != null ? org.media.toFixed(1).replace('.', ',') : '—', 'Organização (1 a 5)')}</div>
+      alvo.innerHTML = `<p class="det-dica small muted">${ic('olho', 14)} Toque em qualquer número, barra, empresa ou comentário para ver os detalhes.</p>
+      <div class="stat-strip">${statC('nps', stat('estrela', nps ? nps.score : '—', 'NPS', true))}${statC('todas', stat('respostas', rs.length, 'Avaliações'))}${statC('q1_avaliacao:0', stat('feliz', excelente + '%', 'Avaliação excelente'))}${statC('org', stat('grafico', org.media != null ? org.media.toFixed(1).replace('.', ',') : '—', 'Organização (1 a 5)'))}</div>
       <div class="grid grid-3" style="align-items:start">
         <div class="card card-pad"><div class="kpi-label">NPS — recomendação</div>
-          ${nps ? `${A.medidor(nps.score)}<div style="text-align:center;margin-top:-34px"><div class="nps-big gauge-num" style="color:${zCor}" data-contar="${nps.score}">${nps.score}</div><div class="small" style="color:${zCor};font-weight:900;margin-bottom:16px">${zTxt}</div></div>
-          <div class="nps-split" aria-hidden="true"><span style="width:${nps.detratores / nps.n * 100}%;background:#C2410C"></span><span style="width:${nps.neutros / nps.n * 100}%;background:#D9A441"></span><span style="width:${nps.promotores / nps.n * 100}%;background:var(--ok)"></span></div>
-          <div class="row-between small muted" style="margin-top:10px;font-weight:700"><span class="row" style="gap:5px">${ic('triste', 15)} ${nps.detratores} detratores</span><span class="row" style="gap:5px">${ic('neutro', 15)} ${nps.neutros}</span><span class="row" style="gap:5px">${ic('feliz', 15)} ${nps.promotores} promotores</span></div>` : '<p class="muted" style="margin-top:10px">Sem notas no período.</p>'}</div>
+          ${nps ? `<div class="clicavel det-medidor"${clic('nps', 'Como o NPS é calculado')}>${A.medidor(nps.score)}<div style="text-align:center;margin-top:-34px"><div class="nps-big gauge-num" style="color:${zCor}" data-contar="${nps.score}">${nps.score}</div><div class="small" style="color:${zCor};font-weight:900;margin-bottom:16px">${zTxt}</div></div></div>
+          <div class="nps-split"><span class="clicavel"${clic('grupo:2', 'Detratores')} style="width:${nps.detratores / nps.n * 100}%;background:#C2410C"></span><span class="clicavel"${clic('grupo:1', 'Neutros')} style="width:${nps.neutros / nps.n * 100}%;background:#D9A441"></span><span class="clicavel"${clic('grupo:0', 'Promotores')} style="width:${nps.promotores / nps.n * 100}%;background:var(--ok)"></span></div>
+          <div class="row-between small muted" style="margin-top:10px;font-weight:700"><span class="row det-link clicavel" style="gap:5px"${clic('grupo:2')}>${ic('triste', 15)} ${A.plural(nps.detratores, 'detrator', 'detratores')}</span><span class="row det-link clicavel" style="gap:5px"${clic('grupo:1')}>${ic('neutro', 15)} ${nps.neutros}</span><span class="row det-link clicavel" style="gap:5px"${clic('grupo:0')}>${ic('feliz', 15)} ${A.plural(nps.promotores, 'promotor', 'promotores')}</span></div>` : '<p class="muted" style="margin-top:10px">Sem notas no período.</p>'}</div>
         <div class="card card-pad" style="grid-column:span 2"><div class="row-between"><span class="kpi-label">Distribuição das notas (0 a 10)</span><span class="small muted">% de notas 9–10 menos % de notas 0–6</span></div>
-          <div class="histo">${hist.map((n, i) => `<div><b>${n || ''}</b><i style="height:${Math.round(n / maxH * 100)}%;background:${!n ? 'var(--line)' : i <= 6 ? 'linear-gradient(#E0612A,#B93A0C)' : i <= 8 ? 'var(--grad-gold)' : 'var(--grad-green)'};animation-delay:${i * 40}ms"></i><span>${i}</span></div>`).join('')}</div></div>
+          <div class="histo">${hist.map((n, i) => `<div${n ? ` class="clicavel"${clic('nota:' + i, `Ver quem deu nota ${i}`)}` : ''}><b>${n || ''}</b><i style="height:${Math.round(n / maxH * 100)}%;background:${!n ? 'var(--line)' : i <= 6 ? 'linear-gradient(#E0612A,#B93A0C)' : i <= 8 ? 'var(--grad-gold)' : 'var(--grad-green)'};animation-delay:${i * 40}ms"></i><span>${i}</span></div>`).join('')}</div></div>
       </div>
       <div class="grid grid-3" style="margin-top:18px;align-items:start">
-        <div class="card card-pad"><div class="kpi-label">Avaliação geral</div><div style="margin-top:14px">${A.barras(est.q1_avaliacao.contagem, est.q1_avaliacao.total)}</div></div>
-        <div class="card card-pad"><div class="kpi-label">O conteúdo fez sentido?</div><div style="margin-top:14px">${A.barras(est.q3_conteudo.contagem, est.q3_conteudo.total)}</div></div>
-        <div class="card card-pad"><div class="kpi-label">Envolvimento dos colaboradores</div><div style="margin-top:14px">${A.barras(est.q4_envolvimento.contagem, est.q4_envolvimento.total)}</div></div>
+        <div class="card card-pad"><div class="kpi-label">Avaliação geral</div><div style="margin-top:14px">${A.barras(est.q1_avaliacao.contagem, est.q1_avaliacao.total, 'q1_avaliacao')}</div></div>
+        <div class="card card-pad"><div class="kpi-label">O conteúdo fez sentido?</div><div style="margin-top:14px">${A.barras(est.q3_conteudo.contagem, est.q3_conteudo.total, 'q3_conteudo')}</div></div>
+        <div class="card card-pad"><div class="kpi-label">Envolvimento dos colaboradores</div><div style="margin-top:14px">${A.barras(est.q4_envolvimento.contagem, est.q4_envolvimento.total, 'q4_envolvimento')}</div></div>
       </div>
       <h2 class="section-title">Por empresa</h2>
-      <div class="card"><div class="table-wrap"><table class="table"><thead><tr><th>Empresa</th><th class="num">Avaliações</th><th class="num">NPS</th><th class="num">Organização</th></tr></thead><tbody>${linhas}</tbody></table></div></div>
+      <div class="card"><div class="table-wrap"><table class="table"><thead><tr><th>Empresa</th><th class="num">Avaliações</th><th class="num">NPS</th><th class="num">Organização</th><th aria-label="Detalhes"></th></tr></thead><tbody>${linhas}</tbody></table></div></div>
       <h2 class="section-title">O que os clientes disseram</h2>
       <div class="grid grid-2" style="align-items:start">${citacoes('q9_frase', 'Em uma frase', 'conversa')}${citacoes('q5_valor', 'O que gerou valor', 'brilho')}${citacoes('q6_impacto', 'Impacto percebido', 'tendencia')}${citacoes('q7_melhoria', 'Sugestões de melhoria', 'editar')}</div>`;
       A.animar(alvo);
