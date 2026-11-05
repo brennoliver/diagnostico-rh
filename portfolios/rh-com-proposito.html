@@ -332,10 +332,11 @@ body::after {
 
 /* ─── 11b REGISTROS ─────────────────────────────────────────── */
 .s-gallery { flex-direction: column; }
-.gallery { flex: 1; min-height: 0; display: grid; grid-template-columns: repeat(3, 1fr); grid-template-rows: repeat(2, minmax(0, 1fr)); gap: clamp(10px, 1.2vw, 18px); margin-top: clamp(18px, 3.4vh, 36px); }
+.gallery { flex: 1; min-height: 0; display: grid; grid-template-columns: 1.3fr repeat(3, 1fr); grid-template-rows: repeat(2, minmax(0, 1fr)); gap: clamp(10px, 1.2vw, 18px); margin-top: clamp(18px, 3.4vh, 36px); }
 .gallery figure { border-radius: 14px; overflow: hidden; background: var(--paper-2); }
 .gallery img { width: 100%; height: 100%; object-fit: cover; object-position: var(--pos, 50% 40%); display: block; transition: transform .6s cubic-bezier(.2,.7,.2,1); }
 .gallery figure:hover img { transform: scale(1.04); }
+.gallery .destaque { grid-row: span 2; }
 
 /* ─── 12 RESULTADOS ─────────────────────────────────────────── */
 .s-results { gap: clamp(32px, 6vw, 100px); align-items: center; }
@@ -499,6 +500,7 @@ body::after {
   .annual-head { flex-direction: column; gap: 4px; }
   .gallery { grid-template-columns: 1fr 1fr; grid-template-rows: none; }
   .gallery figure { aspect-ratio: 4 / 3; }
+  .gallery .destaque { grid-row: auto; grid-column: 1 / -1; }
   .quotes { grid-template-columns: 1fr; }
   .results { columns: 1; }
   .s-quote { align-items: center; text-align: center; }
@@ -751,7 +753,7 @@ body::after {
   <section class="slide s-gallery" data-title="Registros dos projetos">
     <p class="eyebrow r">Registros</p>
     <h2 class="h-lg r r2">Projetos <em>em imagens</em></h2>
-    <div class="gallery"><figure class="r r3" style="--pos:50% 40%"><img src="fotos/projeto-04.jpg" alt="Registro de projeto do RH com Propósito" loading="lazy"></figure><figure class="r r3" style="--pos:50% 30%"><img src="fotos/projeto-05.jpg" alt="Registro de projeto do RH com Propósito" loading="lazy"></figure><figure class="r r3" style="--pos:50% 30%"><img src="fotos/projeto-06.jpg" alt="Registro de projeto do RH com Propósito" loading="lazy"></figure><figure class="r r4" style="--pos:50% 40%"><img src="fotos/projeto-07.jpg" alt="Registro de projeto do RH com Propósito" loading="lazy"></figure><figure class="r r4" style="--pos:50% 40%"><img src="fotos/projeto-08.jpg" alt="Registro de projeto do RH com Propósito" loading="lazy"></figure><figure class="r r4" style="--pos:50% 35%"><img src="fotos/projeto-09.jpg" alt="Registro de projeto do RH com Propósito" loading="lazy"></figure></div>
+    <div class="gallery"><figure class="r r3 destaque" style="--pos:52% 50%"><img src="fotos/projeto-10.jpg" alt="Cristiele conduzindo dinâmica ao ar livre com a equipe" loading="lazy"></figure><figure class="r r3" style="--pos:50% 40%"><img src="fotos/projeto-04.jpg" alt="Registro de projeto do RH com Propósito" loading="lazy"></figure><figure class="r r3" style="--pos:50% 30%"><img src="fotos/projeto-05.jpg" alt="Registro de projeto do RH com Propósito" loading="lazy"></figure><figure class="r r3" style="--pos:50% 30%"><img src="fotos/projeto-06.jpg" alt="Registro de projeto do RH com Propósito" loading="lazy"></figure><figure class="r r4" style="--pos:50% 40%"><img src="fotos/projeto-07.jpg" alt="Registro de projeto do RH com Propósito" loading="lazy"></figure><figure class="r r4" style="--pos:50% 40%"><img src="fotos/projeto-08.jpg" alt="Registro de projeto do RH com Propósito" loading="lazy"></figure><figure class="r r4" style="--pos:50% 35%"><img src="fotos/projeto-09.jpg" alt="Registro de projeto do RH com Propósito" loading="lazy"></figure></div>
   </section>
 
   <!-- 12 · RESULTADOS -->
