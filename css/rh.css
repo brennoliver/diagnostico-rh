@@ -665,3 +665,31 @@ input[type=range]::-moz-range-thumb{width:16px;height:16px;border-radius:50%;bac
 .convite-ico{width:56px;height:56px;border-radius:18px;display:grid;place-items:center;background:var(--grad-gold);color:#2A1C05;box-shadow:var(--shadow-gold);flex-shrink:0}
 .convite-corpo{flex:1;min-width:0}
 @media(max-width:640px){.convite{flex-direction:column}}
+
+/* ── Satisfação: dados clicáveis e janela de detalhes ── */
+.clicavel{cursor:pointer;transition:background-color .15s,box-shadow .15s,border-color .15s,filter .15s}
+.clicavel:focus-visible{outline:2px solid var(--green);outline-offset:2px}
+.stat.clicavel:hover{background:var(--green-soft-2)}
+.bar-row.clicavel{border-radius:8px;margin:-4px -6px;padding:4px 6px}
+.bar-row.clicavel:hover{background:var(--green-soft-2)}
+.bar-row.clicavel:hover .bar-label{color:var(--green);text-decoration:underline;text-underline-offset:3px}
+.histo div.clicavel{border-radius:8px}
+.histo div.clicavel:hover i{filter:brightness(1.12)}
+.histo div.clicavel:hover span{color:var(--green)}
+tr.clicavel:hover td{background:var(--green-soft-2)}
+.det-seta{color:var(--muted);width:32px}
+tr.clicavel:hover .det-seta{color:var(--green)}
+.quote.clicavel:hover{border-color:var(--gold);box-shadow:var(--shadow-1)}
+.nps-split span.clicavel:hover{filter:brightness(1.15)}
+.det-link{border-radius:6px;padding:2px 4px;margin:-2px -4px}
+.det-link:hover{color:var(--green);background:var(--green-soft-2)}
+.det-medidor{border-radius:12px}
+.det-medidor:hover{background:var(--green-soft-2)}
+.det-dica{display:flex;align-items:center;gap:6px;margin:-6px 0 12px}
+.det-texto{color:var(--ink-2);margin-bottom:16px;line-height:1.55}
+.det-strip{margin-bottom:18px}
+.det-blocos{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:22px;margin-bottom:6px}
+.det-h{font-size:15px;margin:22px 0 10px}
+.det-lista{overflow:hidden}
+.det-lista .list-item{padding:12px 16px}
+.nota-pill{flex:none;width:34px;height:34px;border-radius:50%;display:grid;place-items:center;color:#fff;font-weight:900;font-size:14px}

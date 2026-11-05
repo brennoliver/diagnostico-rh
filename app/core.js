@@ -174,7 +174,8 @@ window.App = (function () {
       <div class="modal-body">${corpo}</div>${rodape ? `<div class="modal-foot">${rodape}</div>` : ''}</div>`;
     const anterior = document.activeElement;
     const fechar = () => { back.remove(); document.removeEventListener('keydown', esc_); anterior && anterior.focus && anterior.focus(); };
-    const esc_ = e => { if (e.key === 'Escape') fechar(); };
+    // com janelas empilhadas, o Esc fecha só a de cima
+    const esc_ = e => { if (e.key === 'Escape' && [...document.querySelectorAll('.modal-back')].pop() === back) fechar(); };
     back.addEventListener('click', e => { if (e.target === back || e.target.closest('[data-fechar]')) fechar(); });
     document.addEventListener('keydown', esc_);
     document.body.appendChild(back);
@@ -190,12 +191,15 @@ window.App = (function () {
     new MutationObserver((_, o) => { if (!document.body.contains(m.el)) { o.disconnect(); res(resp); } }).observe(document.body, { childList: true });
   });
 
-  A.barras = (contagem, total) => {
+  // det: prefixo (data-det="prefixo:índice") ou função (barra, índice) => chave; cada barra com valor vira clicável
+  A.barras = (contagem, total, det = '') => {
     if (!total) return '<p class="muted small">Ainda sem respostas.</p>';
     const max = Math.max(...contagem.map(c => c.n));
     return '<div class="bars">' + contagem.map((c, i) => {
       const pct = Math.round((c.n / total) * 100);
-      return `<div class="bar-row${c.n && c.n === max ? ' top' : ''}"><span class="bar-label">${esc(c.rotulo)}</span><span class="bar-count">${c.n} · ${pct}%</span><div class="bar-track"><div class="bar-fill" style="width:${pct}%;animation-delay:${i * 60}ms"></div></div></div>`;
+      const chave = typeof det === 'function' ? det(c, i) : det ? `${det}:${i}` : '';
+      const clic = chave && c.n ? ` clicavel" data-det="${esc(chave)}" role="button" tabindex="0" title="Ver quem respondeu` : '';
+      return `<div class="bar-row${c.n && c.n === max ? ' top' : ''}${clic}"><span class="bar-label">${esc(c.rotulo)}</span><span class="bar-count">${c.n} · ${pct}%</span><div class="bar-track"><div class="bar-fill" style="width:${pct}%;animation-delay:${i * 60}ms"></div></div></div>`;
     }).join('') + '</div>';
   };
 
